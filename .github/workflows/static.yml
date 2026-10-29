@@ -36,7 +36,7 @@ jobs:
           sed -i "s|'/src|'/guangzhou|" src/data/*.ts
           npm i --legacy-peer-deps
           npx vite build --base=/guangzhou/
-          cp -r src/assets ./dist/assets
+          cp -r src/assets ./dist/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
