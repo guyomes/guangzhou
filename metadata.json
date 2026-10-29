@@ -1,0 +1,6 @@
+{
+  "name": "Guangdong Voyage - Guangzhou, Shenzhen, Shantou & Chaozhou",
+  "description": "Planificateur de voyage et guide interactif pour Guangzhou, Shenzhen, Shantou et Chaozhou. Cartes hors ligne, descriptions complètes en français, itinéraires et avis comparatifs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
