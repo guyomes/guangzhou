@@ -49,13 +49,18 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
-      const initialCenter: [number, number] = selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]
-        ? [CITIES_CONFIG[selectedCityId].centerLat, CITIES_CONFIG[selectedCityId].centerLng]
-        : [23.125, 113.285];
+      let initialCenter: [number, number] = [23.125, 113.275];
+      let initialZoom = 12;
 
-      const initialZoom = selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]
-        ? CITIES_CONFIG[selectedCityId].zoomLevel
-        : 12;
+      const targetedSpot = selectedAttractionId ? attractions.find(a => a.id === selectedAttractionId) : null;
+      if (targetedSpot) {
+        initialCenter = [targetedSpot.lat, targetedSpot.lng];
+        initialZoom = 16;
+        setActiveAttraction(targetedSpot);
+      } else if (selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]) {
+        initialCenter = [CITIES_CONFIG[selectedCityId].centerLat, CITIES_CONFIG[selectedCityId].centerLng];
+        initialZoom = CITIES_CONFIG[selectedCityId].zoomLevel;
+      }
 
       // Initialize Leaflet map
       const map = L.map(mapContainerRef.current, {
@@ -73,6 +78,16 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
       }).addTo(map);
 
       mapInstanceRef.current = map;
+
+      // Handle viewport size recalculation on tab switch
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+          if (targetedSpot) {
+            mapInstanceRef.current.flyTo([targetedSpot.lat, targetedSpot.lng], 16, { duration: 0.8 });
+          }
+        }
+      }, 150);
     }
 
     return () => {
@@ -83,10 +98,13 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     };
   }, []);
 
-  // Pan to city when selectedCityId changes
+  // Pan to city when selectedCityId changes, unless a specific attraction is focused
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
+
+    // If an attraction is currently being focused, do not let city change override the zoom
+    if (selectedAttractionId) return;
 
     if (selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]) {
       const city = CITIES_CONFIG[selectedCityId];
@@ -94,7 +112,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     } else if (selectedCityId === 'all') {
       map.flyTo([23.1, 114.8], 8, { duration: 1.2 });
     }
-  }, [selectedCityId]);
+  }, [selectedCityId, selectedAttractionId]);
 
   // Update Markers
   useEffect(() => {
@@ -204,7 +222,8 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
         .addTo(map)
         .on('click', () => {
           setActiveAttraction(attraction);
-          map.panTo([attraction.lat, attraction.lng], { animate: true });
+          const targetZoom = Math.max(map.getZoom(), 16);
+          map.flyTo([attraction.lat, attraction.lng], targetZoom, { animate: true, duration: 1.0 });
         });
 
       // Bind French tooltip for clear readability
@@ -241,20 +260,20 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     }
   }, [displayedAttractions, selectedAttractionId, filterMode, itineraryStopIds]);
 
-  // Center on selected attraction if prop changed
+  // Center & zoom closely on selected attraction if prop changed
   useEffect(() => {
     if (selectedAttractionId && mapInstanceRef.current) {
       const match = attractions.find(a => a.id === selectedAttractionId);
       if (match) {
         setActiveAttraction(match);
-        mapInstanceRef.current.setView([match.lat, match.lng], 14, { animate: true });
+        mapInstanceRef.current.flyTo([match.lat, match.lng], 16, { animate: true, duration: 1.2 });
       }
     }
   }, [selectedAttractionId, attractions]);
 
   const handleCenterGuangzhou = () => {
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.setView([23.125, 113.285], 12, { animate: true });
+      mapInstanceRef.current.setView([23.125, 113.275], 12, { animate: true });
     }
   };
 
@@ -386,6 +405,17 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
 
           <div className="mt-3 flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <button
+              onClick={() => {
+                if (mapInstanceRef.current) {
+                  mapInstanceRef.current.flyTo([activeAttraction.lat, activeAttraction.lng], 17, { duration: 0.8 });
+                }
+              }}
+              className="py-2 px-2.5 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 rounded-lg transition"
+              title="Zoomer au plus près sur la carte"
+            >
+              🔍 Zoom
+            </button>
+            <button
               onClick={() => onSelectAttraction(activeAttraction)}
               className="flex-1 py-2 px-3 text-xs font-semibold text-white bg-slate-900 dark:bg-rose-600 rounded-lg hover:bg-slate-800 transition text-center"
             >
@@ -393,7 +423,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
             </button>
             <button
               onClick={() => onOpenTaxiCard(activeAttraction)}
-              className="py-2 px-3 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 transition"
+              className="py-2 px-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 transition"
               title="Montrer au chauffeur de taxi"
             >
               向司机出示 🚕

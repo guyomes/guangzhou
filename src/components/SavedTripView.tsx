@@ -102,6 +102,7 @@ export const SavedTripView: React.FC<SavedTripViewProps> = ({
             attraction={attraction}
             onOpenDetails={onOpenDetails}
             onOpenTaxiCard={onOpenTaxiCard}
+            onViewOnMap={(attr) => onViewOnMap([attr.id])}
             isSaved={true}
             onToggleSave={onToggleSave}
           />

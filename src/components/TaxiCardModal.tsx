@@ -35,7 +35,7 @@ export const TaxiCardModal: React.FC<TaxiCardModalProps> = ({ attraction, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
       <div 
         className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border-4 border-amber-400 text-slate-900 animate-in fade-in zoom-in-95 duration-150"
         role="dialog"

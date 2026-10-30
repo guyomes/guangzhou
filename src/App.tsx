@@ -65,9 +65,22 @@ export default function App() {
     setSavedIds(updated);
   };
 
+  const handleViewSingleAttractionOnMap = (attraction: Attraction) => {
+    setSelectedAttraction(null);
+    if (selectedCity !== 'all' && selectedCity !== attraction.cityId) {
+      setSelectedCity(attraction.cityId);
+    }
+    setFocusedMapAttractionId(attraction.id);
+    setActiveTab('map');
+  };
+
   const handleViewOnMap = (stopIds: string[]) => {
     setMapItineraryStops(stopIds);
     if (stopIds.length > 0) {
+      const firstAttraction = ALL_ATTRACTIONS.find(a => a.id === stopIds[0]);
+      if (firstAttraction && selectedCity !== 'all' && selectedCity !== firstAttraction.cityId) {
+        setSelectedCity(firstAttraction.cityId);
+      }
       setFocusedMapAttractionId(stopIds[0]);
     }
     setActiveTab('map');
@@ -398,6 +411,7 @@ export default function App() {
                       attraction={attraction}
                       onOpenDetails={(item) => setSelectedAttraction(item)}
                       onOpenTaxiCard={(item) => setTaxiCardAttraction(item)}
+                      onViewOnMap={handleViewSingleAttractionOnMap}
                       isSaved={savedIds.includes(attraction.id)}
                       onToggleSave={handleToggleSave}
                     />
@@ -472,6 +486,7 @@ export default function App() {
         attraction={selectedAttraction}
         onClose={() => setSelectedAttraction(null)}
         onOpenTaxiCard={(item) => setTaxiCardAttraction(item)}
+        onViewOnMap={handleViewSingleAttractionOnMap}
         isSaved={selectedAttraction ? savedIds.includes(selectedAttraction.id) : false}
         onToggleSave={handleToggleSave}
       />

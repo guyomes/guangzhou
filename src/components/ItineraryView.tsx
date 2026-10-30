@@ -292,17 +292,25 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                  <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                    <button
+                      onClick={() => onViewOnMap([attraction.id])}
+                      className="py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1 shadow-sm"
+                      title="Centrer et zoomer sur ce lieu sur la carte interactive"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-white" />
+                      <span>Carte</span>
+                    </button>
                     <button
                       onClick={() => onOpenTaxiCard(attraction)}
-                      className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 hover:bg-rose-100 transition flex items-center gap-1"
+                      className="py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 hover:bg-rose-100 transition flex items-center gap-1"
                     >
                       <Navigation className="w-3.5 h-3.5" />
                       <span>Taxi</span>
                     </button>
                     <button
                       onClick={() => onSelectAttraction(attraction)}
-                      className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 transition"
+                      className="py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 transition"
                     >
                       Détails
                     </button>

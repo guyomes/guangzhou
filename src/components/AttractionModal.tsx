@@ -6,6 +6,7 @@ interface AttractionModalProps {
   attraction: Attraction | null;
   onClose: () => void;
   onOpenTaxiCard: (attraction: Attraction) => void;
+  onViewOnMap?: (attraction: Attraction) => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
 }
@@ -14,13 +15,14 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
   attraction,
   onClose,
   onOpenTaxiCard,
+  onViewOnMap,
   isSaved,
   onToggleSave,
 }) => {
   if (!attraction) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4 overflow-y-auto">
       <div 
         className="w-full sm:max-w-2xl bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
@@ -38,14 +40,30 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
 
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            aria-label="Fermer"
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Map and Close Buttons */}
+          <div className="absolute top-3 right-3 flex items-center gap-2">
+            {onViewOnMap && (
+              <button
+                onClick={() => {
+                  onViewOnMap(attraction);
+                  onClose();
+                }}
+                aria-label="Voir sur la carte"
+                className="h-9 px-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 shadow-md backdrop-blur-md transition-colors text-xs font-bold"
+                title="Centrer et zoomer sur la carte interactive"
+              >
+                <MapPin className="w-3.5 h-3.5 text-white" />
+                <span>Voir sur la carte</span>
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              aria-label="Fermer"
+              className="w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* Floating Actions on Hero */}
           <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
@@ -199,10 +217,22 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
         </div>
 
         {/* Fixed Bottom Action Bar */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3">
+        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-2.5">
+          {onViewOnMap && (
+            <button
+              onClick={() => {
+                onViewOnMap(attraction);
+                onClose();
+              }}
+              className="w-full sm:w-auto py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2 shadow-md shrink-0"
+            >
+              <MapPin className="w-4 h-4 text-white" />
+              <span>Voir sur la carte</span>
+            </button>
+          )}
           <button
             onClick={() => onOpenTaxiCard(attraction)}
-            className="flex-1 py-3 px-4 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors flex items-center justify-center gap-2 shadow-md"
+            className="flex-1 w-full py-3 px-4 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors flex items-center justify-center gap-2 shadow-md"
           >
             <Navigation className="w-4 h-4 text-rose-500" />
             <span>Fiche Chauffeur de Taxi (向司机出示)</span>
