@@ -33,7 +33,8 @@ import {
   Download,
   ShoppingBag,
   Utensils,
-  Zap
+  Zap,
+  Hotel
 } from 'lucide-react';
 
 export default function App() {
@@ -123,7 +124,7 @@ export default function App() {
   const currentBanner = useMemo(() => {
     if (selectedCity === 'shenzhen') {
       return {
-        image: '/src/assets/images/shenzhen_skyline_bay_1793293122053.jpg',
+        image: './assets/images/shenzhen_skyline_bay_1793293122053.jpg',
         title: 'Shenzhen · 深圳 : Silicon Valley & Baie Maritime',
         subtitle: 'Mégalopole futuriste, 4e plus haute tour au monde (Ping An 599m), parcs côtiers et galeries d’art industriel.',
         badge: 'Guangdong Tech & Design',
@@ -131,7 +132,7 @@ export default function App() {
     }
     if (selectedCity === 'shantou') {
       return {
-        image: '/src/assets/images/shantou_xiaogongyuan_street_1793293123621.jpg',
+        image: './assets/images/shantou_xiaogongyuan_street_1793293123621.jpg',
         title: 'Shantou · 汕头 : Capitale Mondiale du Bœuf Chaoshan',
         subtitle: 'Arcades républicaines de Xiaogongyuan, découpe de bœuf minute légendaire et plages sauvages de l’île de Nan’ao.',
         badge: 'Chaoshan Gastronomie',
@@ -139,14 +140,14 @@ export default function App() {
     }
     if (selectedCity === 'chaozhou') {
       return {
-        image: '/src/assets/images/chaozhou_guangji_bridge_1793293122927.jpg',
+        image: './assets/images/chaozhou_guangji_bridge_1793293122927.jpg',
         title: 'Chaozhou · 潮州 : Cité Impériale & Pont Flottant Song',
         subtitle: 'Pont de Guangji sur 18 bateaux flottants, 22 portiques de granit sculpté et cérémonie du thé Gongfu UNESCO.',
         badge: 'Histoire & Thé Gongfu',
       };
     }
     return {
-      image: '/src/assets/images/canton_tower_night_1793290740500.jpg',
+      image: './assets/images/canton_tower_night_1793290740500.jpg',
       title: 'Explorez le Guangdong : Guangzhou, Shenzhen, Shantou & Chaozhou',
       subtitle: 'Descriptions traduites en français, comparatif exclusif des avis chinois (Dianping 大众点评) et internationaux (Tripadvisor), et génération d’itinéraires sur-mesure.',
       badge: 'Guangdong · 粤 · Guide 100% en Français & Hors Ligne',
@@ -334,6 +335,7 @@ export default function App() {
                   { id: 'event', label: 'Spectacles & Robot Box', icon: Zap },
                   { id: 'nature', label: 'Nature & Collines', icon: Trees },
                   { id: 'art_hidden', label: 'Ruelles d’Art & Pépites', icon: Gem },
+                  { id: 'hotel', label: 'Hôtels & Hébergements', icon: Hotel },
                 ].map((cat) => {
                   const Icon = cat.icon;
                   const isSelected = selectedCategory === cat.id;

@@ -20,7 +20,8 @@ export type AttractionCategory =
   | 'art_hidden'
   | 'mall'
   | 'restaurant'
-  | 'event';
+  | 'event'
+  | 'hotel';
 
 export interface ReviewScore {
   source: 'dianping' | 'tripadvisor' | 'google' | 'ctrip' | 'xiaohongshu';

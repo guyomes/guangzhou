@@ -88,9 +88,13 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
               </span>
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 block font-medium">Billet d’entrée</span>
+              <span className="text-slate-500 dark:text-slate-400 block font-medium">
+                {attraction.category === 'hotel' ? 'Tarif par nuit' : 'Billet d’entrée'}
+              </span>
               <span className="font-semibold text-slate-900 dark:text-white mt-0.5 block">
-                {attraction.estimatedCostRmb === 0 ? 'Gratuit' : `${attraction.estimatedCostRmb} RMB (~${Math.round(attraction.estimatedCostRmb / 7.8)}€)`}
+                {attraction.category === 'hotel'
+                  ? `~${attraction.estimatedCostRmb} RMB/nuit (~${Math.round(attraction.estimatedCostRmb / 7.8)}€)`
+                  : (attraction.estimatedCostRmb === 0 ? 'Gratuit' : `${attraction.estimatedCostRmb} RMB (~${Math.round(attraction.estimatedCostRmb / 7.8)}€)`)}
               </span>
             </div>
             <div>

@@ -38,6 +38,11 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
 
         {/* Top Badges / Indicators */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
+          {attraction.category === 'hotel' && (
+            <span className="bg-sky-600/95 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-sm">
+              🏨 Hôtel
+            </span>
+          )}
           {attraction.isTopRated && (
             <span className="bg-rose-600/90 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-sm">
               ★ Coup de Cœur
@@ -70,7 +75,9 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent p-3 pt-6 flex items-center justify-between text-white text-xs">
           <span className="font-medium text-slate-200">{attraction.district}</span>
           <span className="font-semibold text-rose-300">
-            {attraction.estimatedCostRmb === 0 ? 'Entrée Gratuite' : `${attraction.estimatedCostRmb} RMB`}
+            {attraction.category === 'hotel'
+              ? `~${attraction.estimatedCostRmb} RMB/nuit`
+              : (attraction.estimatedCostRmb === 0 ? 'Entrée Gratuite' : `${attraction.estimatedCostRmb} RMB`)}
           </span>
         </div>
       </div>

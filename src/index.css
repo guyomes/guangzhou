@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/* Leaflet marker zero-offset reset */
+.leaflet-div-icon,
+.leaflet-custom-marker-wrapper {
+  background: transparent !important;
+  border: none !important;
+}

@@ -124,18 +124,34 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
       if (attraction.category === 'event') pinColor = '#ec4899'; // pink
       if (attraction.category === 'modern') pinColor = '#6366f1'; // indigo
       if (attraction.category === 'nature') pinColor = '#10b981'; // emerald
+      if (attraction.category === 'hotel') pinColor = '#0284c7'; // deep sky blue
       if (isHidden) pinColor = '#8b5cf6'; // violet for hidden gems
 
+      let categorySymbol = '●';
+      if (attraction.category === 'hotel') categorySymbol = '🏨';
+      else if (isHidden) categorySymbol = '✦';
+      else if (attraction.category === 'food' || attraction.category === 'restaurant') categorySymbol = '🍴';
+      else if (attraction.category === 'mall') categorySymbol = '🛍️';
+      else if (attraction.category === 'event') categorySymbol = '⚡';
+      else if (attraction.category === 'nature') categorySymbol = '🌿';
+      else if (attraction.category === 'heritage') categorySymbol = '🏛️';
+      else if (attraction.category === 'modern') categorySymbol = '🏙️';
+
+      // Zero-size wrapper with exact (0, 0) anchor prevents any drift during zooming
       const customIcon = L.divIcon({
-        className: 'custom-map-pin',
+        className: 'leaflet-custom-marker-wrapper',
         html: `
           <div style="
-            position: relative;
-            transform: translate(-50%, -100%);
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            transform: translate(-50%, 0);
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
+            pointer-events: auto;
+            user-select: none;
           ">
             <div style="
               background: ${pinColor};
@@ -150,25 +166,38 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               align-items: center;
               gap: 5px;
               border: 2px solid #ffffff;
+              white-space: nowrap;
               transform: ${isSelected ? 'scale(1.15)' : 'scale(1)'};
+              transform-origin: bottom center;
               transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             ">
-              <span>${isHidden ? '✦' : '●'}</span>
-              <span style="max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <span style="font-size: 12px; line-height: 1;">${categorySymbol}</span>
+              <span style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 ${attraction.nameFr}
               </span>
             </div>
             <div style="
               width: 0;
               height: 0;
-              border-left: 5px solid transparent;
-              border-right: 5px solid transparent;
-              border-top: 6px solid ${pinColor};
+              border-left: 6px solid transparent;
+              border-right: 6px solid transparent;
+              border-top: 7px solid ${pinColor};
+              margin-top: -1px;
+              filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));
+            "></div>
+            <div style="
+              width: 5px;
+              height: 5px;
+              border-radius: 50%;
+              background: ${pinColor};
+              border: 1px solid #ffffff;
+              box-shadow: 0 0 2px rgba(0,0,0,0.6);
+              margin-top: -1px;
             "></div>
           </div>
         `,
-        iconSize: [30, 42],
-        iconAnchor: [15, 42],
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
       });
 
       const marker = L.marker([attraction.lat, attraction.lng], { icon: customIcon })
@@ -188,7 +217,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
         </div>
       `, {
         direction: 'top',
-        offset: [0, -32],
+        offset: [0, -38],
         opacity: 0.96,
       });
 
