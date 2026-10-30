@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Attraction, CityId } from '../types/travel';
 import { CITIES_CONFIG } from '../data/citiesData';
-import { Layers, MapPin, Compass, ShieldCheck, WifiOff } from 'lucide-react';
+import { Layers, MapPin, Compass, ShieldCheck, WifiOff, Route as RouteIcon } from 'lucide-react';
 
 interface GuangzhouMapProps {
   attractions: Attraction[];
@@ -29,21 +29,36 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<{ [id: string]: L.Marker }>({});
   const polylineRef = useRef<L.Polyline | null>(null);
-  const [filterMode, setFilterMode] = useState<'all' | 'top' | 'hidden' | 'itinerary'>('all');
+  const lastFittedRouteRef = useRef<string | null>(null);
+
+  const isItineraryRoute = !!itineraryStopIds && itineraryStopIds.length > 1;
+
+  const [filterMode, setFilterMode] = useState<'all' | 'top' | 'hidden' | 'itinerary'>(
+    isItineraryRoute ? 'itinerary' : 'all'
+  );
   const [activeAttraction, setActiveAttraction] = useState<Attraction | null>(null);
 
-  // Filtered attractions based on selected city and filter
-  const displayedAttractions = attractions.filter(attraction => {
+  // Filtered attractions based on selected city and filter.
+  // Route stops are always included so the polyline has all its vertices on-screen.
+  const displayedAttractions = attractions.filter((attraction) => {
+    const isItineraryStop = isItineraryRoute && itineraryStopIds!.includes(attraction.id);
+    if (isItineraryStop) return true;
+
     if (selectedCityId !== 'all' && attraction.cityId !== selectedCityId) {
       return false;
     }
     if (filterMode === 'top') return attraction.isTopRated;
     if (filterMode === 'hidden') return attraction.isHiddenGem;
-    if (filterMode === 'itinerary' && itineraryStopIds && itineraryStopIds.length > 0) {
-      return itineraryStopIds.includes(attraction.id);
-    }
+    if (filterMode === 'itinerary') return !isItineraryRoute;
     return true;
   });
+
+  // When the user opens a day itinerary, default to the "itinerary" filter view.
+  useEffect(() => {
+    if (isItineraryRoute) {
+      setFilterMode('itinerary');
+    }
+  }, [isItineraryRoute]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -52,17 +67,21 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
       let initialCenter: [number, number] = [23.125, 113.275];
       let initialZoom = 12;
 
-      const targetedSpot = selectedAttractionId ? attractions.find(a => a.id === selectedAttractionId) : null;
+      const targetedSpot = selectedAttractionId
+        ? attractions.find((a) => a.id === selectedAttractionId)
+        : null;
       if (targetedSpot) {
         initialCenter = [targetedSpot.lat, targetedSpot.lng];
         initialZoom = 16;
         setActiveAttraction(targetedSpot);
       } else if (selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]) {
-        initialCenter = [CITIES_CONFIG[selectedCityId].centerLat, CITIES_CONFIG[selectedCityId].centerLng];
+        initialCenter = [
+          CITIES_CONFIG[selectedCityId].centerLat,
+          CITIES_CONFIG[selectedCityId].centerLng,
+        ];
         initialZoom = CITIES_CONFIG[selectedCityId].zoomLevel;
       }
 
-      // Initialize Leaflet map
       const map = L.map(mapContainerRef.current, {
         center: initialCenter,
         zoom: initialZoom,
@@ -79,12 +98,15 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
 
       mapInstanceRef.current = map;
 
-      // Handle viewport size recalculation on tab switch
       setTimeout(() => {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.invalidateSize();
           if (targetedSpot) {
-            mapInstanceRef.current.flyTo([targetedSpot.lat, targetedSpot.lng], 16, { duration: 0.8 });
+            mapInstanceRef.current.flyTo(
+              [targetedSpot.lat, targetedSpot.lng],
+              16,
+              { duration: 0.8 }
+            );
           }
         }
       }, 150);
@@ -103,7 +125,6 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    // If an attraction is currently being focused, do not let city change override the zoom
     if (selectedAttractionId) return;
 
     if (selectedCityId !== 'all' && CITIES_CONFIG[selectedCityId]) {
@@ -114,13 +135,13 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
     }
   }, [selectedCityId, selectedAttractionId]);
 
-  // Update Markers
+  // Update Markers + itinerary polyline
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    // Clear existing markers
-    Object.values(markersRef.current).forEach(m => m.remove());
+    // Clear existing markers & polyline before redrawing
+    Object.values(markersRef.current).forEach((m) => m.remove());
     markersRef.current = {};
 
     if (polylineRef.current) {
@@ -128,22 +149,37 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
       polylineRef.current = null;
     }
 
-    const routeLatLngs: [number, number][] = [];
+    if (!isItineraryRoute) {
+      lastFittedRouteRef.current = null;
+    }
+
+    // Resolve itinerary stops in the day's declared order
+    const itineraryAttractions: Attraction[] = isItineraryRoute
+      ? itineraryStopIds!
+          .map((id) => attractions.find((a) => a.id === id))
+          .filter((a): a is Attraction => !!a)
+      : [];
 
     displayedAttractions.forEach((attraction) => {
       const isSelected = attraction.id === selectedAttractionId;
       const isHidden = attraction.isHiddenGem;
 
-      // Color scheme according to category
-      let pinColor = '#3b82f6'; // blue
-      if (attraction.category === 'heritage') pinColor = '#e11d48'; // rose
-      if (attraction.category === 'food' || attraction.category === 'restaurant') pinColor = '#f59e0b'; // amber
-      if (attraction.category === 'mall') pinColor = '#0ea5e9'; // sky blue
-      if (attraction.category === 'event') pinColor = '#ec4899'; // pink
-      if (attraction.category === 'modern') pinColor = '#6366f1'; // indigo
-      if (attraction.category === 'nature') pinColor = '#10b981'; // emerald
-      if (attraction.category === 'hotel') pinColor = '#0284c7'; // deep sky blue
-      if (isHidden) pinColor = '#8b5cf6'; // violet for hidden gems
+      const itineraryIndex = isItineraryRoute
+        ? itineraryAttractions.findIndex((a) => a.id === attraction.id)
+        : -1;
+      const isItineraryStop = itineraryIndex >= 0;
+
+      // Color scheme according to category (overridden by rose when on route)
+      let pinColor = '#3b82f6';
+      if (attraction.category === 'heritage') pinColor = '#e11d48';
+      if (attraction.category === 'food' || attraction.category === 'restaurant') pinColor = '#f59e0b';
+      if (attraction.category === 'mall') pinColor = '#0ea5e9';
+      if (attraction.category === 'event') pinColor = '#ec4899';
+      if (attraction.category === 'modern') pinColor = '#6366f1';
+      if (attraction.category === 'nature') pinColor = '#10b981';
+      if (attraction.category === 'hotel') pinColor = '#0284c7';
+      if (isHidden) pinColor = '#8b5cf6';
+      if (isItineraryStop) pinColor = '#e11d48';
 
       let categorySymbol = '●';
       if (attraction.category === 'hotel') categorySymbol = '🏨';
@@ -155,7 +191,22 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
       else if (attraction.category === 'heritage') categorySymbol = '🏛️';
       else if (attraction.category === 'modern') categorySymbol = '🏙️';
 
-      // Zero-size wrapper with exact (0, 0) anchor prevents any drift during zooming
+      const prefixHtml = isItineraryStop
+        ? `<span style="
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:18px;
+            height:18px;
+            border-radius:50%;
+            background:#ffffff;
+            color:${pinColor};
+            font-size:11px;
+            font-weight:800;
+            line-height:1;
+          ">${itineraryIndex + 1}</span>`
+        : `<span style="font-size: 12px; line-height: 1;">${categorySymbol}</span>`;
+
       const customIcon = L.divIcon({
         className: 'leaflet-custom-marker-wrapper',
         html: `
@@ -175,7 +226,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               background: ${pinColor};
               color: white;
               border-radius: 9999px;
-              padding: ${isSelected ? '6px 12px' : '4px 9px'};
+              padding: ${isSelected || isItineraryStop ? '6px 12px' : '4px 9px'};
               font-size: 11px;
               font-weight: 700;
               font-family: system-ui, -apple-system, sans-serif;
@@ -189,7 +240,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               transform-origin: bottom center;
               transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             ">
-              <span style="font-size: 12px; line-height: 1;">${categorySymbol}</span>
+              ${prefixHtml}
               <span style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 ${attraction.nameFr}
               </span>
@@ -223,53 +274,94 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
         .on('click', () => {
           setActiveAttraction(attraction);
           const targetZoom = Math.max(map.getZoom(), 16);
-          map.flyTo([attraction.lat, attraction.lng], targetZoom, { animate: true, duration: 1.0 });
+          map.flyTo([attraction.lat, attraction.lng], targetZoom, {
+            animate: true,
+            duration: 1.0,
+          });
         });
 
-      // Bind French tooltip for clear readability
-      marker.bindTooltip(`
-        <div style="font-weight: 700; font-size: 12px; color: #0f172a; font-family: system-ui, sans-serif;">
-          ${attraction.nameFr}
-        </div>
-        <div style="font-size: 10px; color: #475569; margin-top: 2px;">
-          ${attraction.district} · ★ ${attraction.scores[0]?.score?.toFixed(1) || '4.8'} / 5
-        </div>
-      `, {
-        direction: 'top',
-        offset: [0, -38],
-        opacity: 0.96,
-      });
+      marker.bindTooltip(
+        `
+          <div style="font-weight: 700; font-size: 12px; color: #0f172a; font-family: system-ui, sans-serif;">
+            ${isItineraryStop ? `Étape ${itineraryIndex + 1} · ` : ''}${attraction.nameFr}
+          </div>
+          <div style="font-size: 10px; color: #475569; margin-top: 2px;">
+            ${attraction.district} · ★ ${attraction.scores[0]?.score?.toFixed(1) || '4.8'} / 5
+          </div>
+        `,
+        {
+          direction: 'top',
+          offset: [0, -38],
+          opacity: 0.96,
+        }
+      );
 
       markersRef.current[attraction.id] = marker;
-
-      if (itineraryStopIds && itineraryStopIds.includes(attraction.id)) {
-        routeLatLngs.push([attraction.lat, attraction.lng]);
-      }
     });
 
-    // Draw connecting itinerary line if in itinerary mode
-    if (filterMode === 'itinerary' && routeLatLngs.length > 1) {
+    // Draw the itinerary polyline in declared visit order
+    if (isItineraryRoute && itineraryAttractions.length > 1) {
+      const routeLatLngs = itineraryAttractions.map(
+        (a) => [a.lat, a.lng] as [number, number]
+      );
+
       polylineRef.current = L.polyline(routeLatLngs, {
-        color: '#f43f5e',
-        weight: 4,
-        opacity: 0.85,
-        dashArray: '8, 8',
+        color: '#e11d48',
+        weight: 5,
+        opacity: 0.9,
+        dashArray: '10 8',
+        lineCap: 'round',
+        lineJoin: 'round',
       }).addTo(map);
 
-      map.fitBounds(L.latLngBounds(routeLatLngs), { padding: [40, 40] });
-    }
-  }, [displayedAttractions, selectedAttractionId, filterMode, itineraryStopIds]);
+      // Draw small dots at each stop for a cleaner path
+      itineraryAttractions.forEach((a) => {
+        L.circleMarker([a.lat, a.lng], {
+          radius: 4,
+          color: '#e11d48',
+          fillColor: '#ffffff',
+          fillOpacity: 1,
+          weight: 2,
+        }).addTo(map);
+      });
 
-  // Center & zoom closely on selected attraction if prop changed
-  useEffect(() => {
-    if (selectedAttractionId && mapInstanceRef.current) {
-      const match = attractions.find(a => a.id === selectedAttractionId);
-      if (match) {
-        setActiveAttraction(match);
-        mapInstanceRef.current.flyTo([match.lat, match.lng], 16, { animate: true, duration: 1.2 });
+      // Fit the map to the entire route exactly once per unique route
+      const routeKey = itineraryStopIds!.join('|');
+      if (routeKey !== lastFittedRouteRef.current) {
+        lastFittedRouteRef.current = routeKey;
+        setTimeout(() => {
+          if (!mapInstanceRef.current) return;
+          mapInstanceRef.current.invalidateSize();
+          mapInstanceRef.current.fitBounds(L.latLngBounds(routeLatLngs), {
+            padding: [60, 60],
+            maxZoom: 15,
+            animate: true,
+            duration: 0.8,
+          });
+        }, 220);
       }
     }
-  }, [selectedAttractionId, attractions]);
+  }, [displayedAttractions, selectedAttractionId, filterMode, itineraryStopIds, attractions, isItineraryRoute]);
+
+  // Center & zoom closely on selected attraction if prop changed.
+  // While a route is active we keep the whole path in view.
+  useEffect(() => {
+    if (!selectedAttractionId) return;
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    const match = attractions.find((a) => a.id === selectedAttractionId);
+
+    if (isItineraryRoute) {
+      if (match) setActiveAttraction(match);
+      return;
+    }
+
+    if (match) {
+      setActiveAttraction(match);
+      map.flyTo([match.lat, match.lng], 16, { animate: true, duration: 1.2 });
+    }
+  }, [selectedAttractionId, attractions, isItineraryRoute]);
 
   const handleCenterGuangzhou = () => {
     if (mapInstanceRef.current) {
@@ -307,15 +399,42 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
-                {cId === 'all' ? 'Toutes' : (cId === 'guangzhou' ? 'Canton' : CITIES_CONFIG[cId].nameFr.split(' ')[0])}
+                {cId === 'all'
+                  ? 'Toutes'
+                  : cId === 'guangzhou'
+                    ? 'Canton'
+                    : CITIES_CONFIG[cId].nameFr.split(' ')[0]}
               </button>
             ))}
+          </div>
+        )}
+
+        {isItineraryRoute && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-600 text-white backdrop-blur-md text-xs font-bold border border-rose-400 shadow-lg">
+            <RouteIcon className="w-3.5 h-3.5" />
+            <span>
+              Itinéraire · {itineraryStopIds!.length} étapes
+            </span>
           </div>
         )}
       </div>
 
       {/* Filter Bar */}
       <div className="absolute top-3 right-3 z-[1000] flex items-center gap-1.5 bg-white/95 dark:bg-slate-900/95 p-1 rounded-xl shadow-lg border border-slate-200/80 dark:border-slate-800 text-xs backdrop-blur-md">
+        {isItineraryRoute && (
+          <button
+            onClick={() => setFilterMode('itinerary')}
+            className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors flex items-center gap-1 ${
+              filterMode === 'itinerary'
+                ? 'bg-rose-600 text-white'
+                : 'text-rose-700 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+            }`}
+            title="Afficher uniquement les étapes de l’itinéraire"
+          >
+            <RouteIcon className="w-3.5 h-3.5" />
+            Itinéraire
+          </button>
+        )}
         <button
           onClick={() => setFilterMode('all')}
           className={`px-2.5 py-1.5 rounded-lg font-medium transition-colors ${
@@ -369,7 +488,6 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               alt={activeAttraction.nameFr}
               className="w-18 h-18 rounded-xl object-cover shrink-0"
               onError={(e) => {
-                // Fallback styled avatar if image fails
                 (e.target as HTMLElement).style.display = 'none';
               }}
             />
@@ -391,13 +509,16 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                 {activeAttraction.nameCn} · {activeAttraction.pinyin}
               </p>
-              
-              {/* Dual Review Highlights */}
+
               <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-600 dark:text-slate-300">
-                <span className="font-semibold text-amber-600">★ {activeAttraction.scores[0]?.score}</span>
+                <span className="font-semibold text-amber-600">
+                  ★ {activeAttraction.scores[0]?.score}
+                </span>
                 <span>(Dianping)</span>
                 <span>·</span>
-                <span className="font-semibold text-emerald-600">★ {activeAttraction.scores[1]?.score || 4.7}</span>
+                <span className="font-semibold text-emerald-600">
+                  ★ {activeAttraction.scores[1]?.score || 4.7}
+                </span>
                 <span>(Tripadvisor)</span>
               </div>
             </div>
@@ -407,7 +528,11 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
             <button
               onClick={() => {
                 if (mapInstanceRef.current) {
-                  mapInstanceRef.current.flyTo([activeAttraction.lat, activeAttraction.lng], 17, { duration: 0.8 });
+                  mapInstanceRef.current.flyTo(
+                    [activeAttraction.lat, activeAttraction.lng],
+                    17,
+                    { duration: 0.8 }
+                  );
                 }
               }}
               className="py-2 px-2.5 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 rounded-lg transition"
