@@ -1,7 +1,7 @@
 import React from 'react';
 import { Attraction } from '../types/travel';
 import { X, Navigation, Bookmark, BookmarkCheck, Clock, MapPin, Ticket, Sparkles, CheckCircle2, ExternalLink } from 'lucide-react';
-import { getReviewSourceUrl } from '../utils/reviewUtils';
+import { formatAnnualVisitors } from '../utils/reviewUtils';
 
 interface AttractionModalProps {
   attraction: Attraction | null;
@@ -175,65 +175,76 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
             </ul>
           </section>
 
-          {/* Dual Review Score Breakdown (Chinese & Western Sites) */}
+          {/* Notre avis & Fréquentation */}
           <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Scores & Verbatim des Voyageurs
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Notre avis & Fréquentation</span>
               </h3>
-              <span className="text-xs text-slate-500">Plateformes Chinoises & Occidentales</span>
+              <span className="text-xs text-slate-500 font-medium">Recommandation du guide</span>
             </div>
 
-            <div className="space-y-3">
-              {attraction.scores.map((score, sIdx) => {
-                const targetUrl = getReviewSourceUrl(score, attraction);
-                const isChinesePlatform = score.source === 'dianping' || score.source === 'xiaohongshu' || score.source === 'ctrip';
-
-                return (
-                  <div
-                    key={sIdx}
-                    className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs shadow-sm hover:border-rose-300 dark:hover:border-rose-900 transition-colors"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-slate-900 dark:text-white">
-                          {score.sourceName}
-                        </span>
-                        {score.badge && (
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200/60 dark:border-rose-800/60">
-                            {score.badge}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className="font-bold text-amber-500 text-sm">★ {score.score.toFixed(1)} / 5</span>
-                        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                          ({score.reviewCount.toLocaleString('fr-FR')} {score.source === 'xiaohongshu' ? 'notes' : 'avis'})
-                        </span>
-                      </div>
-                    </div>
-
-                    <p className="text-slate-600 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800/60 leading-relaxed">
-                      "{score.highlightQuote}"
-                    </p>
-
-                    <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60">
-                      <span className="text-[10px] text-slate-400">
-                        {isChinesePlatform ? 'Source officielle locale' : 'Source voyageurs internationaux'}
-                      </span>
-                      <a
-                        href={targetUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 transition-colors"
-                      >
-                        <span>Voir la page officielle sur {score.source === 'dianping' ? 'Dianping' : score.source === 'tripadvisor' ? 'Tripadvisor' : score.source === 'xiaohongshu' ? 'Xiaohongshu' : score.sourceName.split(' ')[0]}</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
+            <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 shadow-sm space-y-3.5">
+              {/* Score & Estimated Visitors Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <div className="px-3 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-base flex items-center gap-1.5">
+                    <span>★</span>
+                    <span>{attraction.overallScore.toFixed(1)} / 5</span>
                   </div>
-                );
-              })}
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    Note globale d’appréciation
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
+                  <span className="text-slate-400">👥 Fréquentation estimée :</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">
+                    ~{formatAnnualVisitors(attraction.annualVisitors)} / an
+                  </span>
+                </div>
+              </div>
+
+              {/* Quote prefixed with "Notre avis : " */}
+              <div className="bg-white dark:bg-slate-800/80 p-3.5 rounded-xl border border-slate-200/60 dark:border-slate-800">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 italic leading-relaxed">
+                  "{attraction.ourOpinionFr}"
+                </p>
+              </div>
+
+              {/* External Resource Links */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+                <div className="text-[11px] text-slate-500">
+                  Ressources & plateformes documentaires :
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <a
+                    href={attraction.tripadvisorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60 hover:bg-emerald-100 transition-colors font-semibold text-xs"
+                    title="Consulter les avis et infos sur Tripadvisor"
+                  >
+                    <span>Tripadvisor</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+
+                  {attraction.wikipediaUrl && (
+                    <a
+                      href={attraction.wikipediaUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60 hover:bg-sky-100 transition-colors font-semibold text-xs"
+                      title="Lire l'article encyclopédique sur Wikipédia"
+                    >
+                      <span>Wikipédia</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </section>
         </div>

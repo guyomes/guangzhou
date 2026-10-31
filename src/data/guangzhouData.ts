@@ -29,6 +29,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 150,
     bestTime: 'Coucher de soleil & Nuit (18h00 - 21h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Un incontournable absolu pour embrasser la démesure futuriste de Canton à 360°, à privilégier au coucher du soleil lorsque le maillage torsadé s’illumine de mille feux au-dessus de la Rivière des Perles.",
+    annualVisitors: 2500000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1785563-Reviews-Canton_Tower-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Tour_de_Canton",
     scores: [
       {
             source: 'dianping',
@@ -92,6 +97,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 10,
     bestTime: 'Matinée (09h00 - 11h30) pour la douce lumière dans les cours',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Le chef-d’œuvre absolu de l’art architectural Lingnan ; les dentelles de bois doré, les bas-reliefs de brique et les faïences faîtières de Shiwan sont d’une virtuosité bouleversante.",
+    annualVisitors: 1800000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d311546-Reviews-Chen_Clan_Ancestral_Hall-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Temple_des_anc%C3%AAtres_de_la_famille_Chen",
     scores: [
       {
             source: 'dianping',
@@ -155,6 +165,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Matin ou Fin d’après-midi pour la lumière filtrée des arbres',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Une enclave coloniale préservée d’une élégance rare, idéale pour une promenade romantique sous les banians centenaires à l’écart de l’agitation de la métropole.",
+    annualVisitors: 5200000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d311545-Reviews-Shamian_Island-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Shamian",
     scores: [
       {
             source: 'dianping',
@@ -218,6 +233,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h',
     estimatedCostRmb: 85,
     bestTime: 'Matinée (08h00 - 11h00) ou Déjeuner',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : L’expérience culturelle et gustative suprême du Sud de la Chine ; le rituel du thé bouillant et la finesse des raviolis vapeur Har Gow justifient le voyage à eux seuls.",
+    annualVisitors: 1500000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Restaurant_Review-g298555-d1012973-Reviews-Tao_Tao_Ju_Restaurant-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Yum_cha",
     scores: [
       {
             source: 'dianping',
@@ -281,6 +301,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Après-midi (14h00 - 18h00)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Le cœur battant de la créativité cantonaise contemporaine ; flâner entre les villas républicaines en brique rouge et les galeries indépendantes est un pur délice.",
+    annualVisitors: 3800000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d12644265-Reviews-Dongshankou-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Dongshan,_Guangzhou",
     scores: [
       {
             source: 'dianping',
@@ -344,6 +369,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 2h30',
     estimatedCostRmb: 0,
     bestTime: 'Fin d’après-midi jusqu’à la tombée de la nuit (16h30 - 20h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une réhabilitation patrimoniale exemplaire au cœur de l’ancien Xiguan, sublimée par la scène lacustre du musée de l’Opéra et le charme de ses ruelles de granit.",
+    annualVisitors: 6000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d15024467-Reviews-Yong_Qing_Fang-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Cantonese_Opera_Art_Museum",
     scores: [
       {
             source: 'dianping',
@@ -407,6 +437,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Matinée fraîche (08h00 - 11h00)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Le poumon historique verdoyant de Canton où bat l’âme populaire de la ville, abritant la mythique sculpture des Cinq Béliers et les remparts de la dynastie Ming.",
+    annualVisitors: 8500000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d311538-Reviews-Yuexiu_Park-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Yuexiu_Hill",
     scores: [
       {
             source: 'dianping',
@@ -470,6 +505,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '1h',
     estimatedCostRmb: 0,
     bestTime: 'Mardi à Samedi après-midi (14h30 - 16h30) pour la lumière dans les vitraux',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Un prodige architectural néogothique taillé à la main dans le granit massif, dont les vitraux baignés de lumière offrent une atmosphère mystique inoubliable.",
+    annualVisitors: 1200000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1800170-Reviews-Sacred_Heart_Cathedral-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Cath%C3%A9drale_du_Sacr%C3%A9-C%C5%93ur_de_Canton",
     scores: [
       {
             source: 'dianping',
@@ -533,6 +573,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Après-midi ensoleillé pour les reflets sur les canaux',
+    overallScore: 4.5,
+    ourOpinionFr: "Notre avis : Une échappée poétique hors du temps au fil des canaux et des antiques maisons bâties en coquilles d’huîtres, rendez-vous paisible des peintres et des calligraphes.",
+    annualVisitors: 450000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d2279140-Reviews-Xiaozhou_Village-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Xiaozhou_Village",
     scores: [
       {
             source: 'dianping',
@@ -596,6 +641,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '1h15 (croisière) + 30 min embarquement',
     estimatedCostRmb: 118,
     bestTime: 'Soirée (départs entre 19h15 et 21h00)',
+    overallScore: 4.6,
+    ourOpinionFr: "Notre avis : La meilleure façon d’admirer les ponts suspendus et les reflets multicolores de la skyline de Zhujiang New Town, avec la brise du large sur le pont supérieur.",
+    annualVisitors: 3200000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1800171-Reviews-Pearl_River-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Rivi%C3%A8re_des_Perles_(Chine)",
     scores: [
       {
             source: 'dianping',
@@ -659,6 +709,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '3h - 4h',
     estimatedCostRmb: 5,
     bestTime: 'Tôt le matin (07h30 - 11h00) pour la fraîcheur et la mer de brume',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Le grand bol d’air de Canton ; l’ascension en téléphérique ouvre un panorama vertigineux sur la mégalopole enveloppée de brume, à accompagner d’un tofu de montagne.",
+    annualVisitors: 12000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d311540-Reviews-Baiyun_Mountain-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Mont_Baiyun",
     scores: [
       {
             source: 'dianping',
@@ -722,6 +777,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 0,
     bestTime: 'Fin de matinée ou après-midi paisible (11h00 - 16h00)',
+    overallScore: 4.6,
+    ourOpinionFr: "Notre avis : Un village d’eau millénaire au charme discret et paisible, parfait pour goûter aux gâteaux de châtaigne d’eau et flâner au bord du lac Liwan.",
+    annualVisitors: 950000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1800164-Reviews-Liwan_Lake_Park-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Liwan_District",
     scores: [
       {
             source: 'dianping',
@@ -785,6 +845,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '3h',
     estimatedCostRmb: 54,
     bestTime: 'Journée complète ou matinée ensoleillée (09h30 - 14h00)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : L’un des jardins impériaux les plus spectaculaires du Sud avec ses ponts de marbre blanc, ses dizaines de milliers de carpes koï ondoyantes et ses sculptures d’argile.",
+    annualVisitors: 850000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1804106-Reviews-Baomo_Garden-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Panyu_District#Tourism",
     scores: [
       {
             source: 'dianping',
@@ -848,6 +913,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h30 - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Mardi à Dimanche après-midi (13h30 - 16h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une \"boîte à trésors\" moderne grandiose exposant l’épopée maritime de la Route de la Soie, les soieries et les retables en or ouvragé de Chaozhou.",
+    annualVisitors: 2800000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1840292-Reviews-Guangdong_Museum-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Mus%C3%A9e_du_Guangdong",
     scores: [
       {
             source: 'dianping',
@@ -911,6 +981,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Après-midi ou soirée (14h00 - 21h30)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : La référence suprême du shopping architectural et de la haute gastronomie à Canton, réputée pour sa terrasse arborée et son design immaculé.",
+    annualVisitors: 18000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d2279144-Reviews-TaiKoo_Hui-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Taikoo_Hui_Guangzhou",
     scores: [
       {
             source: 'dianping',
@@ -974,6 +1049,11 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: '2h - 3h (spectacle) ou 1h (architecture extérieure)',
     estimatedCostRmb: 180,
     bestTime: 'Soirée de spectacle (19h30) ou crépuscule pour les reflets architecturaux',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : La vision sculpturale avant-gardiste de Zaha Hadid à son apogée ; le reflet nocturne des deux galets dans les bassins miroirs est d’une beauté cinématographique.",
+    annualVisitors: 650000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g298555-d1886866-Reviews-Guangzhou_Opera_House-Guangzhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Op%C3%A9ra_de_Canton",
     scores: [
       {
             source: 'dianping',
@@ -1037,6 +1117,10 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     recommendedDuration: 'Séjour & Nuitée',
     estimatedCostRmb: 380,
     bestTime: 'Enregistrement dès 14h / Splendide vue nocturne sur le fleuve (19h00 - 23h00)',
+    overallScore: 4.6,
+    ourOpinionFr: "Notre avis : Une valeur sûre au bord de l’eau offrant l’une des plus belles vues directes sur les embarcadères nocturnes de la Rivière des Perles et la promenade piétonne.",
+    annualVisitors: 90000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Hotel_Review-g298555-d1193309-Reviews-Haijun_Hotel-Guangzhou_Guangdong.html",
     scores: [
       {
             source: 'dianping',

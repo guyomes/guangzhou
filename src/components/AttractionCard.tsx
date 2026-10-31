@@ -1,7 +1,7 @@
 import React from 'react';
 import { Attraction } from '../types/travel';
 import { Bookmark, BookmarkCheck, Navigation, Star, Heart, MapPin, ExternalLink } from 'lucide-react';
-import { getReviewSourceUrl } from '../utils/reviewUtils';
+import { formatAnnualVisitors } from '../utils/reviewUtils';
 
 interface AttractionCardProps {
   attraction: Attraction;
@@ -20,8 +20,6 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
   isSaved,
   onToggleSave,
 }) => {
-  const dianpingScore = attraction.scores.find(s => s.source === 'dianping');
-  const westernScore = attraction.scores.find(s => s.source === 'tripadvisor' || s.source === 'google');
 
   return (
     <article className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
@@ -105,57 +103,52 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
             {attraction.descriptionFr}
           </p>
 
-          {/* Comparative Review Scores Section */}
-          <div className="mt-3.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              <span>Avis Réels Vérifiés :</span>
-              <span className="text-[10px] text-slate-500">Chine vs International</span>
+          {/* Avis éditorial, Score, Fréquentation & Liens */}
+          <div className="mt-3.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 space-y-2">
+            {/* Stars & Annual Visitors */}
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-amber-500 flex items-center gap-1">
+                ★ {attraction.overallScore.toFixed(1)} <span className="text-[11px] font-normal text-slate-500">/ 5</span>
+              </span>
+              <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                👥 ~{formatAnnualVisitors(attraction.annualVisitors)} / an
+              </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              {/* Dianping Chinese Review */}
-              {dianpingScore ? (
-                <a
-                  href={getReviewSourceUrl(dianpingScore, attraction)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex flex-col group/dp hover:text-rose-600 transition-colors"
-                  title="Consulter la page officielle Dianping (大众点评)"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-amber-500 font-bold">★ {dianpingScore.score.toFixed(1)}</span>
-                    <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-500 group-hover/dp:text-rose-600 font-medium">
-                      Dianping <ExternalLink className="w-2.5 h-2.5" />
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-400 font-mono">
-                    {dianpingScore.reviewCount.toLocaleString('fr-FR')} avis
-                  </span>
-                </a>
-              ) : null}
+            {/* Quote prefixed with "Notre avis : " */}
+            <p className="text-xs text-slate-600 dark:text-slate-300 italic line-clamp-2 leading-relaxed border-l-2 border-rose-400/80 pl-2">
+              "{attraction.ourOpinionFr}"
+            </p>
 
-              {/* Western Review (Tripadvisor) */}
-              {westernScore ? (
+            {/* Direct Links: Tripadvisor & Wikipédia */}
+            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px]">
+              <a
+                href={attraction.tripadvisorUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 transition-colors"
+                title="Consulter la fiche Tripadvisor"
+              >
+                <span>Tripadvisor</span>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+
+              {attraction.wikipediaUrl ? (
                 <a
-                  href={getReviewSourceUrl(westernScore, attraction)}
+                  href={attraction.wikipediaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex flex-col border-l border-slate-200 dark:border-slate-700 pl-2 group/ta hover:text-emerald-600 transition-colors"
-                  title="Consulter la page officielle Tripadvisor"
+                  className="inline-flex items-center gap-1 font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 transition-colors"
+                  title="Consulter l'article Wikipédia"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-emerald-500 font-bold">★ {westernScore.score.toFixed(1)}</span>
-                    <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-500 group-hover/ta:text-emerald-600 font-medium">
-                      {westernScore.source === 'google' ? 'Google' : 'Tripadvisor'} <ExternalLink className="w-2.5 h-2.5" />
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-400 font-mono">
-                    {westernScore.reviewCount.toLocaleString('fr-FR')} avis
-                  </span>
+                  <span>Wikipédia</span>
+                  <ExternalLink className="w-2.5 h-2.5" />
                 </a>
-              ) : null}
+              ) : (
+                <span className="text-[10px] text-slate-400">Guangdong Guide</span>
+              )}
             </div>
           </div>
         </div>

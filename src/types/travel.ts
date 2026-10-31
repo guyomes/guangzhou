@@ -58,7 +58,12 @@ export interface Attraction {
   recommendedDuration: string; // e.g. "1h30 - 2h"
   estimatedCostRmb: number; // 0 for free
   bestTime: string; // e.g. "Coucher de soleil & Nuit"
-  scores: ReviewScore[];
+  overallScore: number; // e.g. 4.8 / 5
+  ourOpinionFr: string; // "Notre avis : ..."
+  annualVisitors: number; // e.g. 2500000
+  tripadvisorUrl: string;
+  wikipediaUrl?: string;
+  scores?: ReviewScore[];
   isTopRated: boolean;
   isHiddenGem: boolean;
   tags: string[];

@@ -18,7 +18,7 @@ export function getReviewSourceUrl(score: ReviewScore, attraction: Attraction): 
     case 'xiaohongshu':
       return `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(cleanCn)}`;
     case 'tripadvisor':
-      return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(cleanEn + ' ' + cityNameEn)}`;
+      return attraction.tripadvisorUrl || `https://www.tripadvisor.com/Search?q=${encodeURIComponent(cleanEn + ' ' + cityNameEn)}`;
     case 'google':
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanCn + ' ' + cleanEn)}`;
     case 'ctrip':
@@ -26,4 +26,17 @@ export function getReviewSourceUrl(score: ReviewScore, attraction: Attraction): 
     default:
       return `https://www.google.com/search?q=${encodeURIComponent(cleanCn + ' ' + score.sourceName)}`;
   }
+}
+
+export function formatAnnualVisitors(num: number): string {
+  if (!num || num <= 0) return 'Non communiqué';
+  if (num >= 2_000_000) {
+    const formatted = (num / 1_000_000).toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+    return `${formatted} millions`;
+  }
+  if (num >= 1_000_000) {
+    const formatted = (num / 1_000_000).toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+    return `${formatted} million`;
+  }
+  return num.toLocaleString('fr-FR');
 }

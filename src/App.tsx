@@ -107,8 +107,7 @@ export default function App() {
         return false;
       }
       if (filterRatingType === 'dianping_fav') {
-        const dp = item.scores.find(s => s.source === 'dianping');
-        if (!dp || dp.score < 4.8) return false;
+        if (item.overallScore < 4.8) return false;
       }
 
       // Search Query
@@ -251,7 +250,7 @@ export default function App() {
                 <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-200">
                   <span className="flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span>Avis Dianping & Tripadvisor</span>
+                    <span>Notre avis & Fréquentation</span>
                   </span>
                   <span aria-hidden="true">·</span>
                   <span className="flex items-center gap-1.5">
@@ -329,9 +328,9 @@ export default function App() {
                         ? 'bg-amber-600 text-white shadow-sm'
                         : 'text-amber-700 dark:text-amber-400 hover:bg-amber-50'
                     }`}
-                    title="Favoris de l'application chinoise Dianping (Score >= 4.8)"
+                    title="Lieux exceptionnels avec note >= 4.8 / 5"
                   >
-                    点评 Favoris Locaux
+                    ★ Coups de Cœur (≥ 4.8)
                   </button>
                 </div>
               </div>

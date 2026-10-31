@@ -77,6 +77,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 180,
     bestTime: 'Fin d’après-midi & Coucher de soleil (17h30 - 19h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une prouesse d’ingénierie contemporaine vertigineuse ; la vue depuis la plateforme suspendue à 541 mètres s’étend jusqu’aux collines sauvages de Hong Kong.",
+    annualVisitors: 1400000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d13197063-Reviews-Ping_An_Finance_Centre-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Ping_An_Finance_Centre",
     scores: [
       {
             source: 'dianping',
@@ -141,6 +146,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h30 - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Après-midi et soirée (14h30 - 21h00)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : L’oasis hipster et créative par excellence de Shenzhen ; ses anciennes usines reconverties en galeries d’art sous les arbres offrent une atmosphère d’une douceur incomparable.",
+    annualVisitors: 4500000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d2430349-Reviews-OCT_Loft_Creative_Culture_Park-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Overseas_Chinese_Town",
     scores: [
       {
             source: 'dianping',
@@ -205,6 +215,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Fin d’après-midi au coucher du soleil (16h30 - 19h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : La plus belle promenade côtière urbaine de Chine du Sud ; louer un vélo pour longer la baie au crépuscule face aux lumières de Hong Kong est un pur enchantement.",
+    annualVisitors: 15000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d3648356-Reviews-Shenzhen_Bay_Park-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Shenzhen_Bay_Park",
     scores: [
       {
             source: 'dianping',
@@ -269,6 +284,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '3h - 4h',
     estimatedCostRmb: 0,
     bestTime: 'Journée ensoleillée (10h00 - 16h00)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Un bastion naval millénaire méconnu de la dynastie Ming, où les ruelles dallées de granit et les portes fortifiées côtoient les eaux turquoise de la mer de Chine.",
+    annualVisitors: 1100000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d1800185-Reviews-Dapeng_Fortress-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Forteresse_de_Dapeng",
     scores: [
       {
             source: 'dianping',
@@ -333,6 +353,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h30 - 3h30',
     estimatedCostRmb: 0,
     bestTime: 'Fin d’après-midi & Soirée festive (15h30 - 22h00)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Le symbole du lifestyle et de la modernité de Nanshan avec son éléphant géant monumental \"Bubble\" et une offre avant-gardiste de designers et de cafés branchés.",
+    annualVisitors: 22000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d13197064-Reviews-The_Mixc-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/MixC",
     scores: [
       {
             source: 'dianping',
@@ -397,6 +422,10 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 2h30',
     estimatedCostRmb: 120,
     bestTime: 'Vendredi, Samedi et Dimanche soir (19h00 - 21h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une expérience cyberpunk unique au monde où s’affrontent de véritables robots gladiateurs en armure d’acier dans des étincelles métalliques spectaculaires.",
+    annualVisitors: 120000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d1800183-Reviews-Shenzhen_Science_Museum-Shenzhen_Guangdong.html",
     scores: [
       {
             source: 'dianping',
@@ -461,6 +490,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 110,
     bestTime: 'Déjeuner ou Dîner convivial (12h00 ou 18h30)',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Le plat signature officiel de la Silicon Valley chinoise ; le bouillon d’eau de coco pure et la trempette au calamansi créent une harmonie sucrée-acidulée divine.",
+    annualVisitors: 850000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Restaurant_Review-g297415-d4177432-Reviews-Runyuan_Sijia_Coconut_Chicken-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Wenchang_chicken",
     scores: [
       {
             source: 'dianping',
@@ -525,6 +559,11 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Soirée illuminée (19h00 - 22h00)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : L’énergie brute de la capitale mondiale du hardware ; la monumentale verrière LED illuminée la nuit donne l’impression de marcher en plein décor de Blade Runner.",
+    annualVisitors: 35000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g297415-d1800184-Reviews-Huaqiang_Bei_Commercial_Street-Shenzhen_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Huaqiangbei",
     scores: [
       {
             source: 'dianping',
@@ -592,6 +631,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Fin d’après-midi jusqu’en soirée (16h30 - 21h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Le joyau architectural républicain du port franc avec ses façades d’arcade Qilou en plan radial, particulièrement envoûtant de nuit sous les lampions rouges.",
+    annualVisitors: 4200000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303746-d12644262-Reviews-Shantou_Little_Park-Shantou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Shantou#Tourism",
     scores: [
       {
             source: 'dianping',
@@ -656,6 +700,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h',
     estimatedCostRmb: 95,
     bestTime: 'Déjeuner (11h30 - 13h30) ou Dîner (17h30 - 20h30)',
+    overallScore: 5,
+    ourOpinionFr: "Notre avis : La référence mondiale incontestée du bœuf frais ; la viande abattue moins de 4 heures auparavant et découpée au couteau de maître fond sur le palais avec la sauce Shacha.",
+    annualVisitors: 1200000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Restaurant_Review-g303746-d8051759-Reviews-BaHeLi_HaiJi_NiuRouDian-Shantou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chaoshan_cuisine",
     scores: [
       {
             source: 'dianping',
@@ -720,6 +769,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: 'Journée complète (5h - 7h)',
     estimatedCostRmb: 0,
     bestTime: 'Journée ensoleillée de mai à octobre pour la clarté des eaux marines',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une île maritime idyllique reliée par un pont haubané grandiose de 11 km ; ses plages de sable blond et ses phares dressés sur les récifs en font une étape balnéaire parfaite.",
+    annualVisitors: 2600000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303746-d1800367-Reviews-Nan_ao_Island-Shantou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Xian_de_Nan%27ao",
     scores: [
       {
             source: 'dianping',
@@ -784,6 +838,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Après-midi ou soirée (14h00 - 21h30)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Un complexe contemporain remarquable qui réussit le pari d’intégrer une rue Nanyang d’inspiration coloniale au cœur du plus grand mall de l’est du Guangdong.",
+    annualVisitors: 12000000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303746-d23912953-Reviews-The_Mixc_Shantou-Shantou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/MixC",
     scores: [
       {
             source: 'dianping',
@@ -848,6 +907,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 2h30',
     estimatedCostRmb: 160,
     bestTime: 'Dîner & Repas de minuit (18h00 - 01h00)',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Le temple mythique des festins nocturnes de Chaoshan ; son étalage monumental de crabes bleus marinés au soja et de poissons frais est un choc gustatif inoubliable.",
+    annualVisitors: 550000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Restaurant_Review-g303746-d8616110-Reviews-FuYuan_YinShi-Shantou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chaoshan_cuisine",
     scores: [
       {
             source: 'dianping',
@@ -912,6 +976,11 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 35,
     bestTime: 'Matinée ou après-midi (09h00 - 16h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : \"La Première Demeure du Lingnan\" ; 506 pièces impériales mêlant le plan Teochew des Quatre Chevaux et des carreaux de sol en faïence européenne d’une conservation éblouissante.",
+    annualVisitors: 600000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303746-d1800366-Reviews-Chen_Cihong_s_Former_Residence-Shantou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chenghai_District#History_and_heritage",
     scores: [
       {
             source: 'dianping',
@@ -979,6 +1048,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 20,
     bestTime: 'Fin d’après-midi & Soirée illuminée (16h30 - 20h30)',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Un miracle d’ingénierie millénaire de la dynastie Song ; la manœuvre quotidienne de déconnexion des 18 bateaux en bois flottants à 17h30 est un spectacle poétique et captivant.",
+    annualVisitors: 2300000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303698-d1864475-Reviews-Guangji_Bridge-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Pont_de_Guangji",
     scores: [
       {
             source: 'dianping',
@@ -1043,6 +1117,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '2h - 3h',
     estimatedCostRmb: 0,
     bestTime: 'Fin d’après-midi et soirée (16h00 - 21h30)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Une traversée historique magistrale sous 22 portiques de pierre colossaux, rythmée par l’arôme des thés Dancong et le tintement des outils de sculpteurs sur bois.",
+    annualVisitors: 5800000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303698-d7100869-Reviews-Chaozhou_Paifang_Street-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chaozhou#Culture_and_tourism",
     scores: [
       {
             source: 'dianping',
@@ -1107,6 +1186,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h - 1h30',
     estimatedCostRmb: 0,
     bestTime: 'Matinée paisible (08h30 - 11h00)',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Un monastère Tang fondé en 738 empreint d’une ferveur intacte, où les encensoirs séculaires et les majestueux arbres Bodhi invitent au recueillement le plus profond.",
+    annualVisitors: 1600000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303698-d1805562-Reviews-Kaiyuan_Temple-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Kaiyuan_Temple_(Chaozhou)",
     scores: [
       {
             source: 'dianping',
@@ -1171,6 +1255,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 68,
     bestTime: 'Après-midi paisible (14h00 - 17h30)',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Le berceau et le sommet mondial de la cérémonie du thé ; déguster un grand cru d’oolong Phénix selon le rituel des 21 gestes est un moment de grâce absolue.",
+    annualVisitors: 750000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303698-d12644261-Reviews-Zaiyang_Building-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://fr.wikipedia.org/wiki/Gong_fu_cha",
     scores: [
       {
             source: 'dianping',
@@ -1235,6 +1324,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 50,
     bestTime: 'Soirée (19h30 - 21h30)',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : L’émotion intemporelle de l’opéra Chaoju en costumes de soie chamarrés, à savourer en buvant une tasse de thé dans un salon de thé historique au bord du fleuve Han.",
+    annualVisitors: 280000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Attraction_Review-g303698-d1864474-Reviews-Chaozhou_Ancient_City-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chaozhou_opera",
     scores: [
       {
             source: 'dianping',
@@ -1299,6 +1393,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: '1h30 - 2h',
     estimatedCostRmb: 95,
     bestTime: 'Déjeuner ou Dîner traditionnel (11h45 ou 18h00)',
+    overallScore: 4.9,
+    ourOpinionFr: "Notre avis : Le monument culinaire de la tradition Teochew ; l’oie géante mijotée dans son bouillon maître aux cinq épices offre un foie gras d’une délicatesse soyeuse mémorable.",
+    annualVisitors: 650000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Restaurants-g303698-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Chaoshan_cuisine",
     scores: [
       {
             source: 'dianping',
@@ -1363,6 +1462,11 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     recommendedDuration: 'Séjour & Nuitée',
     estimatedCostRmb: 330,
     bestTime: 'Enregistrement dès 14h / Idéal pour séjours touristiques et d’affaires à Chaozhou',
+    overallScore: 4.7,
+    ourOpinionFr: "Notre avis : Une excellente adresse contemporaine sur la route Cixing, idéale pour explorer les ateliers de porcelaine de Fengxi tout en profitant d’un confort moderne et de soupes locales.",
+    annualVisitors: 85000,
+    tripadvisorUrl: "https://www.tripadvisor.com/Hotel_Review-g303698-d23190821-Reviews-Orange_Hotel_Chaozhou_Fortune_Center-Chaozhou_Guangdong.html",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Huazhu_Hotels_Group",
     scores: [
       {
             source: 'dianping',

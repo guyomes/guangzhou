@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { Attraction, CityId } from '../types/travel';
 import { CITIES_CONFIG } from '../data/citiesData';
 import { Layers, MapPin, Compass, ShieldCheck, WifiOff, Route as RouteIcon } from 'lucide-react';
+import { formatAnnualVisitors } from '../utils/reviewUtils';
 
 interface GuangzhouMapProps {
   attractions: Attraction[];
@@ -286,7 +287,7 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
             ${isItineraryStop ? `Étape ${itineraryIndex + 1} · ` : ''}${attraction.nameFr}
           </div>
           <div style="font-size: 10px; color: #475569; margin-top: 2px;">
-            ${attraction.district} · ★ ${attraction.scores[0]?.score?.toFixed(1) || '4.8'} / 5
+            ${attraction.district} · ★ ${attraction.overallScore.toFixed(1)} / 5
           </div>
         `,
         {
@@ -511,19 +512,13 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
               </p>
 
               <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-600 dark:text-slate-300">
-                <span className="font-semibold text-amber-600">
-                  ★ {activeAttraction.scores[0]?.score?.toFixed(1)}
+                <span className="font-bold text-amber-500">
+                  ★ {activeAttraction.overallScore.toFixed(1)} / 5
                 </span>
-                <span>({activeAttraction.scores[0]?.sourceName?.split(' ')[0] || 'Dianping'})</span>
-                {activeAttraction.scores[1] && (
-                  <>
-                    <span>·</span>
-                    <span className="font-semibold text-emerald-600">
-                      ★ {activeAttraction.scores[1].score?.toFixed(1)}
-                    </span>
-                    <span>({activeAttraction.scores[1].sourceName?.split(' ')[0] || 'Tripadvisor'})</span>
-                  </>
-                )}
+                <span aria-hidden="true">·</span>
+                <span className="text-slate-500 font-medium">
+                  👥 ~{formatAnnualVisitors(activeAttraction.annualVisitors)} / an
+                </span>
               </div>
             </div>
           </div>
