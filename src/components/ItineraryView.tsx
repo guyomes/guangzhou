@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SuggestedItinerary, Attraction, CityId } from '../types/travel';
-import { SUGGESTED_ITINERARIES } from '../data/itineraries';
+import { SUGGESTED_ITINERARIES, getPacedItinerary } from '../data/itineraries';
 import { ALL_ATTRACTIONS, CITIES_CONFIG } from '../data/citiesData';
-import { Calendar, Clock, Navigation, MapPin, Utensils, Compass, ChevronRight, Sparkles, Footprints, Building2 } from 'lucide-react';
+import { Calendar, Clock, Navigation, MapPin, Utensils, Compass, ChevronRight, Sparkles, Footprints, Building2, Flame, Smile, CheckCircle2 } from 'lucide-react';
 
 interface ItineraryViewProps {
   initialCityId?: CityId;
@@ -26,16 +26,22 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   // Filter itineraries by city
   const cityItineraries = SUGGESTED_ITINERARIES.filter(it => it.cityId === selectedCity);
   
-  // Available durations for the selected city
+  // Available durations for the selected city (1, 2, 3, 4, 5 days)
   const availableDurations = Array.from(new Set(cityItineraries.map(it => it.durationDays))).sort((a, b) => a - b);
 
-  // Find active itinerary
-  const activeItinerary = 
+  // Find raw base itinerary for city and duration
+  const baseItinerary = 
     cityItineraries.find(it => it.durationDays === selectedDuration) ||
     cityItineraries[0] ||
     SUGGESTED_ITINERARIES[0];
 
-  const currentDay = activeItinerary.days[activeDayIndex] || activeItinerary.days[0];
+  // Derive active itinerary strictly matching travelPace
+  const activeItinerary = useMemo(() => {
+    return getPacedItinerary(baseItinerary, travelPace);
+  }, [baseItinerary, travelPace]);
+
+  const safeDayIndex = Math.min(activeDayIndex, activeItinerary.days.length - 1);
+  const currentDay = activeItinerary.days[safeDayIndex] || activeItinerary.days[0];
 
   const getAttractionById = (id: string): Attraction | undefined => {
     return ALL_ATTRACTIONS.find(a => a.id === id);
@@ -67,8 +73,6 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 onClick={() => {
                   setSelectedCity(c.id as any);
                   setActiveDayIndex(0);
-                  const firstDuration = SUGGESTED_ITINERARIES.find(it => it.cityId === c.id)?.durationDays || 1;
-                  setSelectedDuration(firstDuration);
                 }}
                 className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                   selectedCity === c.id
@@ -119,7 +123,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
             <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-2">
               Rythme de visite souhaité :
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {[
                 { id: 'relaxed', label: 'Détendu (2-3 visites/j)' },
                 { id: 'balanced', label: 'Équilibré (3-4 visites/j)' },
@@ -138,6 +142,25 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 </button>
               ))}
             </div>
+
+            {travelPace === 'relaxed' && (
+              <p className="mt-2 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1.5">
+                <Smile className="w-3.5 h-3.5 shrink-0" />
+                <span>Mode Détendu : 2 à 3 visites avec durées amples (2h30-3h30) et pauses thé prolongées.</span>
+              </p>
+            )}
+            {travelPace === 'balanced' && (
+              <p className="mt-2 text-[11px] text-indigo-600 dark:text-indigo-400 font-medium flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                <span>Mode Équilibré : 3 à 4 visites incontournables par jour, équilibre parfait.</span>
+              </p>
+            )}
+            {travelPace === 'packed' && (
+              <p className="mt-2 text-[11px] text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 shrink-0" />
+                <span>Mode Intense : 5+ étapes par jour optimisées du matin au soir pour tout explorer.</span>
+              </p>
+            )}
           </div>
 
           <div>
@@ -174,7 +197,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
           <div>
             <div className="flex items-center gap-2 text-rose-400 text-xs font-semibold mb-1">
               <Calendar className="w-4 h-4" />
-              <span>Itinéraire {activeItinerary.durationDays} Jours Recommandé</span>
+              <span>Itinéraire {activeItinerary.durationDays} {activeItinerary.durationDays === 1 ? 'Jour' : 'Jours'} · {travelPace === 'relaxed' ? 'Détendu' : travelPace === 'packed' ? 'Intense' : 'Équilibré'}</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
               {activeItinerary.titleFr}
@@ -189,7 +212,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
             className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg transition-colors shrink-0"
           >
             <Compass className="w-4 h-4" />
-            <span>Tracer le Jour {activeDayIndex + 1} sur la Carte</span>
+            <span>Tracer le Jour {safeDayIndex + 1} sur la Carte ({currentDay.stops.length} étapes)</span>
           </button>
         </div>
       </div>
@@ -202,12 +225,17 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
               key={day.dayNumber}
               onClick={() => setActiveDayIndex(idx)}
               className={`py-2.5 px-4 rounded-2xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 ${
-                activeDayIndex === idx
+                safeDayIndex === idx
                   ? 'bg-slate-900 text-white dark:bg-rose-600 shadow-md scale-[1.02]'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'
               }`}
             >
               <span>Jour {day.dayNumber}</span>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                safeDayIndex === idx ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+              }`}>
+                {day.stops.length} étapes
+              </span>
               <span className="opacity-60 font-normal truncate max-w-[120px] hidden sm:inline">
                 · {day.themeFr}
               </span>

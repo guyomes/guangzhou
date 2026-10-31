@@ -824,6 +824,67 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Michelin Selected', 'Crabes Cru Marinés', 'Da Pai Dang', 'Fruits de Mer Chaoshan']
+  },
+  {
+    id: 'shantou-chen-cihong-residence',
+    cityId: 'shantou',
+    nameFr: 'Ancienne Résidence de Chen Cihong (Grand Manoir Qianmei)',
+    nameEn: "Chen Cihong's Former Residence",
+    nameCn: '陈慈黉故居',
+    pinyin: 'Chén Cíhóng Gùjū',
+    cantonesePhonetic: 'Can Ci-wang Gu-geoi (Teochew: Tân Chû-hông Kū-kù)',
+    category: 'heritage',
+    district: 'Chenghai (澄海区 / 前美村)',
+    lat: 23.57055,
+    lng: 116.74064,
+    metroInfoFr: 'Depuis le centre de Shantou, taxi / Didi (environ 35-40 min) ou bus interurbain 103/209 vers le village historique de Qianmei (前美村)',
+    metroInfoEn: 'From central Shantou, take a taxi or Didi (~40 min) or suburban bus 103/209 directly to Qianmei Ancient Village, Chenghai',
+    addressCn: '汕头市澄海区隆都镇前美村陈慈黉故居 (正德路)',
+    image: './assets/images/chen_cihong_former_residence_1793400000000.jpg',
+    thumbnailAlt: 'Galeries à arcades occidentales, cours intérieures et toitures traditionnelles de la résidence Chen Cihong à Shantou',
+    descriptionFr: 'Surnommée avec respect "La Première Demeure des Chinois d’Outre-Mer du Lingnan" (岭南第一侨宅), l’Ancienne Résidence de Chen Cihong est un ensemble architectural grandiose érigé à partir de 1910 par la prestigieuse dynastie du magnat Chen Cihong (1843–1921), célébré comme le "Roi du riz au Siam" et respectueusement appelé "Oncle Cihong" (慈黉爷). S’étendant sur 25 400 m² et comptant pas moins de 506 pièces réparties sur plusieurs manoirs monumentaux (Langzhong Di, Shoushi Di, Shanju Shi et Sanfang), le domaine fusionne la disposition royale Chaoshan dite "Quatre chevaux tirant un chariot" (驷马拖车 / Sì Mǎ Tuō Chē) avec de superbes galeries à arcades occidentales sur deux niveaux, des carreaux de faïence émaillés importés d’Italie et d’Espagne, ainsi que de précieux vitraux européens côtoyant des sculptures sur bois dorées à la feuille, des bas-reliefs en pierre et des faîtages en porcelaine ciselée (Qianci).',
+    descriptionEn: 'Hailed as "Lingnan’s No. 1 Overseas Chinese Residence", Chen Cihong’s Former Residence was constructed starting in 1910 by the legendary Thai-Chinese merchant Chen Cihong (1843–1921), revered as the "King of Rice in Siam". Spanning 25,400 square meters with 506 rooms across grand palatial courtyards, it seamlessly marries the Chaoshan "Four Horses Pulling a Cart" layout with two-story Western arcades, imported Italian and Spanish tiles, stained glass, and gilded Chaozhou wood carvings.',
+    culturalNoteFr: 'Chen Cihong bâtit un empire commercial transfrontalier entre Hong Kong, Bangkok, Singapour et Saïgon grâce à la firme Chen Hongli, inspirant le dicton populaire de Chaoshan : "Nul n’est plus opulent que l’Oncle Cihong" (富不过慈黉爷). Rentré au pays en 1903, ce grand philanthrope finança routes, canaux et fonda l’école Chengde, premier établissement scolaire moderne financé par la diaspora dans l’est du Guangdong.',
+    visitingTipsFr: [
+      'Visitez en priorité le complexe Shanju Shi (善居室), le plus vaste et somptueux avec 202 pièces et d’authentiques carreaux de faïence européens de 1910 parfaitement conservés.',
+      'La lumière matinale et celle de fin d’après-midi créent des jeux d’ombre et de lumière remarquables sous les arcades et à travers les vitraux multicolores.',
+      'Profitez de votre excursion pour savourer l’emblématique oie braisée aux cinq épices de Chenghai (Lion Head Goose) dans les auberges du village de Qianmei.'
+    ],
+    recommendedDuration: '2h - 3h',
+    estimatedCostRmb: 35,
+    bestTime: 'Matinée ou après-midi (09h00 - 16h30)',
+    scores: [
+      {
+        source: 'dianping',
+        sourceName: 'Dianping (大众点评)',
+        sourceType: 'chinese',
+        score: 4.8,
+        reviewCount: 62000,
+        badge: '岭南第一侨宅 & 澄海名胜榜首 (N°1 Patrimoine Lingnan)',
+        highlightQuote: '潮汕驷马拖车建筑巅峰之作！中西合璧的506间房，百年前进口的西洋花砖和金漆木雕至今绚丽夺目，文化底蕴极其深厚！(Le sommet absolu de l’architecture Chaoshan ! 506 pièces métissant Orient et Occident, faïences centenaires et boiseries dorées sublimes).'
+      },
+      {
+        source: 'tripadvisor',
+        sourceName: 'Tripadvisor',
+        sourceType: 'western',
+        score: 4.7,
+        reviewCount: 920,
+        badge: 'Top Cultural Heritage Site',
+        highlightQuote: 'A breathtaking colonial-meets-Lingnan manor. The sheer scale, preserved Italian tiles, and intricate courtyards make it a must-see in Guangdong.'
+      },
+      {
+        source: 'xiaohongshu',
+        sourceName: 'Xiaohongshu (小红书)',
+        sourceType: 'chinese',
+        score: 4.9,
+        reviewCount: 115000,
+        badge: '复古出片天花板 (Sommet Rétro & Photogénique)',
+        highlightQuote: '中西合璧的骑楼回廊光影太绝了！民国时期的进口彩色瓷砖历经百年依然艳丽如新，漫步庭院随手一拍都是复古大片。(Les arcades et couloirs coloniaux sont sublimes sous la lumière ! Les faïences sont éclatantes de beauté).'
+      }
+    ],
+    isTopRated: true,
+    isHiddenGem: false,
+    tags: ['Manoir Historique', '岭南第一侨宅', 'Quatre Chevaux Tirant un Chariot', 'Faïences Importées', 'Chenghai', 'Diaspora Teochew']
   }
 ];
 
