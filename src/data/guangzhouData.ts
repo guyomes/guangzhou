@@ -31,32 +31,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Coucher de soleil & Nuit (18h00 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 142000,
-        badge: '必打卡榜 (Incontournable)',
-        highlightQuote: '夜景绝美，坐摩天轮俯瞰整个广州珠江两岸，浪漫至极！(La vue nocturne est sublime, le Bubble Tram surplombant la rivière est un romantisme absolu).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 48290,
+            badge: '必打卡榜 (Incontournable)',
+            highlightQuote: '夜景绝美，坐摩天轮俯瞰整个广州珠江两岸，浪漫至极！(La vue nocturne est sublime, le Bubble Tram surplombant la rivière est un romantisme absolu).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%BF%E5%B7%9E%E5%A1%94'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 6850,
-        badge: 'Travelers’ Choice Best of the Best',
-        highlightQuote: 'Engineering marvel with breathtaking 360-degree city views. Better than the Oriental Pearl in Shanghai.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 3420,
+            badge: 'Travelers’ Choice Best of the Best',
+            highlightQuote: 'Engineering marvel with breathtaking 360-degree city views. Better than the Oriental Pearl in Shanghai.',
+            url: 'https://www.tripadvisor.com/Search?q=Canton+Tower+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 9200,
-        highlightQuote: 'Spectacular light show every evening. The promenade along the Pearl River is just as enjoyable as going up.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 52100,
+            badge: '夜景出片天花板 (Sommet Nocturne)',
+            highlightQuote: '日落时分上海心沙拍广州塔亮灯，绝美倒影！(Au crépuscule sur l’esplanade Haixinsha, le reflet de la tour illuminée est grandiose).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%BF%E5%B7%9E%E5%A1%94'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Architecture', 'Vue Panoramique', 'Rivière des Perles', 'Photographie Nocturne']
@@ -90,32 +94,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Matinée (09h00 - 11h30) pour la douce lumière dans les cours',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 98000,
-        badge: '岭南建筑第一名 (N°1 Patrimoine Lingnan)',
-        highlightQuote: '三雕一彩一绣集大成者，砖雕木雕巧夺天工，每次带朋友来都叹为观止！(Le summum des arts décoratifs cantonais, chaque détail de sculpture est un miracle d’orfèvrerie).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 26450,
+            badge: '必游榜第1名 (N°1 Sites Culturels)',
+            highlightQuote: '岭南建筑艺术的明珠！屋脊上的石湾陶塑太精致了，每一处木雕都是故事。(La perle de l’art architectural Lingnan ! Les céramiques de faîtière et boiseries sont remarquables).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E9%99%88%E5%AE%B6%E7%A5%A0'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 4200,
-        badge: 'N°1 Attraction Culturelle à Guangzhou',
-        highlightQuote: 'Stunning preservation. If you only visit one cultural site in Guangzhou, make it this one.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 2540,
+            badge: 'Travelers’ Choice Top Cultural Sight',
+            highlightQuote: 'Incredible detail and craftsmanship. The wood, stone and ceramic carvings on the roof ridges are unlike anything in Europe.',
+            url: 'https://www.tripadvisor.com/Search?q=Chen+Clan+Ancestral+Hall+Guangzhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 65000,
-        highlightQuote: '门票十块钱良心之作，岭南文化活化石。(Un billet à 10 yuans d’une générosité rare, un fossile vivant de la culture cantonaise).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 31800,
+            badge: '非遗美学打卡 (Esthétique Patrimoine)',
+            highlightQuote: '三雕两塑一铁铸，随手一拍都是国风大片！(Trois sculptures, deux modelages, chaque photo respire la tradition raffinée).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E9%99%88%E5%AE%B6%E7%A5%A0'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Patrimoine Qing', 'Sculptures sur Bois', 'Céramique de Shiwan', 'Artisanat Lingnan']
@@ -149,32 +157,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Matin ou Fin d’après-midi pour la lumière filtrée des arbres',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 118000,
-        badge: '广州散步漫游榜 (Top Balade Piétonne)',
-        highlightQuote: '古树参天，欧式建筑很有情调，白天拍照出片，晚上吹着江风喝咖啡特别惬意。(Des arbres centenaires majestueux, une architecture pleine de charme et une brise fluviale délicieuse).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 35120,
+            badge: '休闲度假榜 (Flânerie & Patrimoine)',
+            highlightQuote: '古树参天，欧式建筑很有异国情调，漫步其中非常惬意！(Arbres centenaires et demeures européennes, une balade pleine de charme et de sérénité).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B2%99%E9%9D%A2%E5%B2%9B'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 5120,
-        badge: 'Top Choice Guangzhou Walk',
-        highlightQuote: 'A peaceful, shaded retreat from modern skyscrapers. Fascinating colonial history and pleasant gardens.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 2180,
+            badge: 'Travelers’ Choice',
+            highlightQuote: 'A peaceful, shady oasis away from the frenzy of Guangzhou. The French and British colonial architecture is lovingly preserved.',
+            url: 'https://www.tripadvisor.com/Search?q=Shamian+Island+Guangzhou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 89000,
-        highlightQuote: '法式复古胶片感拉满，随手一拍就是电影画面。(Ambiance cinéma rétro français assurée, chaque recoin est un cliché de film).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 41200,
+            badge: '复古胶片感街区 (Ambiance Rétro)',
+            highlightQuote: '树影斑驳的洋房街道，穿洋装拍照超有民国复古范。(Rues ombragées et villas de brique, idéal pour la photo rétro).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B2%99%E9%9D%A2%E5%B2%9B'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Concessions Historiques', 'Banyans Centenaires', 'Flânerie', 'Patrimoine Franco-Britannique']
@@ -208,32 +220,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Matinée (08h00 - 11h00) ou Déjeuner',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 220000,
-        badge: '必吃榜常客 (Palmarès Gastronomique Culinaire)',
-        highlightQuote: '一盅两件，叹茶叹人生。虾饺皮薄如蝉翼，虾仁弹牙爽脆！(Une tasse de thé et deux douceurs : voilà la saveur de la vie. Des crevettes d’une fraîcheur remarquable).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 38700,
+            badge: '广州必吃榜榜首 (N°1 Guide Gourmand)',
+            highlightQuote: '一盅两件，叹茶人生。虾饺皇皮薄馅靓，红米肠酥脆鲜嫩！(Une tasse de thé, deux bouchées vapeur. Les raviolis aux crevettes et crêpes de riz rouge sont incomparables).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E9%99%B6%E9%99%B6%E5%B1%85'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 3100,
-        badge: 'Culinary Bucket List Must-Do',
-        highlightQuote: 'The best dim sum experience on earth. Nothing in Hong Kong or London compares to fresh Guangzhou yum cha.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 1290,
+            badge: 'Authentic Cantonese Heritage Dining',
+            highlightQuote: 'The best dim sum experience of my life. The har gow are packed with fresh, plump whole shrimp and the tea ritual is timeless.',
+            url: 'https://www.tripadvisor.com/Search?q=Tao+Tao+Ju+Guangzhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 78000,
-        highlightQuote: '百年老字号，地道广府味，点心现点现蒸。(Maison centenaire aux saveurs cantonaises intemporelles, paniers étuvés minute).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 28400,
+            badge: '老字号早茶天花板 (Sommet du Dim Sum)',
+            highlightQuote: '来广州不吃早茶等于没来！水滚茶靓，点心现点现蒸超级鲜！(Incontournable à Canton ! Thé bouillant et bouchées vapeur cuites minute).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%BF%E5%B7%9E%E6%97%A9%E8%8C%B6'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Gastronomie Cantonaise', 'Yum Cha', 'Étoile Gourmande', 'Art de Vivre']
@@ -267,31 +283,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Après-midi (14h00 - 18h00)',
     scores: [
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 310000,
-        badge: '文艺潮人首选地 (N°1 Quartier Bohème & Mode)',
-        highlightQuote: '红砖洋房太有民国复古韵味了！各种小众艺术空间和咖啡馆，逛一下午都不觉得累。(Les manoirs en briques rouges ont un cachet fou ! Galeries d’art et cafés intimistes sublimes).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 19830,
+            badge: '文艺潮流第一街 (N°1 Quartiers Branchés)',
+            highlightQuote: '红砖洋房太有历史厚重感了，很多宝藏小店和艺术展，咖啡店水准很高！(Les villas en brique rouge regorgent de cafés d’artistes et de boutiques de créateurs).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E4%B8%9C%E5%B1%B1%E5%8F%A3'
       },
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 64000,
-        highlightQuote: '广州最有小资情调的地方，新旧文化的完美交融。(Le spot le plus raffiné de Guangzhou, fusion idéale d’histoire et d’avant-garde).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 185,
+            badge: 'Architectural Gem',
+            highlightQuote: 'Red-brick Republican era villas mixed with hipster coffee shops and indie galleries. A delight to get lost in.',
+            url: 'https://www.tripadvisor.com/Search?q=Dongshankou+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 1250,
-        highlightQuote: 'A hidden gem overlooked by standard tour packages. Hipster coffee, cool architecture, zero crowds.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 68500,
+            badge: '潮流文艺策源地 (Berceau Bohème)',
+            highlightQuote: '东山少爷的历史沉淀与现代潮流完美融合，拍照超出片！(Le passé des notables républicains fusionne avec la mode contemporaine).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%9C%E5%B1%B1%E5%8F%A3'
       }
-    ],
+],
     isTopRated: false,
     isHiddenGem: true,
     tags: ['Pépite Cachée', 'Villas Rétro 1920', 'Galeries d’Art', 'Cafés de Spécialité']
@@ -325,31 +346,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Fin d’après-midi jusqu’à la tombée de la nuit (16h30 - 20h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 88000,
-        badge: '古镇老街第1名 (N°1 Quartier Historique Xiguan)',
-        highlightQuote: '夜晚的月亮桥太绝了，粤剧博物馆的水榭戏台宛如仙境，既传统又新潮！(Le pont de lune le soir est magique, la scène flottante est digne d’un conte de fées).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 28940,
+            badge: '西关风情历史街 (N°1 Ruelles Xiguan)',
+            highlightQuote: '粤剧博物馆水上戏台美轮美奂，李小龙祖居修缮得很棒，麻石路很有味道！(La scène aquatique du musée de l’Opéra et les ruelles pavées de granit sont magiques).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B0%B8%E5%BA%86%E5%9D%8A'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 1820,
-        highlightQuote: 'Brilliant blend of restored heritage and lively modern culture. The Opera Museum gardens are breathtaking.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 290,
+            badge: 'Cultural Landmark',
+            highlightQuote: 'A stunning revitalization of traditional Xiguan architecture. The Cantonese Opera museum courtyard on the lake is tranquil.',
+            url: 'https://www.tripadvisor.com/Search?q=Yong+Qing+Fang+Guangzhou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 160000,
-        highlightQuote: '穿汉服拍照天花板，月亮桥倒影一定要去打卡！(Le meilleur spot photo pour les amoureux d’esthétique classique chinoise).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 45700,
+            badge: '月亮桥夜景绝美 (Pont de la Lune)',
+            highlightQuote: '晚上月亮桥倒影亮起时太震撼了，非遗手艺人和铜器小店值得慢慢逛！(Le reflet du pont de la Lune le soir est sublime, artisans sur cuivre à découvrir).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B0%B8%E5%BA%86%E5%9D%8A'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Opéra UNESCO', 'Xiguan Qilou', 'Bruce Lee', 'Architecture sur l’eau']
@@ -383,31 +409,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Matinée fraîche (08h00 - 11h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 92000,
-        badge: '广州城市地标 (Emblème Municipal)',
-        highlightQuote: '五羊石雕是广州人的集体记忆，公园绿树成荫，空气清新，适合全家散步。(Les Cinq Béliers incarnent la mémoire de Guangzhou ; parc d’une fraîcheur remarquable).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 18320,
+            badge: '羊城八景标志 (Symbole de Canton)',
+            highlightQuote: '五羊石雕是广州的城市象征，公园绿化极佳，镇海楼历史底蕴深厚。(La statue des Cinq Béliers est l’emblème éternel de Canton, la verdure est superbe).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E8%B6%8A%E7%A7%80%E5%85%AC%E5%9B%AD'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 3800,
-        highlightQuote: 'Beautiful huge park in the city center. The Zhenhai tower museum gave fantastic historical perspective.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 1340,
+            badge: 'City Landmark',
+            highlightQuote: 'Sprawling park with lakes, ancient city walls, and the iconic Five Rams statue. Peaceful walk in the center of town.',
+            url: 'https://www.tripadvisor.com/Search?q=Yuexiu+Park+Guangzhou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.5,
-        reviewCount: 2900,
-        highlightQuote: 'A lovely green escape. Seeing the Five Rams monument is an essential rite of passage for first-time visitors.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 16900,
+            badge: '老广州早晨漫游 (Matinée Canton)',
+            highlightQuote: '早上来听老人家踢毽子唱粤曲，充满生活气息。(Ambiance chaleureuse le matin avec chants d’opéra et tai-chi).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E8%B6%8A%E7%A7%80%E5%85%AC%E5%9B%AD'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Parc Urbain', 'Légende des 5 Béliers', 'Muraille Ming', 'Tour Zhenhai']
@@ -441,31 +472,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Mardi à Samedi après-midi (14h30 - 16h30) pour la lumière dans les vitraux',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 76000,
-        badge: '远东巴黎圣母院 (Notre-Dame d’Extrême-Orient)',
-        highlightQuote: '纯花岗岩石结构太震撼了，阳光透过彩色琉璃窗洒进教堂，神圣而庄严。(Le granit pur est impressionnant, la lumière à travers les vitraux est mystique).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 24710,
+            badge: '远东第一全石教堂 (Chef-d’Œuvre de Granit)',
+            highlightQuote: '纯花岗岩建造的哥特式大教堂，阳光透过彩色琉璃窗洒进殿堂，庄严肃穆！(Entièrement taillée dans le granit, la lumière à travers les vitraux est saisissante).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E7%9F%B3%E5%AE%A4%E5%9C%A3%E5%BF%83%E5%A4%A7%E6%95%99%E5%A0%82'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 2100,
-        highlightQuote: 'Astonishing piece of French Gothic heritage in the bustling subtropical heart of Canton.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 890,
+            badge: 'Gothic Architectural Wonder',
+            highlightQuote: 'Known as the \'Stone House\', this twin-spired cathedral is constructed entirely of granite blocks. Reminiscent of Notre Dame.',
+            url: 'https://www.tripadvisor.com/Search?q=Sacred+Heart+Cathedral+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 3400,
-        highlightQuote: 'Incredible granite stonework. Free entry and very peaceful atmosphere.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 38200,
+            badge: '光影秘境 (Jeux de Lumière)',
+            highlightQuote: '下午三点阳光穿过玫瑰花窗，神圣浪漫的光斑拍照绝美。(À 15h, les rayons traversant la rosace créent une atmosphère magique).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E7%9F%B3%E5%AE%A4%E5%9C%A3%E5%BF%83%E5%A4%A7%E6%95%99%E5%A0%82'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Architecture Gothique', 'Granit Massif', 'Vitraux Français', 'Histoire XIXe']
@@ -499,31 +535,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Après-midi ensoleillé pour les reflets sur les canaux',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.6,
-        reviewCount: 39000,
-        badge: '小众水乡秘境 (Havre Fluvial Secret)',
-        highlightQuote: '保留了原始水乡的宁静，走在石板路上能听到水声，很有文艺气息。(Le calme originel du village sur l’eau est préservé, on entend le clapotis le long des ruelles pavées).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.5,
+            reviewCount: 8640,
+            badge: '生态艺术古村 (Village d’Artistes)',
+            highlightQuote: '蚝壳墙非常有特色，石板桥和古桥流水很有水乡宁静的感觉。(Les murs en coquilles d’huîtres et les ponts de pierre offrent une quiétude bucolique).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B0%8F%E6%B4%B2%E6%9D%91'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 52000,
-        highlightQuote: '蚝壳屋真的大开眼界！很多美院老师的画室，非常适合安静散心。(Les maisons en coquilles d’huîtres sont stupéfiantes ! Idéal pour flâner loin du bruit).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4,
+            reviewCount: 115,
+            badge: 'Off the Beaten Path',
+            highlightQuote: 'Centuries-old oyster shell houses and quiet canals. A bohemian haven for artists and painters away from the skyscrapers.',
+            url: 'https://www.tripadvisor.com/Search?q=Xiaozhou+Village+Guangzhou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.4,
-        reviewCount: 420,
-        highlightQuote: 'Authentic hidden gem of old Canton that tourists rarely find. Great artist vibe.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 9800,
+            badge: '古桥流水人家 (Canaux & Coquilles)',
+            highlightQuote: '走在百年蚝壳古屋间，在河边茶馆喝茶画画，超级治愈。(Savourer un thé au bord des canaux séculaires est un pur moment d’apaisement).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B0%8F%E6%B4%B2%E6%9D%91'
       }
-    ],
+],
     isTopRated: false,
     isHiddenGem: true,
     tags: ['Pépite Cachée', 'Village Lacustre', 'Maisons d’Huîtres', 'Ateliers de Peintres']
@@ -557,32 +598,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Soirée (départs entre 19h15 et 21h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 165000,
-        badge: '广州夜游榜首 (N°1 Sorties Nocturnes)',
-        highlightQuote: '吹着江风看两岸灯光秀，经过广州塔那一刻全船人都在惊呼欢呼！(La brise sur le fleuve, le spectacle des lumières... au passage devant la tour de Canton, tout le bateau applaudit !).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 22150,
+            badge: '夜游推荐榜 (Balade Nocturne)',
+            highlightQuote: '吹着江风看两岸摩天大楼灯光秀，穿过猎德大桥时拍照极美。(Admirer la skyline illuminée au fil de l’eau en passant sous le pont Liede).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E7%8F%A0%E6%B1%9F%E5%A4%9C%E6%B8%B8'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 3950,
-        badge: 'Top Guangzhou Night Activity',
-        highlightQuote: 'A mesmerizing light show from the water. Seeing the skyline and bridges light up is unforgettable.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4,
+            reviewCount: 1460,
+            badge: 'Classic Night Activity',
+            highlightQuote: 'Fabulous night views of the futuristic CBD and bridges illuminated in shifting neon colors. The top open deck is best.',
+            url: 'https://www.tripadvisor.com/Search?q=Pearl+River+Night+Cruise+Guangzhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 112000,
-        highlightQuote: '广州标志性游玩项目，视野无敌。(Projet emblématique de Guangzhou, vue panoramique imbattable).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 18300,
+            badge: '浪漫珠江夜景 (Romantisme Nocturne)',
+            highlightQuote: '选三层露天甲板，广州塔近在咫尺，微风吹拂惬意极了。(Le pont supérieur en plein air offre une vue imprenable sur la tour illuminée).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E7%8F%A0%E6%B1%9F%E5%A4%9C%E6%B8%B8'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Croisière', 'Skyline Nocturne', 'Rivière des Perles', 'Romantique']
@@ -616,31 +661,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Tôt le matin (07h30 - 11h00) pour la fraîcheur et la mer de brume',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 130000,
-        badge: '广州绿肺国家5A景区 (Poumon Vert 5A)',
-        highlightQuote: '缆车上山风景绝赞，山顶吃一碗山水豆腐花，看整个广州尽收眼底。(Le téléphérique est spectaculaire, le tofu à l’eau de source au sommet est un régal).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 31400,
+            badge: '国家5A级景区 (Site National 5A)',
+            highlightQuote: '广州的市肺！缆车上山视野开阔，山顶广场看羊城日落非常震撼，山水豆腐花必吃。(Le poumon vert de Canton ! Vue magnifique en téléphérique et coucher de soleil).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E7%99%BD%E4%BA%91%E5%B1%B1'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.5,
-        reviewCount: 3100,
-        highlightQuote: 'Great escape from city traffic into lush pine forests and gardens. Fantastic views on clear days.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 980,
+            badge: 'Natural City Escape',
+            highlightQuote: 'Take the cable car up for sweeping vistas over the sprawling city. Peaceful forested trails and great fresh mountain air.',
+            url: 'https://www.tripadvisor.com/Search?q=Baiyun+Mountain+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 2800,
-        highlightQuote: 'Easy hiking with paved walkways. Beautiful bird aviary and peaceful temple gardens.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 24600,
+            badge: '徒步吸氧胜地 (Randonnée & Nature)',
+            highlightQuote: '清晨上山吸氧俯瞰城市，山顶公园视野超级开阔，山水豆腐花嫩滑清甜！(Randonnée matinale oxygénante et tofu de montagne fondant).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E7%99%BD%E4%BA%91%E5%B1%B1'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Nature & Randonnée', 'Téléphérique', 'Panorama', 'Tofu de Montagne']
@@ -674,31 +724,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Fin de matinée ou après-midi paisible (11h00 - 16h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 31000,
-        badge: '千年老村秘境 (Secret Millénaire Vivant)',
-        highlightQuote: '比永庆坊更安静原始，原住民和文艺手作人共同生活，泮塘马蹄糕软糯清甜！(Plus authentique et paisible qu’Yongqingfang ; les gâteaux de châtaigne d’eau sont exquis).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 7890,
+            badge: '西关水乡秘境 (Canaux Historiques)',
+            highlightQuote: '保留了千年古村的格局，很多手作工坊和特色茶馆，挨着荔湾湖公园漫步很舒服。(Village millénaire préservé avec ateliers d’artisans le long du lac Liwan).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B3%AE%E5%A1%98%E4%BA%94%E7%BA%A6'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 47000,
-        highlightQuote: '猫咪在青砖瓦房上晒太阳，藏在市中心的世外桃源。(Des chats qui somnolent sur les toits de tuiles vernissées, un havre de paix au centre-ville).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 85,
+            badge: 'Hidden Heritage',
+            highlightQuote: 'Quiet cobblestone alleyways, banyan roots clinging to ancient bricks, and peaceful lakeside pagodas. Authentic local culture.',
+            url: 'https://www.tripadvisor.com/Search?q=Pantang+Village+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 540,
-        highlightQuote: 'Superb peaceful traditional village, virtually zero commercial tourist traps. Must visit.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 14200,
+            badge: '烟火气慢生活 (Douceur de Vivre)',
+            highlightQuote: '泮塘马蹄糕软糯清香，老街小巷充满人情味，比永庆坊更安静闲适。(Gâteaux de châtaigne d’eau moelleux et ruelles authentiques pleines de vie).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%AE%E5%A1%98%E4%BA%94%E7%BA%A6'
       }
-    ],
+],
     isTopRated: false,
     isHiddenGem: true,
     tags: ['Pépite Cachée', 'Village Millénaire', 'Musique Guqin', 'Gâteau de Châtaigne d’eau']
@@ -732,31 +787,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Journée complète ou matinée ensoleillée (09h30 - 14h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 52000,
-        badge: '岭南园林代表作 (Grand Chef-d’Œuvre Paysager)',
-        highlightQuote: '锦鲤超多超治愈，白石拱桥与假山回廊交相辉映，比苏州园林更显开阔大气！(Des carpes koï innombrables, les ponts de marbre et galeries sont encore plus amples et majestueux qu’à Suzhou !).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 14250,
+            badge: '岭南园林代表作 (Sommet des Jardins Lingnan)',
+            highlightQuote: '园林水景绝美，几万条锦鲤同时抢食太壮观了！砖雕石雕工艺登峰造极。(Des dizaines de milliers de carpes koï et des sculptures sur brique magistrales).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%AE%9D%E5%A2%A8%E5%9B%AD'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 43000,
-        highlightQuote: '番禺必去景点，园林精美，适合穿旗袍或汉服拍大片。(Incontournable à Panyu, décor grandiose pour la photographie).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 310,
+            badge: 'Architectural Gem',
+            highlightQuote: 'Spectacular water garden with white marble bridges and massive ponds swarming with thousands of colorful koi fish.',
+            url: 'https://www.tripadvisor.com/Search?q=Baomo+Garden+Guangzhou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 980,
-        highlightQuote: 'Fabulous traditional garden with millions of golden koi fish. A magical day trip outside downtown.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 12800,
+            badge: '锦鲤福地 (Bassin de Carpes Koï)',
+            highlightQuote: '穿汉服拍照美翻了，买包鱼料喂锦鲤，红锦鲤铺满水面极具视觉震撼！(Habits traditionnels et feeding des carpes koï : un spectacle féerique).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%AE%9D%E5%A2%A8%E5%9B%AD'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Jardin Lingnan', 'Carpes Koï', 'Sculptures Guinness', 'Juge Bao']
@@ -790,32 +850,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Mardi à Dimanche après-midi (13h30 - 16h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 94000,
-        badge: '国家一级博物馆 (Musée National Élite)',
-        highlightQuote: '月光宝盒建筑太震撼了！端砚馆和木雕馆展品精美绝伦，免费吹空调看国宝，值哭！(La boîte à trésors est grandiose ! Les sculptures sur bois et pierres à encre sont des trésors nationaux).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 29860,
+            badge: '国家一级博物馆 (Musée National)',
+            highlightQuote: '月光宝盒建筑太震撼了！广彩广绣和潮州金漆木雕展厅极其华美，海洋生物馆也很适合拍照。(Architecture en coffret précieux, collections de céramiques et soieries éblouissantes).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%8D%9A%E7%89%A9%E9%A6%86'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 1450,
-        badge: 'Top Museum Guangzhou',
-        highlightQuote: 'World-class museum with excellent bilingual signage. The building itself is a contemporary sculpture.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 420,
+            badge: 'Top Museum in South China',
+            highlightQuote: 'Fascinating exhibits detailing the Maritime Silk Road and Cantonese export porcelain. The architecture resembling a lacquer jewelry box is stunning.',
+            url: 'https://www.tripadvisor.com/Search?q=Guangdong+Museum+Guangzhou'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 2200,
-        highlightQuote: 'Free entry, magnificent architecture by Rocco, fascinating exhibits on maritime silk trade.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 33500,
+            badge: '文博打卡殿堂 (Temple Culturel)',
+            highlightQuote: '潮州金漆木雕神龛金碧辉煌，海洋馆的蓝鲸标本超震撼，必须提前在公众号预约！(Les retables dorés de Chaozhou et le grand cétacé suspendu sont inoubliables).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%8D%9A%E7%89%A9%E9%A6%86'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Musée National', 'Zaha Hadid Voisine', 'Route de la Soie Maritime', 'Porcelaine de Canton']
@@ -849,32 +913,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Après-midi ou soirée (14h00 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 156000,
-        badge: '广州高端商场第1名 (N°1 Malls de Prestige)',
-        highlightQuote: '广州顶奢商场天花板，顶楼露天花园太舒服了，方所书店也很好逛。(Le summum du shopping de prestige, le jardin sur le toit est un havre de paix).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 38720,
+            badge: '华南高端商业标杆 (Référence Luxe du Sud)',
+            highlightQuote: '广州顶奢商场，顶楼天台花园很惬意，餐饮品牌阵容豪华，方所书店很值得逛！(Le summum du shopping de prestige avec jardin en terrasse et librairie Fang Suo).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%BF%E5%B7%9E%E5%A4%AA%E5%8F%A4%E6%B1%87'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 1850,
-        badge: 'Top Luxury Shopping Mall',
-        highlightQuote: 'Immaculate, world-class luxury shopping. Beautiful rooftop terrace and wonderful bakery and tea selections.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 240,
+            badge: 'Luxury Shopping Destination',
+            highlightQuote: 'Immaculate luxury retail experience with flagship boutiques, top Michelin restaurants, and an innovative bookstore.',
+            url: 'https://www.tripadvisor.com/Search?q=Taikoo+Hui+Guangzhou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 240000,
-        highlightQuote: '三楼空中花园拍照绝绝子，方所书店文创超丰富！(Le rooftop est idéal pour les photos, Fangsuo est une merveille de papeterie et de livres d’art).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 27900,
+            badge: '都市美学生活馆 (Art de Vivre Urbain)',
+            highlightQuote: '三楼露天花园下午茶很有松弛感，洗手间设施被誉为天花板级别！(Le jardin du 3e étage pour le thé de l’après-midi est une bulle de luxe et d’élégance).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%A4%AA%E5%8F%A4%E6%B1%87'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Shopping de Luxe', 'Rooftop Garden', 'Librairie Fangsuo', 'Tianhe CBD']
@@ -908,32 +976,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Soirée de spectacle (19h30) ou crépuscule pour les reflets architecturaux',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 68000,
-        badge: '扎哈哈迪德传世之作 (Chef-d’Œuvre Éternel de Zaha Hadid)',
-        highlightQuote: '双砾造型在珠江边太美了，大剧场满天星光的天花板美到窒息，音效无懈可击！(L’effet galets jumeaux est saisissant, le plafond en voûte étoilée est sublime et l’acoustique est sans faute).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 12640,
+            badge: '世界十大歌剧院之一 (Top 10 Opéras Mondiaux)',
+            highlightQuote: '扎哈·哈迪德设计的双砾石建筑，内部满天星穹顶如梦如幻，音响效果无可挑剔！(Conçu par Zaha Hadid comme deux galets fluides, voûte étoilée acoustique divine).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%BF%E5%B7%9E%E5%A4%A7%E5%89%A7%E9%99%A2'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 2200,
-        badge: 'Top Cultural Performance Venue',
-        highlightQuote: 'Zaha Hadid at her peak. Seeing a live orchestra performance here is a world-class audio-visual spectacle.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 390,
+            badge: 'Architectural Masterpiece',
+            highlightQuote: 'Stunning asymmetric design by Zaha Hadid. The grand theater auditorium with its starry sky ceiling is breathtaking.',
+            url: 'https://www.tripadvisor.com/Search?q=Guangzhou+Opera+House'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 110000,
-        highlightQuote: '夜景光影交错像科幻异次元！看一场音乐剧仪式感满满。(Jeux de lumière futuristes le soir, une soirée de spectacle inoubliable).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 19400,
+            badge: '未来主义建筑美学 (Design Futuriste)',
+            highlightQuote: '黑白双砾倒映在水池里，夜晚亮灯后线条流线感超强，极具科幻未来感。(Lignes fluides de nuit reflétées dans les bassins, atmosphère de science-fiction).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%BF%E5%B7%9E%E5%A4%A7%E5%89%A7%E9%99%A2'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Spectacles Vivants', 'Zaha Hadid', 'Opéra & Ballets', 'Architecture Futuriste']
@@ -967,33 +1039,36 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
     bestTime: 'Enregistrement dès 14h / Splendide vue nocturne sur le fleuve (19h00 - 23h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 28000,
-        badge: '珠江沿江高性价比酒店 (Rapport Qualité/Prix Front de Fleuve)',
-        highlightQuote: '地理位置绝佳！正对珠江夜景，步行去北京路和天字码头只要几分钟，房间干净宽敞！(Emplacement de premier ordre ! Face à la Rivière des Perles, à quelques minutes à pied de Beijing Road et de Tianzi Wharf).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 6430,
+            badge: '一线江景口碑酒店 (Vue Imprenable sur le Fleuve)',
+            highlightQuote: '沿江中路位置绝佳，窗外就是珠江夜游码头，离北京路和海珠广场都很近，性价比很高！(Emplacement parfait sur Yanjiang Road face aux croisières, chambres confortables avec vue directe).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%BF%E5%B7%9E%E6%B5%B7%E5%86%9B%E9%85%92%E5%BA%97'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 820,
-        badge: 'Prime Pearl River Location',
-        highlightQuote: 'Great river views and convenient access to Guangzhou metro lines and night river cruise docks.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4,
+            reviewCount: 195,
+            badge: 'Great Riverfront Location',
+            highlightQuote: 'Clean, reliable, and conveniently situated right on the Pearl River promenade. Walking distance to Haizhu Square and ferries.',
+            url: 'https://www.tripadvisor.com/Search?q=Haijun+Hotel+Guangzhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 45000,
-        badge: '携程精选江景酒店 (Hôtel Vue Fleuve Sélectionné)',
-        highlightQuote: '江景房视野太棒了，夜景迷人，周边老字号小吃很多，出行十分方便。(Vue somptueuse depuis la chambre, vie nocturne et délices cantonais à deux pas).'
+            source: 'ctrip',
+            sourceName: 'Ctrip (携程)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 8920,
+            badge: '高性价比江景优选 (Choix Recommandé Vue Rivière)',
+            highlightQuote: '前台服务热情周到，夜景非常迷人，楼下就是沿江路漫步道，出行便利。(Personnel très attentif, superbe vue nocturne sur le fleuve depuis la chambre).',
+            url: 'https://you.ctrip.com/hotels/guangzhou32/1429815.html'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Hôtel', 'Vue Rivière des Perles', 'Beijing Road', 'Embarcadère Tianzi', 'Yuexiu']

@@ -31,6 +31,7 @@ export interface ReviewScore {
   reviewCount: number;
   badge?: string; // e.g. "必吃榜" or "Choix des Voyageurs"
   highlightQuote: string;
+  url?: string;
 }
 
 export interface Attraction {

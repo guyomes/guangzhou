@@ -79,32 +79,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi & Coucher de soleil (17h30 - 19h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 84000,
-        badge: '深圳地标第一名 (N°1 Monument de Shenzhen)',
-        highlightQuote: '电梯极速上升，116层云端视野太无敌了，香港新界一览无遗！(L’ascenseur est fulgurant, la vue à 360 degrés sur Shenzhen et Hong Kong est sensationnelle).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 18920,
+            badge: '华南最高地标 (Plus Haut Belvédère du Sud)',
+            highlightQuote: '541米云端俯瞰深圳CBD和香港米埔湿地，全透明悬空玻璃平台非常刺激！(Panorama à 541m sur tout Shenzhen et Hong Kong, passerelle en verre grisante).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%B9%B3%E5%AE%89%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 2900,
-        badge: 'Travelers’ Choice Best of the Best',
-        highlightQuote: 'One of the best observation decks anywhere in Asia. Incredibly modern and spotless.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 620,
+            badge: 'Top Viewpoint',
+            highlightQuote: 'One of the tallest buildings on earth. The elevator reaches the 116th floor in 55 seconds, and the views extending to Hong Kong are breathtaking.',
+            url: 'https://www.tripadvisor.com/Search?q=Ping+An+Finance+Centre+Shenzhen'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 3800,
-        highlightQuote: 'Epic architectural wonder. On a clear day you can see deep into Hong Kong mountains.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 26400,
+            badge: '云端日落胜地 (Coucher de Soleil Céleste)',
+            highlightQuote: '下午五点上来能同时看落日余晖和城市璀璨夜景，拍照极具科技未来感！(Montez à 17h pour le coucher de soleil et les lumières scintillantes de la mégalopole).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%B3%E5%AE%89%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Architecture Futuriste', 'Skyline', 'Vue Hong Kong', '599 Mètres']
@@ -139,31 +143,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Après-midi et soirée (14h30 - 21h00)',
     scores: [
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 220000,
-        badge: '深圳文艺天花板 (Sommet Bohème de Shenzhen)',
-        highlightQuote: '旧厂房爆改的艺术街区，旧天堂书店必去，绿树成荫太好逛了！(La reconversion industrielle est sublime, Old Heaven Books est un sanctuaire de culture).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 22460,
+            badge: '文艺青年聚集地 (Quartier Créatif N°1)',
+            highlightQuote: '旧厂房改造很有格调，旧天堂书店很有味道，周末的T街创意市集淘物超棒！(Anciennes usines rénovées avec goût, librairie Old Heaven Books et marché d’artisans).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%8D%8E%E4%BE%A8%E5%9F%8E%E5%88%9B%E6%84%8F%E6%96%87%E5%8C%96%E5%9B%AD'
       },
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 71000,
-        highlightQuote: '闹中取静，咖啡馆和设计画廊林立，适合慢节奏感受深圳的年轻活力。(Une oasis de paix créative, galeries raffinées et superbes cafés).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 380,
+            badge: 'Creative Arts Hub',
+            highlightQuote: 'A lush industrial park converted into hip art galleries, indie design stores, jazz clubs and cafes. A pleasant surprise in Shenzhen.',
+            url: 'https://www.tripadvisor.com/Search?q=OCT-LOFT+Shenzhen'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 1650,
-        highlightQuote: 'A creative oasis in a high-tech city. Great vibe, cool bookstores, and top-notch coffee.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 34700,
+            badge: '绿植咖啡漫游 (Cafés & Galeries)',
+            highlightQuote: '大树掩映下的红砖厂房，咖啡香气扑鼻，每个角落都充满艺术松弛感。(Oasis arborée et cafés artisanaux dans un décor industriel inspirant).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=OCT-LOFT'
       }
-    ],
+],
     isTopRated: false,
     isHiddenGem: true,
     tags: ['Pépite Cachée', 'Design Industriel', 'Clubs de Jazz', 'Cafés de Torréfaction']
@@ -198,31 +207,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi au coucher du soleil (16h30 - 19h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 175000,
-        badge: '深圳散步海景第1名 (N°1 Balades Côtières)',
-        highlightQuote: '沿海吹风看日落太治愈了，春笋大厦倒映在人才公园湖面，夜景美得像科幻电影。(Regarder le coucher de soleil face à la mer est magique, le reflet de la tour Spring Cocoon est digne d’un film de science-fiction).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 34800,
+            badge: '最美海岸线公园 (Plus Bel Espace Côtier)',
+            highlightQuote: '海风吹拂太舒服了！冬季能看成群红嘴鸥，人才公园的春笋大厦灯光秀无与伦比。(Brise marine revigorante, mouettes en hiver et spectacle de lumières de la tour Spring Cocoon).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B7%B1%E5%9C%B3%E6%B9%BE%E5%85%AC%E5%9B%AD'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 2200,
-        highlightQuote: 'Spectacular waterfront park. Cycling here with Hong Kong on one side and futuristic skyline on the other is unforgettable.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 410,
+            badge: 'Waterfront Promenade',
+            highlightQuote: 'Miles of uninterrupted paved coastal walkways facing Hong Kong. Renting a bike and riding past modern skyline reflections is marvelous.',
+            url: 'https://www.tripadvisor.com/Search?q=Shenzhen+Bay+Park'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 3100,
-        highlightQuote: 'World-class public park design. Super clean, wide pathways, amazing sunset skyline.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 48200,
+            badge: '日落橘子海打卡 (Coucher de Soleil Océan)',
+            highlightQuote: '傍晚的晚霞把海面染成金橙色，骑行看香港对岸山影，浪漫到骨子里！(Ciel doré au crépuscule face aux collines de Hong Kong, balade idyllique à vélo).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B7%B1%E5%9C%B3%E6%B9%BE%E5%85%AC%E5%9B%AD'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Parc Côtier', 'Vue Hong Kong', 'Piste Cyclable', 'Oiseaux Migrateurs']
@@ -257,31 +271,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Journée ensoleillée (10h00 - 16h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 58000,
-        badge: '深圳历史文化源头 (Racines Historiques de Shenzhen)',
-        highlightQuote: '六百年明清古城，青石板路古色古香，比市区更有历史沉淀感。(600 ans d’histoire Ming et Qing, un charme minéral préservé loin de la frénésie urbaine).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 15370,
+            badge: '深圳八景之首 (N°1 Patrimoine Historique)',
+            highlightQuote: '明清海防卫所古城保留完好，古城楼、将军第很有历史底蕴，离较场尾海滩很近。(Forteresse côtière Ming parfaitement conservée, manoirs d’amiraux et plage à proximité).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%A4%A7%E9%B9%8F%E6%89%80%E5%9F%8E'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 92000,
-        highlightQuote: '拍照太出片了！石板街两旁是文艺民宿和茶馆，挨着较场尾海滩。(Ruelles pleines de cachet, auberges poétiques et mer à deux pas).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 230,
+            badge: 'Historic Fortress',
+            highlightQuote: 'Surprising 600-year-old Ming dynasty naval garrison. Granite cobblestones, defensive stone gates, and fresh seafood restaurants.',
+            url: 'https://www.tripadvisor.com/Search?q=Dapeng+Ancient+Fortress+Shenzhen'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.5,
-        reviewCount: 880,
-        highlightQuote: 'Surprising historic treasure in modern Shenzhen. Well-preserved military fortress.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 21500,
+            badge: '山海古城慢时光 (Cité Ming Cotière)',
+            highlightQuote: '走在几百年的石板路上，老城门的青砖很有沧桑感，吃海鲜看落日十分惬意！(Flânerie sur les dalles séculaires, briques anciennes et fruits de mer au coucher du soleil).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%A4%A7%E9%B9%8F%E6%89%80%E5%9F%8E'
       }
-    ],
+],
     isTopRated: false,
     isHiddenGem: true,
     tags: ['Pépite Cachée', 'Forteresse Ming 1394', 'Histoire Navale', 'Bord de Mer']
@@ -316,32 +335,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi & Soirée festive (15h30 - 22h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 198000,
-        badge: '深圳潮流商场第一名 (N°1 Malls Tendance)',
-        highlightQuote: '大象雕塑必打卡！街区+商场的设计太好逛了，科技旗舰店和网红餐厅应有尽有。(L’éléphant géant est incontournable ! Le concept rue ouverte + centre commercial est parfait).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 41200,
+            badge: '南山潮流综合体榜首 (N°1 Shopping Nanshan)',
+            highlightQuote: '大象Bubble地标超可爱！街区里里外外都是大牌旗舰店，餐饮阵容极强，潮人云集。(L’éléphant Bubble monumental est culte, boutiques de premier plan et restaurants d’exception).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B7%B1%E5%9C%B3%E4%B8%87%E8%B1%A1%E5%A4%A9%E5%9C%B0'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 340000,
-        badge: '深圳最出片商圈 (Spot Photo Majeur)',
-        highlightQuote: '深圳最酷的潮流地标，晚上水广场喷泉亮灯超级出片！(Le repaire le plus cool de Shenzhen, fontaines illuminées spectaculaires).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 180,
+            badge: 'Modern Lifestyle Center',
+            highlightQuote: 'Stunning outdoor-indoor architectural complex featuring the iconic giant elephant sculpture by Florentijn Hofman. Fantastic dining.',
+            url: 'https://www.tripadvisor.com/Search?q=MixC+World+Shenzhen'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 1250,
-        highlightQuote: 'Ultra-modern urban complex. Great open air spaces, incredible dining options, and tech flagships.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 56800,
+            badge: '街头潮流打卡地 (Spot Avant-Garde)',
+            highlightQuote: '高街漫步太好逛了，各种限定快闪店和设计师品牌，拍照非常出片！(Balade sur la High Street rythmée par les pop-ups de créateurs et terrasses animées).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%87%E8%B1%A1%E5%A4%A9%E5%9C%B0'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Mall Futuriste', 'Bubblecoat Elephant', 'Tech Flagships', 'Terrasses & Bistros']
@@ -376,31 +399,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Vendredi, Samedi et Dimanche soir (19h00 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 45000,
-        badge: '硬核黑科技体验第一名 (N°1 Expériences High-Tech)',
-        highlightQuote: '太炸裂了！真机甲钢铁碰撞火花四溅，现场音效配合赛博朋克灯光，男孩子女孩子都看得热血沸腾！(Un show démentiel ! Des étincelles de métal en direct, sons et néons cyberpunk survoltés).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 3480,
+            badge: '硬核黑科技体验第一名 (N°1 Expérience Tech)',
+            highlightQuote: '太炸裂了！真机甲钢铁碰撞火花四溅，现场音效配合赛博朋克灯光，男孩子女孩子都看得热血沸腾！(Duels de blindages d’acier et étincelles en direct, sons et néons cyberpunk survoltés).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%9C%BA%E7%94%B2%E6%A0%BC%E6%96%97'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 78000,
-        highlightQuote: '硬核科技之城的专属浪漫，亲手操纵格斗机器人太好玩了！(L’esprit d’innovation pur de Shenzhen, piloter son propre robot de duel est jouissif).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 65,
+            badge: 'High-Tech Combat Entertainment',
+            highlightQuote: 'Real BattleBots fighting live inside bulletproof cages. Pure hardware innovation in the tech capital of China.',
+            url: 'https://www.tripadvisor.com/Search?q=Robot+Box+Shenzhen'
       },
       {
-        source: 'google',
-        sourceName: 'Google Maps',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 950,
-        highlightQuote: 'Real-life BattleBots in the hardware capital of the world. Mind-blowing entertainment.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 8900,
+            badge: '赛博朋克硬核浪漫 (Expérience Cyberpunk)',
+            highlightQuote: '亲手操纵百公斤格斗机器人碰撞，金属撕裂感超解压，硬核科技之城专属体验！(Piloter soi-même des robots blindés dans l’arène est une montée d’adrénaline jubilatoire).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%9C%BA%E7%94%B2%E6%A0%BC%E6%96%97'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: true,
     tags: ['Robot Box', 'Combats Méchas', 'Cyberpunk', 'High-Tech Shenzhen']
@@ -435,32 +463,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Déjeuner ou Dîner convivial (12h00 ou 18h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 260000,
-        badge: '必吃榜十年常胜将军 (Légende Incontournable 10 Ans)',
-        highlightQuote: '深圳的市菜担当！椰青水清甜回甘，文昌鸡皮爽肉滑，沙姜青桔蘸料是灵魂中的灵魂！(Le plat emblématique de Shenzhen ! Bouillon de coco pur et poulet divinement fondant).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 36940,
+            badge: '必吃榜十年常胜将军 (Légende Incontournable)',
+            highlightQuote: '深圳的市菜担当！椰青水清甜回甘，文昌鸡皮爽肉滑，沙姜青桔蘸料是灵魂中的灵魂！(Le plat signature de Shenzhen ! Bouillon de coco pur et poulet de Wenchang fondant).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B6%A6%E5%9B%AD%E5%9B%9B%E5%AD%A3%E6%A4%B0%E5%AD%90%E9%B8%A1'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 1400,
-        badge: 'Top Must-Try Local Specialty',
-        highlightQuote: 'Clean, healthy, and supremely delicious. The coconut broth and calamansi lime dip blew me away.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 210,
+            badge: 'Top Local Dining Choice',
+            highlightQuote: 'The definitive culinary emblem of modern Shenzhen. Freshly cracked coconuts table-side create a subtly sweet broth with tender chicken.',
+            url: 'https://www.tripadvisor.com/Search?q=Runyuan+Coconut+Chicken+Shenzhen'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 190000,
-        highlightQuote: '来深圳不吃润园四季等于白来，煲仔饭也是一绝，锅巴焦香酥脆。(Incontournable absolu à Shenzhen, le riz croustillant Baozai Fan est fabuleux).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 29300,
+            badge: '深圳必吃市菜 (Incontournable)',
+            highlightQuote: '先喝两碗汤，清润甜美！文昌鸡蘸上沙姜小米辣青桔酱油，好吃到跺脚！(Deux bols de bouillon doux d’abord, puis poulet trempé dans le piment-gingembre-calamansi).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B6%A6%E5%9B%AD%E5%9B%9B%E5%AD%A3'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Poulet à l’Eau de Coco', 'Spécialité de Shenzhen', 'Wenchang Chicken', 'Baozai Fan']
@@ -495,32 +527,36 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
     bestTime: 'Soirée illuminée (19h00 - 22h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 165000,
-        badge: '深圳科技街区第1名 (N°1 Rues Technologiques)',
-        highlightQuote: '夜晚的科技光影天幕太震撼了！仿佛置身赛博朋克未来之城，各种黑科技数码产品应有尽有！(Le ciel technologique illuminé la nuit est grandiose ! On se croirait dans une ville cyberpunk du futur, un paradis high-tech).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.6,
+            reviewCount: 21580,
+            badge: '深圳科技街区第1名 (N°1 Rue High-Tech)',
+            highlightQuote: '夜晚的科技光影天幕太震撼了！仿佛置身赛博朋克未来之城，各种黑科技数码产品应有尽有！(Le ciel LED nocturne est spectaculaire ! On se croirait dans une ville cyberpunk, un paradis high-tech).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%8D%8E%E5%BC%BA%E5%8C%97'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 280000,
-        badge: '赛博朋克天花板 (Sommet Cyberpunk)',
-        highlightQuote: '华强北不仅好买数码，晚上的光影科技天幕超级酷，拍照出片率100%！(L’arche lumineuse technologique le soir est ultra cool, photos spectaculaires garanties).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4,
+            reviewCount: 520,
+            badge: 'World Hardware Capital',
+            highlightQuote: 'The hardware capital of Earth. The illuminated technological canopy over the walkway at night is futuristic and surreal.',
+            url: 'https://www.tripadvisor.com/Search?q=Huaqiangbei+Shenzhen'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 2100,
-        highlightQuote: 'A surreal glimpse into the hardware capital of Earth. The illuminated technological canopy over the walkway at night is breathtaking.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 31400,
+            badge: '赛博朋克天幕 (Canopée Cyberpunk)',
+            highlightQuote: '华强北不仅好买数码，晚上的光影科技天幕超级酷，拍照出片率100%！(L’arche lumineuse technologique le soir est ultra cool, photos spectaculaires garanties).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%8E%E5%BC%BA%E5%8C%97%E7%A7%91%E6%8A%80%E5%A4%A9%E5%B9%95'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Toit Technologique LED', 'Huaqiangbei', 'Cyberpunk', 'Silicon Valley Hardware', 'Néons Nocturnes']
@@ -558,31 +594,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi jusqu’en soirée (16h30 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 94000,
-        badge: '潮汕民国骑楼第一街 (N°1 Rues Historiques Chaoshan)',
-        highlightQuote: '夜景太惊艳了！修旧如旧的骑楼建筑充满民国复古风情，小吃摊一路吃过去太幸福！(La nuit est féerique ! Les arcades restaurées respirent le charme républicain et les échoppes gourmandes régalent à chaque pas).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 25640,
+            badge: '潮汕民国骑楼第一街 (N°1 Arcades Chaoshan)',
+            highlightQuote: '夜景太惊艳了！修旧如旧的骑楼建筑充满民国复古风情，小吃摊一路吃过去太幸福！(La nuit est féerique ! Les arcades restaurées respirent le charme républicain et les échoppes régalent).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B1%95%E5%A4%B4%E5%B0%8F%E5%85%AC%E5%9B%AD'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 1100,
-        highlightQuote: 'Incredible early 20th-century colonial arcade architecture. Walking here feels like a movie set.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 260,
+            badge: 'Historic Arcade District',
+            highlightQuote: 'Incredible early 20th-century colonial arcade architecture radiating from the central pavilion like Paris. A living open-air museum.',
+            url: 'https://www.tripadvisor.com/Search?q=Xiaogongyuan+Shantou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 180000,
-        highlightQuote: '汕头必打卡地标，穿旗袍拍照复古胶片感十足。(Le spot incontournable de Shantou, atmosphère cinéma rétro absolue).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 38900,
+            badge: '复古胶片感地标 (Charme Rétro)',
+            highlightQuote: '中山纪念亭亮灯绝美，南生百货的红灯笼配上骑楼，拍出浓浓的民国电影质感。(Lampion rouge et pavillon central illuminés : une ambiance de film d’époque).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B1%95%E5%A4%B4%E5%B0%8F%E5%85%AC%E5%9B%AD'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Architecture Qilou', 'Plan Radial', 'Mémoire de la Diaspora', 'Échoppes Gourmandes']
@@ -617,32 +658,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Déjeuner (11h30 - 13h30) ou Dîner (17h30 - 20h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 310000,
-        badge: '黑珍珠一钻 & 必吃榜榜首 (N°1 Guide Black Pearl & Gourmand)',
-        highlightQuote: '牛肉下锅八秒即可，嫩到舌尖化开！沙茶酱咸甜浓郁，来汕头不吃这口等于白来！(8 secondes dans le bouillon et la viande fond sur la langue ! Le goût de Shacha est divin).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 32870,
+            badge: '黑珍珠一钻 & 必吃榜 (N°1 Black Pearl & Gourmand)',
+            highlightQuote: '牛肉下锅八秒即可，嫩到舌尖化开！沙茶酱咸甜浓郁，来汕头不吃这口等于白来！(8 secondes dans le bouillon et la viande fond sur la langue ! Le goût de Shacha est divin).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%85%AB%E5%90%88%E9%87%8C%E6%B5%B7%E8%AE%B0%E6%B1%95%E5%A4%B4'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 2400,
-        badge: 'Foodie Hall of Fame',
-        highlightQuote: 'Incredible freshness. You taste the true pure flavor of beef like nowhere else in the world.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 340,
+            badge: 'Legendary Beef Dining',
+            highlightQuote: 'Incredible freshness. Sliced table-side from meat slaughtered only hours prior, blanched in clear bone broth with sweet savory shacha dip.',
+            url: 'https://www.tripadvisor.com/Search?q=Baheli+Haiji+Shantou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 140000,
-        highlightQuote: '非遗手打牛肉丸Q弹爆汁，潮汕美食灵魂所在。(Les boulettes pétries à la main éclatent de jus savoureux, l’âme culinaire de Chaoshan).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 42100,
+            badge: '潮汕牛肉火锅天花板 (Sommet de la Fondue)',
+            highlightQuote: '吊龙和匙柄嫩滑多汁，手打牛肉丸Q弹得能当乒乓球打，灵魂沙茶酱无可替代！(Filet marbré fondant et boulettes sautillantes qui rebondissent comme des balles de tennis).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E6%B1%95%E7%89%9B%E8%82%89%E7%81%AB%E9%94%85'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Gastronomie Chaoshan', 'Fondue de Bœuf', 'Sauce Shacha', 'Légende Culinaire']
@@ -677,31 +722,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Journée ensoleillée de mai à octobre pour la clarté des eaux marines',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.7,
-        reviewCount: 78000,
-        badge: '广东最美海岛之一 (Une des Plus Belles Îles du Sud)',
-        highlightQuote: '沿海环岛公路美得心醉，青澳湾水清沙幼，吃现捞海鲜吹海风，无敌享受！(La route côtière est enchanteresse, sable fin et fruits de mer ultra-frais).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 21390,
+            badge: '广东最美海岛 (Plus Belle Île Côtière)',
+            highlightQuote: '沿海环岛公路美得心醉，青澳湾水清沙幼，吃现捞海鲜吹海风，无敌享受！(La route côtière est enchanteresse, sable fin et fruits de mer ultra-frais).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%8D%97%E6%BE%B3%E5%B2%9B'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 160000,
-        highlightQuote: '北回归线地标拍照打卡，环岛自驾看风车群绝美！(Vue sublime sur les parcs d’éoliennes et l’arche du Tropique du Cancer).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 190,
+            badge: 'Coastal Island Paradise',
+            highlightQuote: 'Stunning island connected by a majestic 11-km sea bridge. Crescent-shaped beaches, scenic lighthouses, and delicious fresh oysters.',
+            url: 'https://www.tripadvisor.com/Search?q=Nanao+Island+Shantou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.5,
-        reviewCount: 760,
-        highlightQuote: 'A refreshing island getaway with lovely sea views, lighthouses, and delicious seafood.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 47800,
+            badge: '海岛自驾天花板 (Paradis du Road Trip)',
+            highlightQuote: '三囱崖灯塔红白相间像草莓冰淇淋，北回归线自然之门拍照打卡，海水蓝得像果冻！(Le phare bicolore et la Porte du Tropique du Cancer se dressent au-dessus d’eaux cristallines).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%97%E6%BE%B3%E5%B2%9B'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Île Maritime', 'Tropique du Cancer', 'Plage Qing’ao', 'Parcs à Huîtres']
@@ -736,31 +786,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Après-midi ou soirée (14h00 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 142000,
-        badge: '粤东商业天花板 (Sommet Commercial de l’Est)',
-        highlightQuote: '汕头最大最繁华的商场，冰场很大，餐饮区几乎涵盖了所有潮汕本土和全国大牌！(Le plus grand mall de Shantou, la patinoire est impressionnante et l’offre gastronomique est gigantesque).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 18760,
+            badge: '粤东商业天花板 (Sommet Commercial de l’Est)',
+            highlightQuote: '汕头最大最繁华的商场，冰场很大，餐饮区几乎涵盖了所有潮汕本土和全国大牌！(Le plus grand mall de Shantou avec patinoire olympique et offre gastronomique géante).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%B1%95%E5%A4%B4%E4%B8%87%E8%B1%A1%E5%9F%8E'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 175000,
-        highlightQuote: '南洋风情街拍照超美，外广场的喷泉夜景很有大都市气息。(L’allée Nanyang est très photogénique, les fontaines extérieures donnent un cachet métropolitain).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 110,
+            badge: 'Modern Lifestyle Mall',
+            highlightQuote: 'Impressive modern architecture, high-end shopping, ice-skating rink, and a beautifully themed Nanyang heritage food street.',
+            url: 'https://www.tripadvisor.com/Search?q=The+MixC+Shantou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 680,
-        highlightQuote: 'Modern, sparkling clean, impressive selection of restaurants and high-end stores.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 19300,
+            badge: '南洋风情街打卡 (Ambiance Nanyang)',
+            highlightQuote: '负一楼的南洋风情街拍照超美，各种潮汕传统小吃应有尽有，夏天逛街叹空调首选！(L’allée Nanyang au sous-sol recrée l’atmosphère des comptoirs maritimes du Sud-Est).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%B1%95%E5%A4%B4%E4%B8%87%E8%B1%A1%E5%9F%8E'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Mall Moderne', 'Patinoire Olympique', 'Nanyang Street', 'Shopping de Prestige']
@@ -795,32 +850,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Dîner & Repas de minuit (18h00 - 01h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 185000,
-        badge: '黑珍珠一钻 & 米其林入选 (Black Pearl & Michelin)',
-        highlightQuote: '百米档口琳琅满目太震撼了！生腌膏蟹绝了，蟹膏满满像果冻冰淇淋一样滑嫩鲜甜！(Un comptoir de 100 mètres spectaculaire ! Le crabe cru mariné est un pur nectar aux allures de glace crémeuse).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 24350,
+            badge: '米其林入选 & 黑珍珠一钻 (Michelin & Black Pearl)',
+            highlightQuote: '百米档口琳琅满目太震撼了！生腌膏蟹绝了，蟹膏满满像果冻冰淇淋一样滑嫩鲜甜！(Comptoir géant de fruits de mer ! Le crabe cru mariné est un pur nectar aux allures de glace crémeuse).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E5%AF%8C%E8%8B%91%E9%A5%AE%E9%A3%9F'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 1120,
-        badge: 'Michelin Selected Chaoshan Table',
-        highlightQuote: 'The culinary spectacle of a lifetime. The sheer variety and freshness of seafood is unmatched anywhere on Earth.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 280,
+            badge: 'Michelin Selected Chaoshan Table',
+            highlightQuote: 'The culinary spectacle of a lifetime. A 30-meter open buffet of raw marinated seafood, steamed fish, and midnight rice porridge.',
+            url: 'https://www.tripadvisor.com/Search?q=Fuyuan+Seafood+Shantou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 220000,
-        highlightQuote: '舌尖上的中国同款，生腌控的终极朝圣地！隆江猪脚和鱼饭也是一绝。(Le pèlerinage ultime des amoureux de fruits de mer et de cuisine Teochew).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 35400,
+            badge: '生腌界天花板 (Le Roi du Cru Mariné)',
+            highlightQuote: '舌尖上的中国同款，生腌控的终极朝圣地！生腌皮皮虾和隆江猪脚也惊为天人！(Pèlerinage ultime des amoureux de fruits de mer et de cuisine Teochew).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%AF%8C%E8%8B%91%E9%A5%AE%E9%A3%9F'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Michelin Selected', 'Crabes Cru Marinés', 'Da Pai Dang', 'Fruits de Mer Chaoshan']
@@ -855,33 +914,36 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Matinée ou après-midi (09h00 - 16h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 62000,
-        badge: '岭南第一侨宅 & 澄海名胜榜首 (N°1 Patrimoine Lingnan)',
-        highlightQuote: '潮汕驷马拖车建筑巅峰之作！中西合璧的506间房，百年前进口的西洋花砖和金漆木雕至今绚丽夺目，文化底蕴极其深厚！(Le sommet absolu de l’architecture Chaoshan ! 506 pièces métissant Orient et Occident, faïences centenaires et boiseries dorées sublimes).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 9820,
+            badge: '岭南第一侨宅 & 澄海名胜榜首 (N°1 Patrimoine Lingnan)',
+            highlightQuote: '潮汕驷马拖车建筑巅峰之作！中西合璧的506间房，百年前进口的西洋花砖和金漆木雕至今绚丽夺目，文化底蕴极其深厚！(Le sommet de l’architecture Chaoshan ! 506 pièces métissant Orient et Occident, faïences centenaires et boiseries dorées).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E9%99%88%E6%85%88%E9%BB%89%E6%95%85%E5%B1%85'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 920,
-        badge: 'Top Cultural Heritage Site',
-        highlightQuote: 'A breathtaking colonial-meets-Lingnan manor. The sheer scale, preserved Italian tiles, and intricate courtyards make it a must-see in Guangdong.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 140,
+            badge: 'Top Cultural Heritage Site',
+            highlightQuote: 'A breathtaking colonial-meets-Lingnan manor. The sheer scale, preserved Italian tiles, and intricate courtyards make it a must-see in Guangdong.',
+            url: 'https://www.tripadvisor.com/Search?q=Chen+Cihong+Former+Residence+Shantou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 115000,
-        badge: '复古出片天花板 (Sommet Rétro & Photogénique)',
-        highlightQuote: '中西合璧的骑楼回廊光影太绝了！民国时期的进口彩色瓷砖历经百年依然艳丽如新，漫步庭院随手一拍都是复古大片。(Les arcades et couloirs coloniaux sont sublimes sous la lumière ! Les faïences sont éclatantes de beauté).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 16500,
+            badge: '复古出片天花板 (Sommet Rétro & Photogénique)',
+            highlightQuote: '中西合璧的骑楼回廊光影太绝了！民国时期的进口彩色瓷砖历经百年依然艳丽如新，漫步庭院随手一拍都是复古大片。(Les arcades coloniales sont sublimes sous la lumière, les faïences sont éclatantes).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E9%99%88%E6%85%88%E9%BB%89%E6%95%85%E5%B1%85'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Manoir Historique', '岭南第一侨宅', 'Quatre Chevaux Tirant un Chariot', 'Faïences Importées', 'Chenghai', 'Diaspora Teochew']
@@ -919,32 +981,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi & Soirée illuminée (16h30 - 20h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 112000,
-        badge: '中国四大古桥之一 (Un des 4 Grands Ponts de Chine)',
-        highlightQuote: '十八梭船廿四洲，一里长桥一里市！下午五点半收船过江太神奇了，夜景灯光秀美轮美奂。(18 bateaux et 24 îles de pierre ! L’ouverture des bateaux à 17h30 est magique, et le spectacle de lumières est féerique).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 27940,
+            badge: '中国四大古桥之一 (Top 4 Ponts Anciens de Chine)',
+            highlightQuote: '十八梭船廿四洲！每天下午五点半过河拆桥很震撼，晚上的古城灯光秀美轮美奂！(18 bateaux en bois détachés chaque jour à 17h30, spectacle son et lumière nocturne féerique).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%B7%9E%E5%B9%BF%E6%B5%8E%E6%A1%A5'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 1850,
-        badge: 'Top Cultural Landmark Chaozhou',
-        highlightQuote: 'One of the most extraordinary ancient bridges in the world. Walking across the floating boats was magical.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 380,
+            badge: 'Ancient Engineering Wonder',
+            highlightQuote: 'Song Dynasty pontoon bridge featuring 24 stone piers with ornate wooden pagodas, connected by 18 floating wooden boats dismantled daily for river traffic.',
+            url: 'https://www.tripadvisor.com/Search?q=Guangji+Bridge+Chaozhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 88000,
-        highlightQuote: '潮州必游，宋代桥梁智慧的巅峰杰作。(Chef-d’œuvre incontournable de l’ingénierie Song).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 36200,
+            badge: '潮州必打卡地标 (Incontournable Chaozhou)',
+            highlightQuote: '走在宋代石墩上吹着韩江的风，晚上站在广济门城楼看灯光秀，历史感扑面而来。(Sentir la brise du fleuve Han sur les piliers des Song et contempler les lumières nocturnes).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%BF%E6%B5%8E%E6%A1%A5'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Pont Flottant Song', '18 Bateaux de Bois', 'Spectacle Son & Lumière', 'Rivière Han']
@@ -979,31 +1045,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Fin d’après-midi et soirée (16h00 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 135000,
-        badge: '国家级旅游休闲街区 (Quartier Historique National)',
-        highlightQuote: '二十二座明清牌坊气势恢宏！一边逛非遗手作，一边叹工夫茶，满满的古城烟火气。(22 portiques grandioses, du thé Gongfu et de l’artisanat d’art dans une atmosphère médiévale vivante).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 23810,
+            badge: '天下第一牌坊街 (N°1 Rue des Portiques)',
+            highlightQuote: '22座明清石牌坊气势恢宏，一路走一路吃潮州三宝、鸭母捻和牛肉粿条，茶香四溢！(22 arches de pierre impériales grandioses, friandises traditionnelles et thés parfumés à chaque pas).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%B7%9E%E7%89%8C%E5%9D%8A%E8%A1%97'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 1450,
-        highlightQuote: 'Lively, beautifully restored historical street. The stone archways are magnificent works of art.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 290,
+            badge: 'Historic Stone Archway Street',
+            highlightQuote: 'Lined with 22 magnificent monumental granite arches spanning the street, filled with traditional Gongfu teahouses, woodcarvers, and sweet shops.',
+            url: 'https://www.tripadvisor.com/Search?q=Paifang+Street+Chaozhou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 210000,
-        highlightQuote: '潮州必走老街，载阳茶馆听潮剧喝工夫茶，氛围感绝绝子。(Le passage obligé, opéra Teochew et thé au pavillon Zaiyang).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 29400,
+            badge: '古城逛吃指南 (Guide Gourmand Flânerie)',
+            highlightQuote: '牌坊街的骑楼非常古朴，一定要找家二楼茶馆坐下叹凤凰单丛茶，俯瞰青石板路太安逸了！(Prendre de la hauteur dans un salon de thé au 2e étage pour admirer les arches anciennes).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E5%B7%9E%E7%89%8C%E5%9D%8A%E8%A1%97'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['22 Portiques de Granit', 'Thé Gongfu', 'Broderie Teochew', 'Omelette aux Huîtres']
@@ -1038,31 +1109,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Matinée paisible (08h30 - 11h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 68000,
-        badge: '粤东第一古刹 (Premier Temple Ancien de l’Est)',
-        highlightQuote: '唐代开元年间的千年古刹，香火鼎盛，红墙古树特别清净安宁。(Un sanctuaire millénaire Tang d’une sérénité absolue sous les vieux arbres sacrés).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 14260,
+            badge: '千年古刹第一丛林 (Monastère Millénaire)',
+            highlightQuote: '唐代开元年间至今香火鼎盛，红墙古木特别清幽，宋代石经幢和千佛塔很有历史沉淀。(Fondé sous les Tang en 738, sanctuaire paisible sous les arbres séculaires et stèles Song).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%B7%9E%E5%BC%80%E5%85%83%E5%AF%BA'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.6,
-        reviewCount: 920,
-        highlightQuote: 'Tranquil Tang dynasty Buddhist temple right in the heart of town. Free entry and lovely architecture.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 210,
+            badge: 'Tang Dynasty Buddhist Sanctuary',
+            highlightQuote: 'Peaceful Buddhist monastery founded in 738 AD. Massive ancient Bodhi trees, ornate roof ceramic dragons, and serene incense-scented courtyards.',
+            url: 'https://www.tripadvisor.com/Search?q=Kaiyuan+Temple+Chaozhou'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 45000,
-        highlightQuote: '建筑精美，宋代大铜钟与唐代经幢历史厚重。(Architecture exquise et vestiges Tang et Song empreints de solennité).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 18900,
+            badge: '红墙禅意打卡 (Sérénité Murs Rouges)',
+            highlightQuote: '红墙灰瓦与古老菩提树互相掩映，走在庭院里听梵音阵阵，心瞬间安静下来。(Les murs pourpres sous les branches des arbres Bodhi créent un havre de paix méditatif).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E5%B7%9E%E5%BC%80%E5%85%83%E5%AF%BA'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Sanctuaire Tang 738', 'Cloche de Bronze Song', 'Sculpture sur Bois Doré', 'Bouddhisme Zen']
@@ -1097,31 +1173,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Après-midi paisible (14h00 - 17h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 42000,
-        badge: '非遗文化活化石 (Fossile Vivant UNESCO)',
-        highlightQuote: '凤凰单丛鸭屎香香气扑鼻，听着古琴慢悠悠品三道茶，这才是潮州最地道的生活方式！(Le parfum d’orchidée du Dancong est enivrant, déguster trois tasses au son du Guqin est l’essence de Chaozhou).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 8730,
+            badge: '非遗工夫茶体验榜 (Cérémonie du Thé Non-Matériel)',
+            highlightQuote: '潮州人的魂就在这一杯单丛茶里！关公巡城、韩信点兵，二十一式冲泡技艺大开眼界！(L’âme de Chaozhou réside dans cette tasse de thé ! La gestuelle traditionnelle est fascinante).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%B7%9E%E5%B7%A5%E5%A4%AB%E8%8C%B6'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 780,
-        highlightQuote: 'A mesmerizing tea ceremony. The complexity of flavors in the Dancong oolong was a revelation.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 160,
+            badge: 'UNESCO Cultural Tea Experience',
+            highlightQuote: 'The birthplace of Chinese Gongfu tea culture. Tasting aged Phoenix Dancong oolongs brewed with precise ritual ceremony is unforgettable.',
+            url: 'https://www.tripadvisor.com/Search?q=Chaozhou+Gongfu+Tea'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 86000,
-        highlightQuote: '来潮州一定要体验载阳茶馆的工夫茶，配上潮式茶点，整个人都静下来了。(L’expérience ultime de thé à Chaozhou, sérénité garantie).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 22300,
+            badge: '凤凰单丛天花板 (Sommet de l’Oolong)',
+            highlightQuote: '鸭屎香、蜜兰香香气馥郁，坐在老茶馆里听潮剧叹工夫茶，这才是地道的潮州慢生活！(Notes d’orchidée et de miel, déguster le thé en écoutant l’opéra au salon ancien).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E5%B7%9E%E5%B7%A5%E5%A4%AB%E8%8C%B6'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Thé UNESCO', 'Fenghuang Dancong', 'Art de Vivre', '21 Étapes Sacrées']
@@ -1156,32 +1237,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Soirée (19h30 - 21h30)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 38000,
-        badge: '非遗戏曲活化石 (Fossile Scénique UNESCO)',
-        highlightQuote: '唱腔婉转优美，二弦一响整个人都被吸引进去了，配上红木八仙桌和工夫茶，太有古意了！(Le chant est d’une grâce infinie, la viole Erxian vous transporte hors du temps dans le salon de thé).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 4920,
+            badge: '非遗文化戏曲体验 (Opéra Patrimoine UNESCO)',
+            highlightQuote: '坐在古色古香的茶馆里看潮剧，水袖翻飞腔调悠扬，配上一壶单丛和潮州细点，惬意至极！(Au salon ancien avec manches d’eau en soie et mélodies douces, thé et mignardises).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%89%A7%E6%BC%94%E5%87%BA'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 65000,
-        badge: '潮州必体验非遗 (Expérience Incontournable)',
-        highlightQuote: '水袖翻飞美不胜收！近距离看戏曲演员的身段和刺绣戏服，太震撼了。(Le jeu des manches d’eau est sublime, les broderies des costumes sont un choc visuel).'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 75,
+            badge: 'Intangible Cultural Heritage Show',
+            highlightQuote: 'Hypnotic traditional Teochew musical theater performed in silk costumes along the Han River. A rich and lyrical auditory tradition.',
+            url: 'https://www.tripadvisor.com/Search?q=Teochew+Opera+Chaozhou'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 520,
-        highlightQuote: 'Enchanting musical performance. Even without understanding the dialect, the emotion and visuals are extraordinary.'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 11200,
+            badge: '载阳茶馆听戏 (Spectacle Théâtre Vivant)',
+            highlightQuote: '喝茶看潮剧是潮州专属浪漫，戏服华丽唱腔婉转，老戏骨一颦一笑皆是功夫！(Tenues de broderie chatoyantes et virtuosité des comédiens sur scène).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E5%89%A7%E8%BD%BD%E9%98%B3%E8%8C%B6%E9%A6%86'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Opéra UNESCO', 'Costumes de Soie', 'Erxian Fiddle', 'Spectacle Vivant']
@@ -1216,32 +1301,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Déjeuner ou Dîner traditionnel (11h45 ou 18h00)',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 92000,
-        badge: '潮州卤味排行榜榜首 (N°1 Rôtisserie & Braisage)',
-        highlightQuote: '无鹅不成席！鹅肉卤得透心香，鹅肝更是入口即化，比法国鹅肝还绝，蒜泥白醋蘸汁解腻提鲜绝配！(La viande est imprégnée d’arômes et le foie d’oie fond sur la langue, un pur chef-d’œuvre avec le vinaigre d’ail).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 16840,
+            badge: '潮州非遗卤味榜首 (N°1 Oie Braisée)',
+            highlightQuote: '无鹅不成宴！百年卤水煨出的狮头鹅肉香四溢，粉肝滑嫩像冰淇淋，蘸蒜泥白醋绝配！(L’oie à tête de lion mijotée dans son bouillon séculaire, foie fondant et trempette ail-vinaigre).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%BD%AE%E5%B7%9E%E5%8D%A4%E9%B9%85'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.8,
-        reviewCount: 960,
-        badge: 'Foodie Pilgrimage Top Pick',
-        highlightQuote: 'Mind-blowing flavor. The braised goose liver and herbal spice broth are worth traveling to China for.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 185,
+            badge: 'Epicurean Masterpiece',
+            highlightQuote: 'The pride of Teochew culinary heritage. The colossal lion-head goose is slow-braised in a decades-old herbal master stock.',
+            url: 'https://www.tripadvisor.com/Search?q=Braised+Goose+Chaozhou'
       },
       {
-        source: 'xiaohongshu',
-        sourceName: 'Xiaohongshu (小红书)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 130000,
-        highlightQuote: '在古厝四合院里吃卤鹅，配一壶凤凰单丛茶，这才是神仙过的日子！(Déguster l’oie braisée dans une cour traditionnelle avec un thé Dancong : la vie des dieux !).'
+            source: 'xiaohongshu',
+            sourceName: 'Xiaohongshu (小红书)',
+            sourceType: 'chinese',
+            score: 4.9,
+            reviewCount: 25600,
+            badge: '潮汕卤味之光 (Sommet Gastronomique)',
+            highlightQuote: '鹅肝入口即化，鹅掌鹅翼胶质满满，淋上秘制老卤汁拌饭，香到灵魂出窍！(Le foie d’oie fond sur le palais, la sauce parfumée nappe délicatement le riz chaud).',
+            url: 'https://www.xiaohongshu.com/search_result?keyword=%E6%BD%AE%E5%B7%9E%E5%8D%A4%E9%B9%85'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Oie à Tête de Lion', 'Haute Gastronomie Teochew', 'Foie d’Oie Braisé', 'Cour Ancestrale']
@@ -1276,33 +1365,36 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
     bestTime: 'Enregistrement dès 14h / Idéal pour séjours touristiques et d’affaires à Chaozhou',
     scores: [
       {
-        source: 'dianping',
-        sourceName: 'Dianping (大众点评)',
-        sourceType: 'chinese',
-        score: 4.8,
-        reviewCount: 38000,
-        badge: '潮州品质商务热门酒店 (Hôtel Prisé Qualité & Confort)',
-        highlightQuote: '瓷兴路位置极佳，就在财富中心雄英大厦，房间设施非常新而且智能化，桔子特有的香气很治愈，早餐牛肉粿条很好吃！(Emplacement idéal sur Cixing Road dans l’immeuble Xiongying, équipements neufs et intelligents, délicieux petit-déjeuner).'
+            source: 'dianping',
+            sourceName: 'Dianping (大众点评)',
+            sourceType: 'chinese',
+            score: 4.7,
+            reviewCount: 5120,
+            badge: '潮州品质商务热门酒店 (Hôtel Prisé Qualité & Confort)',
+            highlightQuote: '瓷兴路位置极佳，就在财富中心雄英大厦，房间设施非常新而且智能化，桔子特有的香气很治愈，早餐牛肉粿条很好吃！(Emplacement idéal sur Cixing Road dans l’immeuble Xiongying, équipements neufs et intelligents, délicieux petit-déjeuner).',
+            url: 'https://www.dianping.com/search/keyword/0/0_%E6%A1%94%E5%AD%90%E9%85%92%E5%BA%97%E6%BD%AE%E5%B7%9E%E7%93%B7%E5%85%B4%E8%B7%AF'
       },
       {
-        source: 'tripadvisor',
-        sourceName: 'Tripadvisor',
-        sourceType: 'western',
-        score: 4.7,
-        reviewCount: 610,
-        badge: 'Top Modern Comfort Choice',
-        highlightQuote: 'Clean, modern, and super comfortable. Great staff, delicious local breakfast and high-tech robot service.'
+            source: 'tripadvisor',
+            sourceName: 'Tripadvisor',
+            sourceType: 'western',
+            score: 4.5,
+            reviewCount: 95,
+            badge: 'Top Modern Comfort Choice',
+            highlightQuote: 'Clean, modern, and super comfortable. Great staff, delicious local breakfast and high-tech robot service.',
+            url: 'https://www.tripadvisor.com/Search?q=Orange+Hotel+Chaozhou+Fortune+Center'
       },
       {
-        source: 'ctrip',
-        sourceName: 'Ctrip (携程)',
-        sourceType: 'chinese',
-        score: 4.9,
-        reviewCount: 68000,
-        badge: '金牌品质口碑酒店 (Qualité d’Hébergement Recommandée)',
-        highlightQuote: '入住体验满分，前台热情，停车方便，去高铁站和古城都很顺路，值得强烈推荐！(Expérience de séjour parfaite, service chaleureux, accès rapide à la gare et à la vieille ville).'
+            source: 'ctrip',
+            sourceName: 'Ctrip (携程)',
+            sourceType: 'chinese',
+            score: 4.8,
+            reviewCount: 7450,
+            badge: '金牌品质口碑酒店 (Qualité d’Hébergement Recommandée)',
+            highlightQuote: '入住体验满分，前台热情，停车方便，去高铁站和古城都很顺路，值得强烈推荐！(Expérience de séjour parfaite, service chaleureux, accès rapide à la gare et à la vieille ville).',
+            url: 'https://you.ctrip.com/hotels/chaozhou603/75945145.html'
       }
-    ],
+],
     isTopRated: true,
     isHiddenGem: false,
     tags: ['Hôtel', 'Route Cixing', 'Centre de la Fortune', 'Chao’an', 'Design Moderne']

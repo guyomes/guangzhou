@@ -1,6 +1,7 @@
 import React from 'react';
 import { Attraction } from '../types/travel';
-import { Bookmark, BookmarkCheck, Navigation, Star, Heart, MapPin } from 'lucide-react';
+import { Bookmark, BookmarkCheck, Navigation, Star, Heart, MapPin, ExternalLink } from 'lucide-react';
+import { getReviewSourceUrl } from '../utils/reviewUtils';
 
 interface AttractionCardProps {
   attraction: Attraction;
@@ -106,33 +107,55 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
 
           {/* Comparative Review Scores Section */}
           <div className="mt-3.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              <span>Comparatif des Avis :</span>
-              <span className="text-[10px] text-slate-600 dark:text-slate-300">Chine vs International</span>
+            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <span>Avis Réels Vérifiés :</span>
+              <span className="text-[10px] text-slate-500">Chine vs International</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               {/* Dianping Chinese Review */}
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <span className="text-amber-500 font-bold">★ {dianpingScore?.score || '4.8'}</span>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-300">Dianping (点评)</span>
-                </div>
-                <span className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">
-                  {(dianpingScore?.reviewCount || 50000).toLocaleString('fr-FR')} avis locaux
-                </span>
-              </div>
+              {dianpingScore ? (
+                <a
+                  href={getReviewSourceUrl(dianpingScore, attraction)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex flex-col group/dp hover:text-rose-600 transition-colors"
+                  title="Consulter la page officielle Dianping (大众点评)"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-500 font-bold">★ {dianpingScore.score.toFixed(1)}</span>
+                    <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-500 group-hover/dp:text-rose-600 font-medium">
+                      Dianping <ExternalLink className="w-2.5 h-2.5" />
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-600 dark:text-slate-400 font-mono">
+                    {dianpingScore.reviewCount.toLocaleString('fr-FR')} avis
+                  </span>
+                </a>
+              ) : null}
 
-              {/* Western Review */}
-              <div className="flex flex-col border-l border-slate-200 dark:border-slate-700 pl-2">
-                <div className="flex items-center gap-1">
-                  <span className="text-emerald-500 font-bold">★ {westernScore?.score || '4.6'}</span>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-300">Tripadvisor</span>
-                </div>
-                <span className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">
-                  {(westernScore?.reviewCount || 2400).toLocaleString('fr-FR')} avis touristes
-                </span>
-              </div>
+              {/* Western Review (Tripadvisor) */}
+              {westernScore ? (
+                <a
+                  href={getReviewSourceUrl(westernScore, attraction)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex flex-col border-l border-slate-200 dark:border-slate-700 pl-2 group/ta hover:text-emerald-600 transition-colors"
+                  title="Consulter la page officielle Tripadvisor"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-emerald-500 font-bold">★ {westernScore.score.toFixed(1)}</span>
+                    <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-500 group-hover/ta:text-emerald-600 font-medium">
+                      {westernScore.source === 'google' ? 'Google' : 'Tripadvisor'} <ExternalLink className="w-2.5 h-2.5" />
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-600 dark:text-slate-400 font-mono">
+                    {westernScore.reviewCount.toLocaleString('fr-FR')} avis
+                  </span>
+                </a>
+              ) : null}
             </div>
           </div>
         </div>

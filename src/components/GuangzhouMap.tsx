@@ -512,14 +512,18 @@ export const GuangzhouMap: React.FC<GuangzhouMapProps> = ({
 
               <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-600 dark:text-slate-300">
                 <span className="font-semibold text-amber-600">
-                  ★ {activeAttraction.scores[0]?.score}
+                  ★ {activeAttraction.scores[0]?.score?.toFixed(1)}
                 </span>
-                <span>(Dianping)</span>
-                <span>·</span>
-                <span className="font-semibold text-emerald-600">
-                  ★ {activeAttraction.scores[1]?.score || 4.7}
-                </span>
-                <span>(Tripadvisor)</span>
+                <span>({activeAttraction.scores[0]?.sourceName?.split(' ')[0] || 'Dianping'})</span>
+                {activeAttraction.scores[1] && (
+                  <>
+                    <span>·</span>
+                    <span className="font-semibold text-emerald-600">
+                      ★ {activeAttraction.scores[1].score?.toFixed(1)}
+                    </span>
+                    <span>({activeAttraction.scores[1].sourceName?.split(' ')[0] || 'Tripadvisor'})</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
