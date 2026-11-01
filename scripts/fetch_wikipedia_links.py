@@ -11,21 +11,26 @@ The script accepts either:
 
 For each place the script resolves:
 
-  * the French Wikipedia article (exact title first, then the first search
-    result, then an English -> Wikidata fallback), and
+  * the French Wikipedia article (exact title first, then a search scoped to
+    the place's city, then an English -> Wikidata fallback), and
   * the Chinese Wikipedia article through Wikidata's interlanguage links,
     rendered through the Google Translate proxy with ``_x_tr_sl=auto`` and
     ``_x_tr_tl=fr``.
 
 If no Chinese sitelink exists on Wikidata, the script falls back to a
-full-text search on zh.wikipedia.org.
+full-text search on zh.wikipedia.org, again scoped to the city.
 
 The name candidates come from the per-language fields of the data file
 (``nameFr`` for French, ``nameEn`` for English, ``nameCn`` for Chinese). An
 existing ``wikipediaUrl`` field is used as a hint and canonicalised through
-the API, so ``…/wiki/Shamian`` resolves to ``…/wiki/Île_de_Shamian`` and
-``…/wiki/Tour_de_Canton`` to
-``…/wiki/Tour_de_télévision_et_de_tourisme_de_Canton``.
+the API; if the hinted URL points to a missing page (the "Wikipédia ne possède
+pas d'article avec ce nom" screen), it is treated as not found and the search
+paths kick in.
+
+Searches are scoped to the place's city (see ``CITY_NAMES`` below) so that
+generic names do not resolve to an article about another city. The city is
+read from the ``cityId`` field and can be overridden per place with
+``cityFr`` / ``cityEn`` / ``cityCn``.
 
 Usage
 -----
@@ -52,7 +57,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-USER_AGENT = "place-wikipedia-links/1.0 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.1 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
@@ -68,10 +73,42 @@ ZH_TRANSLATE_QUERY = "?_x_tr_sl=auto&_x_tr_tl=fr"
 
 JS_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}
 
+# Localised city names used to disambiguate searches. Only the names for the
+# target wiki's language are appended to a query. The first name is the
+# preferred one; the others are tried in order as fallbacks.
+CITY_NAMES: dict[str, dict[str, list[str]]] = {
+    "guangzhou": {
+        "fr": ["Canton", "Guangzhou"],
+        "en": ["Guangzhou", "Canton"],
+        "zh": ["广州", "广州市"],
+    },
+    "shenzhen": {
+        "fr": ["Shenzhen"],
+        "en": ["Shenzhen"],
+        "zh": ["深圳", "深圳市"],
+    },
+    "shantou": {
+        "fr": ["Shantou", "Swatow"],
+        "en": ["Shantou", "Swatow"],
+        "zh": ["汕头", "汕头市"],
+    },
+    "chaozhou": {
+        "fr": ["Chaozhou"],
+        "en": ["Chaozhou"],
+        "zh": ["潮州", "潮州市"],
+    },
+}
+
 _PAUSE = DEFAULT_PAUSE
+_VERBOSE = False
 
 _QID_CACHE: dict[tuple[str, str], str | None] = {}
 _SITELINK_CACHE: dict[tuple[str, str], str | None] = {}
+
+
+def _log(message: str) -> None:
+    if _VERBOSE:
+        print(f"  · {message}", file=sys.stderr)
 
 
 # ---------------------------------------------------------------------------
@@ -108,10 +145,19 @@ def api_get(api_url: str, params: dict[str, Any]) -> dict[str, Any]:
 # Wikipedia / Wikidata lookups
 # ---------------------------------------------------------------------------
 
+def _is_missing_page(page: dict[str, Any]) -> bool:
+    """True for the "Wikipédia ne possède pas d'article avec ce nom" case."""
+    if "missing" in page or "invalid" in page:
+        return True
+    if page.get("pageid") is None:
+        return True
+    return False
+
+
 def exact_title(api_url: str, term: str) -> str | None:
     data = api_get(api_url, {"action": "query", "titles": term, "redirects": 1})
     for page in data.get("query", {}).get("pages", []):
-        if "missing" in page:
+        if _is_missing_page(page):
             continue
         title = page.get("title")
         if title:
@@ -136,24 +182,54 @@ def search_title(api_url: str, term: str) -> str | None:
     return None
 
 
-def lookup_title(api_url: str, candidates: list[str]) -> str | None:
-    for term in candidates:
-        title = exact_title(api_url, term)
-        if title:
-            return title
-    for term in candidates:
+def search_title_with_city(
+    api_url: str,
+    terms: list[str],
+    city_terms: list[str],
+) -> str | None:
+    """Search for ``<name> <city>`` for every combination before going bare."""
+    for term in terms:
+        for city in city_terms:
+            query = f"{term} {city}"
+            title = search_title(api_url, query)
+            if title:
+                _log(f"search hit for '{query}': {title}")
+                return title
+    for term in terms:
         title = search_title(api_url, term)
         if title:
+            _log(f"search hit for '{term}': {title}")
             return title
     return None
 
 
-def canonical_title(api_url: str, title: str) -> str:
-    """Follow redirects so hinted URLs become canonical article titles."""
+def lookup_title(
+    api_url: str,
+    terms: list[str],
+    city_terms: list[str] | None = None,
+) -> str | None:
+    """Resolve a title: exact matches first, then a city-scoped search."""
+    for term in terms:
+        title = exact_title(api_url, term)
+        if title:
+            return title
+    return search_title_with_city(api_url, terms, list(city_terms or []))
+
+
+def canonical_title(api_url: str, title: str) -> str | None:
+    """Follow redirects; return ``None`` for missing pages.
+
+    Hinted URLs from the data file sometimes point to a page that does not
+    exist. Returning ``None`` here makes the caller fall through to the search
+    path instead of propagating a broken title.
+    """
     try:
-        return exact_title(api_url, title) or title
+        resolved = exact_title(api_url, title)
     except Exception:
         return title
+    if resolved is None:
+        _log(f"hinted title '{title}' is missing, falling back to search")
+    return resolved
 
 
 def get_qid(api_url: str, title: str) -> str | None:
@@ -172,7 +248,7 @@ def get_qid(api_url: str, title: str) -> str | None:
     )
     qid: str | None = None
     for page in data.get("query", {}).get("pages", []):
-        if "missing" in page:
+        if _is_missing_page(page):
             continue
         qid = page.get("pageprops", {}).get("wikibase_item")
         if qid:
@@ -308,10 +384,42 @@ def collect_terms(place: dict[str, Any], keys: tuple[str, ...]) -> list[str]:
     return terms
 
 
+_CITY_OVERRIDE_KEYS = {
+    "fr": ("cityFr", "city_fr"),
+    "en": ("cityEn", "city_en"),
+    "zh": ("cityCn", "city_cn"),
+}
+
+
+def city_terms_for(place: dict[str, Any], lang: str) -> list[str]:
+    """Return the place's city names in ``lang``, primary name first."""
+    terms: list[str] = []
+
+    def add(value: Any) -> None:
+        if isinstance(value, str):
+            value = value.strip()
+            if value and value not in terms:
+                terms.append(value)
+
+    for key in _CITY_OVERRIDE_KEYS[lang]:
+        add(place.get(key))
+
+    city_id = place.get("cityId") or place.get("city_id") or place.get("city")
+    if isinstance(city_id, str):
+        names = CITY_NAMES.get(city_id.strip().lower(), {})
+        for name in names.get(lang, []):
+            add(name)
+
+    return terms
+
+
 def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     fr_terms = collect_terms(place, _FR_NAME_KEYS)
     en_terms = collect_terms(place, _EN_NAME_KEYS)
     zh_terms = collect_terms(place, _ZH_NAME_KEYS)
+    fr_cities = city_terms_for(place, "fr")
+    en_cities = city_terms_for(place, "en")
+    zh_cities = city_terms_for(place, "zh")
 
     hint_lang, hint_title = wiki_hint(place)
 
@@ -320,7 +428,8 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     zh_title: str | None = None
     qid: str | None = None
 
-    # 0. Use the existing wikipediaUrl field as a hint (canonicalised).
+    # 0. Use the existing wikipediaUrl field as a hint. A missing hinted page
+    #    yields None, which lets the search paths below run.
     if hint_lang and hint_title:
         if hint_lang == "fr":
             fr_title = canonical_title(FR_WIKI_API, hint_title)
@@ -329,14 +438,14 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
         elif hint_lang == "zh":
             zh_title = canonical_title(ZH_WIKI_API, hint_title)
 
-    # 1. Direct French lookup (exact title, then first search hit).
+    # 1. Direct French lookup (exact title, then a city-scoped search).
     if not fr_title:
-        fr_title = lookup_title(FR_WIKI_API, fr_terms)
+        fr_title = lookup_title(FR_WIKI_API, fr_terms, fr_cities)
 
     # 2. Fallback: English Wikipedia -> Wikidata -> French sitelink.
     if not fr_title:
         if not en_title:
-            en_title = lookup_title(EN_WIKI_API, en_terms)
+            en_title = lookup_title(EN_WIKI_API, en_terms, en_cities)
         if en_title:
             qid = get_qid(EN_WIKI_API, en_title)
             if qid:
@@ -354,14 +463,14 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     if not zh_title and qid:
         zh_title = get_sitelink(qid, "zhwiki")
 
-    # 6. Last resort: Chinese full-text search.
+    # 6. Last resort: Chinese full-text search, scoped to the city.
     if not zh_title:
         zh_candidates: list[str] = list(zh_terms)
         if en_title and en_title not in zh_candidates:
             zh_candidates.insert(0, en_title)
         if fr_title and fr_title not in zh_candidates:
             zh_candidates.append(fr_title)
-        zh_title = lookup_title(ZH_WIKI_API, zh_candidates)
+        zh_title = lookup_title(ZH_WIKI_API, zh_candidates, zh_cities)
 
     result = dict(place)
     result["fr_title"] = fr_title
@@ -681,13 +790,20 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_PAUSE,
         help=f"Seconds to sleep between API calls (default: {DEFAULT_PAUSE}).",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Log the search queries that hit and hinted titles that were missing.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
-    global _PAUSE
+    global _PAUSE, _VERBOSE
     args = parse_args()
     _PAUSE = max(0.0, args.pause)
+    _VERBOSE = bool(args.verbose)
 
     places = load_places(args.input)
     if not places:
