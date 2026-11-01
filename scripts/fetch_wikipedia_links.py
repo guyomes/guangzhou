@@ -1,38 +1,49 @@
 #!/usr/bin/env python3
 """Recover French and (auto-translated) Chinese Wikipedia links for places.
 
+The script accepts either:
+
+  * a data module in the same shape as ``src/data/guangzhouData.ts``
+    (a ``const SOME_NAME: any[] = [ {...}, ... ];`` literal), or
+  * a ``.json`` file (list of strings, list of objects, or an object mapping
+    place name -> metadata), or
+  * a plain text file with one place per line (``#`` comments allowed).
+
 For each place the script resolves:
 
   * the French Wikipedia article (exact title first, then the first search
     result, then an English -> Wikidata fallback), and
   * the Chinese Wikipedia article through Wikidata's interlanguage links,
-    rendered through the Google Translate proxy with `_x_tr_sl=auto` and
-    `_x_tr_tl=fr`.
+    rendered through the Google Translate proxy with ``_x_tr_sl=auto`` and
+    ``_x_tr_tl=fr``.
 
 If no Chinese sitelink exists on Wikidata, the script falls back to a
 full-text search on zh.wikipedia.org.
 
+The name candidates come from the per-language fields of the data file
+(``nameFr`` for French, ``nameEn`` for English, ``nameCn`` for Chinese). An
+existing ``wikipediaUrl`` field is used as a hint and canonicalised through
+the API, so ``…/wiki/Shamian`` resolves to ``…/wiki/Île_de_Shamian`` and
+``…/wiki/Tour_de_Canton`` to
+``…/wiki/Tour_de_télévision_et_de_tourisme_de_Canton``.
+
 Usage
 -----
-    python scripts/fetch_wikipedia_links.py places.json
-    python scripts/fetch_wikipedia_links.py places.txt -o places.wikipedia.json
-
-Input
------
-Accept `.json` (a list of strings, a list of objects, or an object mapping
-place name -> metadata), or `.txt` / anything else (one place per line,
-`#` comments allowed).
+    python scripts/fetch_wikipedia_links.py src/data/guangzhouData.ts
+    python scripts/fetch_wikipedia_links.py places.json -o places.wikipedia.json
 
 Output
 ------
-A JSON file next to the input (or `-o`), one entry per place, with
-`fr_title`, `fr_url`, `zh_title`, `zh_url`, `wikidata` and `en_title` keys.
+A JSON file next to the input (or ``-o``). Every original field is preserved
+and the following keys are added per place: ``fr_title``, ``fr_url``,
+``zh_title``, ``zh_url``, ``en_title`` and ``wikidata``.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 import urllib.error
@@ -54,6 +65,8 @@ WIKIDATA_API = "https://www.wikidata.org/w/api.php"
 FR_ARTICLE_BASE = "https://fr.wikipedia.org/wiki/"
 ZH_TRANSLATE_BASE = "https://zh-wikipedia-org.translate.goog/wiki/"
 ZH_TRANSLATE_QUERY = "?_x_tr_sl=auto&_x_tr_tl=fr"
+
+JS_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}
 
 _PAUSE = DEFAULT_PAUSE
 
@@ -135,6 +148,14 @@ def lookup_title(api_url: str, candidates: list[str]) -> str | None:
     return None
 
 
+def canonical_title(api_url: str, title: str) -> str:
+    """Follow redirects so hinted URLs become canonical article titles."""
+    try:
+        return exact_title(api_url, title) or title
+    except Exception:
+        return title
+
+
 def get_qid(api_url: str, title: str) -> str | None:
     key = (api_url, title)
     if key in _QID_CACHE:
@@ -193,29 +214,94 @@ def zh_url(title: str) -> str:
     return f"{ZH_TRANSLATE_BASE}{slug}{ZH_TRANSLATE_QUERY}"
 
 
+def wiki_hint(place: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Return ``(language, title)`` from an existing ``wikipediaUrl`` field."""
+    raw = place.get("wikipediaUrl") or place.get("wikipedia_url") or place.get(
+        "wikipediaFrUrl"
+    )
+    if not isinstance(raw, str) or not raw.strip():
+        return None, None
+
+    parsed = urllib.parse.urlparse(raw.strip())
+    host = parsed.netloc.lower()
+    path = parsed.path
+    if not path.startswith("/wiki/"):
+        return None, None
+
+    title = urllib.parse.unquote(path[len("/wiki/"):]).replace("_", " ").strip()
+    if not title:
+        return None, None
+
+    if host.endswith("fr.wikipedia.org") or host.endswith("fr.m.wikipedia.org"):
+        return "fr", title
+    if host.endswith("en.wikipedia.org") or host.endswith("en.m.wikipedia.org"):
+        return "en", title
+    if host.endswith("zh.wikipedia.org") or host.endswith("zh.m.wikipedia.org"):
+        return "zh", title
+    return None, None
+
+
 # ---------------------------------------------------------------------------
 # Per-place resolution
 # ---------------------------------------------------------------------------
 
-_CANDIDATE_KEYS = (
+_FR_NAME_KEYS = (
+    "fr_title",
+    "wikipedia_fr",
+    "nameFr",
+    "name_fr",
+    "nameEn",
+    "name_en",
     "name",
     "title",
-    "name_en",
-    "name_fr",
-    "en",
-    "fr",
+)
+_EN_NAME_KEYS = (
     "en_title",
-    "fr_title",
+    "wikipedia_en",
+    "nameEn",
+    "name_en",
+    "nameFr",
+    "name_fr",
+    "name",
+    "title",
+)
+_ZH_NAME_KEYS = (
+    "zh_title",
+    "wikipedia_zh",
+    "nameCn",
+    "name_cn",
+    "nameZh",
+    "nameEn",
+    "name_en",
+    "nameFr",
+    "name_fr",
+    "name",
+    "title",
 )
 
 
-def candidate_terms(place: dict[str, Any]) -> list[str]:
+def expand_term(value: str) -> list[str]:
+    """Split ``陈家祠 (陈氏书院)`` into ``["陈家祠 (陈氏书院)", "陈家祠"]``."""
+    value = value.strip()
+    if not value:
+        return []
+    terms = [value]
+    for sep in ("(", "（"):
+        if sep in value:
+            base = value.split(sep, 1)[0].strip()
+            if base and base not in terms:
+                terms.append(base)
+    return terms
+
+
+def collect_terms(place: dict[str, Any], keys: tuple[str, ...]) -> list[str]:
     seen: set[str] = set()
     terms: list[str] = []
-    for key in _CANDIDATE_KEYS:
+    for key in keys:
         value = place.get(key)
-        if isinstance(value, str) and value.strip():
-            term = value.strip()
+        if not isinstance(value, str):
+            continue
+        for term in expand_term(value):
             if term not in seen:
                 seen.add(term)
                 terms.append(term)
@@ -223,21 +309,34 @@ def candidate_terms(place: dict[str, Any]) -> list[str]:
 
 
 def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
-    candidates = candidate_terms(place)
+    fr_terms = collect_terms(place, _FR_NAME_KEYS)
+    en_terms = collect_terms(place, _EN_NAME_KEYS)
+    zh_terms = collect_terms(place, _ZH_NAME_KEYS)
 
-    fr_title: str | None = place.get("fr_title") or place.get("wikipedia_fr")
-    en_title: str | None = place.get("en_title") or place.get("wikipedia_en")
-    zh_title: str | None = place.get("zh_title") or place.get("wikipedia_zh")
+    hint_lang, hint_title = wiki_hint(place)
+
+    fr_title: str | None = None
+    en_title: str | None = None
+    zh_title: str | None = None
     qid: str | None = None
+
+    # 0. Use the existing wikipediaUrl field as a hint (canonicalised).
+    if hint_lang and hint_title:
+        if hint_lang == "fr":
+            fr_title = canonical_title(FR_WIKI_API, hint_title)
+        elif hint_lang == "en":
+            en_title = canonical_title(EN_WIKI_API, hint_title)
+        elif hint_lang == "zh":
+            zh_title = canonical_title(ZH_WIKI_API, hint_title)
 
     # 1. Direct French lookup (exact title, then first search hit).
     if not fr_title:
-        fr_title = lookup_title(FR_WIKI_API, candidates)
+        fr_title = lookup_title(FR_WIKI_API, fr_terms)
 
     # 2. Fallback: English Wikipedia -> Wikidata -> French sitelink.
     if not fr_title:
         if not en_title:
-            en_title = lookup_title(EN_WIKI_API, candidates)
+            en_title = lookup_title(EN_WIKI_API, en_terms)
         if en_title:
             qid = get_qid(EN_WIKI_API, en_title)
             if qid:
@@ -257,10 +356,10 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
 
     # 6. Last resort: Chinese full-text search.
     if not zh_title:
-        zh_candidates: list[str] = list(candidates)
-        if en_title:
+        zh_candidates: list[str] = list(zh_terms)
+        if en_title and en_title not in zh_candidates:
             zh_candidates.insert(0, en_title)
-        if fr_title:
+        if fr_title and fr_title not in zh_candidates:
             zh_candidates.append(fr_title)
         zh_title = lookup_title(ZH_WIKI_API, zh_candidates)
 
@@ -272,6 +371,228 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     result["wikidata"] = qid
     result["en_title"] = en_title
     return result
+
+
+# ---------------------------------------------------------------------------
+# Minimal JavaScript / TypeScript literal parser
+# ---------------------------------------------------------------------------
+
+_NUMBER_RE = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
+_IDENT_START_RE = re.compile(r"[A-Za-z_$]")
+_IDENT_RE = re.compile(r"[A-Za-z0-9_$]*")
+_ARRAY_ASSIGN_RE = re.compile(r"=\s*\[")
+
+
+class JSLiteralParser:
+    """Parse the subset of JS/TS needed for the data modules.
+
+    Supports objects, arrays, single/double quoted strings, template literals,
+    numbers, booleans, ``null``/``undefined``, trailing commas, and both
+    ``//`` and ``/* */`` comments.
+    """
+
+    def __init__(self, text: str, pos: int = 0) -> None:
+        self.text = text
+        self.pos = pos
+        self.length = len(text)
+
+    def fail(self, message: str) -> None:
+        line = self.text.count("\n", 0, self.pos) + 1
+        raise ValueError(f"{message} (line {line})")
+
+    def skip_ignored(self) -> None:
+        while self.pos < self.length:
+            ch = self.text[self.pos]
+            if ch in " \t\r\n\ufeff":
+                self.pos += 1
+            elif self.text.startswith("//", self.pos):
+                end = self.text.find("\n", self.pos)
+                self.pos = self.length if end == -1 else end + 1
+            elif self.text.startswith("/*", self.pos):
+                end = self.text.find("*/", self.pos + 2)
+                if end == -1:
+                    self.fail("unterminated block comment")
+                self.pos = end + 2
+            else:
+                return
+
+    def parse_value(self) -> Any:
+        self.skip_ignored()
+        if self.pos >= self.length:
+            self.fail("unexpected end of input")
+
+        ch = self.text[self.pos]
+        if ch == "{":
+            return self.parse_object()
+        if ch == "[":
+            return self.parse_array()
+        if ch in "\"'`":
+            return self.parse_string()
+        if ch.isdigit() or (
+            ch in "-+"
+            and self.pos + 1 < self.length
+            and (self.text[self.pos + 1].isdigit() or self.text[self.pos + 1] == ".")
+        ):
+            return self.parse_number()
+
+        ident = self.parse_identifier()
+        if ident == "true":
+            return True
+        if ident == "false":
+            return False
+        if ident in ("null", "undefined"):
+            return None
+        return ident
+
+    def parse_number(self) -> Any:
+        match = _NUMBER_RE.match(self.text, self.pos)
+        if not match:
+            self.fail("invalid number")
+        raw = match.group(0)
+        self.pos = match.end()
+        try:
+            return int(raw)
+        except ValueError:
+            return float(raw)
+
+    def parse_identifier(self) -> str:
+        if self.pos >= self.length or not _IDENT_START_RE.match(self.text[self.pos]):
+            self.fail("expected identifier")
+        start = self.pos
+        self.pos += 1
+        match = _IDENT_RE.match(self.text, self.pos)
+        if match:
+            self.pos = match.end()
+        return self.text[start:self.pos]
+
+    def parse_string(self) -> str:
+        quote = self.text[self.pos]
+        self.pos += 1
+        out: list[str] = []
+
+        while self.pos < self.length:
+            ch = self.text[self.pos]
+
+            if ch == "\\":
+                self.pos += 1
+                if self.pos >= self.length:
+                    self.fail("unterminated escape")
+                esc = self.text[self.pos]
+                if esc in "\r\n":
+                    self.pos += 1
+                    continue
+                if esc == "u":
+                    hex_value = self.text[self.pos + 1:self.pos + 5]
+                    try:
+                        out.append(chr(int(hex_value, 16)))
+                    except ValueError:
+                        self.fail("invalid unicode escape")
+                    self.pos += 5
+                    continue
+                if esc == "x":
+                    hex_value = self.text[self.pos + 1:self.pos + 3]
+                    try:
+                        out.append(chr(int(hex_value, 16)))
+                    except ValueError:
+                        self.fail("invalid hex escape")
+                    self.pos += 3
+                    continue
+                out.append(
+                    {
+                        "n": "\n",
+                        "t": "\t",
+                        "r": "\r",
+                        "b": "\b",
+                        "f": "\f",
+                        "v": "\v",
+                        "0": "\0",
+                    }.get(esc, esc)
+                )
+                self.pos += 1
+                continue
+
+            if ch == quote:
+                self.pos += 1
+                return "".join(out)
+
+            out.append(ch)
+            self.pos += 1
+
+        self.fail("unterminated string")
+
+    def parse_array(self) -> list[Any]:
+        self.pos += 1  # '['
+        items: list[Any] = []
+        while True:
+            self.skip_ignored()
+            if self.pos >= self.length:
+                self.fail("unterminated array")
+            if self.text[self.pos] == "]":
+                self.pos += 1
+                return items
+
+            items.append(self.parse_value())
+
+            self.skip_ignored()
+            if self.pos < self.length and self.text[self.pos] == ",":
+                self.pos += 1
+                continue
+            if self.pos < self.length and self.text[self.pos] == "]":
+                self.pos += 1
+                return items
+            self.fail("expected ',' or ']' in array")
+
+    def parse_object(self) -> dict[str, Any]:
+        self.pos += 1  # '{'
+        obj: dict[str, Any] = {}
+        while True:
+            self.skip_ignored()
+            if self.pos >= self.length:
+                self.fail("unterminated object")
+            if self.text[self.pos] == "}":
+                self.pos += 1
+                return obj
+
+            if self.text[self.pos] in "\"'`":
+                key = self.parse_string()
+            else:
+                key = self.parse_identifier()
+
+            self.skip_ignored()
+            if self.pos >= self.length or self.text[self.pos] != ":":
+                self.fail("expected ':' in object")
+            self.pos += 1
+
+            obj[key] = self.parse_value()
+
+            self.skip_ignored()
+            if self.pos < self.length and self.text[self.pos] == ",":
+                self.pos += 1
+                continue
+            if self.pos < self.length and self.text[self.pos] == "}":
+                self.pos += 1
+                return obj
+            self.fail("expected ',' or '}' in object")
+
+
+def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
+    """Return the largest array of objects found in ``text``."""
+    best: list[dict[str, Any]] | None = None
+
+    for match in _ARRAY_ASSIGN_RE.finditer(text):
+        start = match.end() - 1  # position of '['
+        parser = JSLiteralParser(text, start)
+        try:
+            value = parser.parse_value()
+        except (ValueError, IndexError):
+            continue
+        if not isinstance(value, list):
+            continue
+        objects = [item for item in value if isinstance(item, dict)]
+        if objects and (best is None or len(objects) > len(best)):
+            best = objects
+
+    return best
 
 
 # ---------------------------------------------------------------------------
@@ -291,7 +612,18 @@ def load_places(path: Path) -> list[dict[str, Any]]:
         raise SystemExit(f"Input file not found: {path}")
 
     text = path.read_text(encoding="utf-8")
-    if path.suffix.lower() == ".json":
+    suffix = path.suffix.lower()
+
+    if suffix in JS_SUFFIXES:
+        objects = parse_js_data_objects(text)
+        if not objects:
+            raise SystemExit(
+                f"No array-of-objects literal found in {path}. "
+                "Expected something like `const DATA: any[] = [ ... ];`."
+            )
+        return [normalize_entry(item) for item in objects]
+
+    if suffix == ".json":
         data = json.loads(text)
         if isinstance(data, list):
             return [normalize_entry(item) for item in data]
@@ -313,14 +645,29 @@ def load_places(path: Path) -> list[dict[str, Any]]:
     ]
 
 
+def display_name(place: dict[str, Any], fallback: str) -> str:
+    for key in ("nameFr", "nameEn", "nameCn", "name", "title", "id"):
+        value = place.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return fallback
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Recover French and Chinese Wikipedia links for places."
+        description=(
+            "Recover French and Chinese Wikipedia links for places. Accepts a "
+            "guangzhouData-style .ts/.js module, a .json file, or a plain "
+            "text file with one place per line."
+        )
     )
     parser.add_argument(
         "input",
         type=Path,
-        help="Input file (.json or one-name-per-line .txt).",
+        help=(
+            "Input file: .ts/.tsx/.js/.jsx data module, .json, or one-name-"
+            "per-line text."
+        ),
     )
     parser.add_argument(
         "-o",
@@ -350,11 +697,7 @@ def main() -> int:
     results: list[dict[str, Any]] = []
     total = len(places)
     for index, place in enumerate(places, start=1):
-        name = (
-            place.get("name")
-            or place.get("title")
-            or f"place-{index}"
-        )
+        name = display_name(place, f"place-{index}")
         print(f"[{index}/{total}] {name}", file=sys.stderr)
         try:
             result = resolve_place(place)
