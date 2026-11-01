@@ -14,9 +14,10 @@ For each place the script resolves:
   * the French Wikipedia article (exact title first, then an ``intitle:``
     search, then a city/country-scoped search, then an English -> Wikidata
     fallback), and
-  * the Chinese Wikipedia article through Wikidata's interlanguage links,
-    rendered through the Google Translate proxy with ``_x_tr_sl=auto`` and
-    ``_x_tr_tl=fr``.
+  * the Chinese Wikipedia article through, in order: an existing hint, an
+    exact-title hit, the Wikidata interlanguage link, a scoped search, and
+    finally a scan of the district's Chinese Wikipedia page, rendered through
+    the Google Translate proxy with ``_x_tr_sl=auto`` and ``_x_tr_tl=fr``.
 
 Every candidate is verified against Wikidata by walking its ``P131``
 ("located in the administrative territorial entity") chain up to a few hops:
@@ -27,9 +28,14 @@ Every candidate is verified against Wikidata by walking its ``P131``
   * a candidate whose ``P17`` (country) is set to something other than China
     is rejected outright.
 
-This is what prevents e.g. ``Rivière des Perles`` (Rivière des Perles, Chine)
-from resolving to the Swiss lake, ``Chen Clan Ancestral Hall`` from resolving
-to the Chen dynasty, or ``Yong Qing Fang`` from resolving to a Shanghai page.
+In addition, a candidate whose Wikidata item is the *district* the place
+belongs to is discarded (so that e.g. the Chinese page for Baomo Garden never
+comes back as the article about Panyu District). When no article is found this
+way and the district page is available, the script scans the district page's
+wikitext for a ``[[…]]`` link whose target or label matches the place name and
+uses that target as the article title. Once a Chinese article is known, a
+French title is fetched from its Wikidata ``frwiki`` sitelink if none was
+found earlier.
 
 The name candidates come from the per-language fields of the data file
 (``nameFr`` for French, ``nameEn`` for English, ``nameCn`` for Chinese). An
@@ -46,12 +52,8 @@ Output
 ------
 A JSON file next to the input (or ``-o``). Every original field is preserved
 and the following keys are added per place: ``fr_title``, ``fr_url``,
-``zh_title``, ``zh_url``, ``en_title``, ``wikidata``, ``fr_verdict`` and
-``zh_verdict``. ``*_verdict`` is one of ``city`` (P131 chain reaches the
-target city), ``guangdong`` (chain reaches Guangdong), ``other_china``
-(chain reaches China but not the target city; accepted only on title match),
-``unknown`` (no location statements; accepted only on title match) or
-``foreign`` (rejected; the corresponding URL is ``null``).
+``zh_title``, ``zh_url``, ``en_title``, ``wikidata``, ``fr_verdict``,
+``zh_verdict``, ``fr_via`` and ``zh_via``.
 """
 
 from __future__ import annotations
@@ -67,7 +69,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "place-wikipedia-links/1.3 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.4 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
@@ -130,6 +132,24 @@ COUNTRY_TERMS: dict[str, list[str]] = {
     "zh": ["中国"],
 }
 
+# Namespace prefixes ignored when scanning wikitext for article links.
+_WIKI_SKIP_PREFIXES = (
+    "file:",
+    "image:",
+    "category:",
+    "template:",
+    "wikipedia:",
+    "wp:",
+    "help:",
+    "portal:",
+    "special:",
+    "module:",
+    "user:",
+    "talk:",
+    "mediawiki:",
+    "draft:",
+)
+
 _PAUSE = DEFAULT_PAUSE
 _VERBOSE = False
 
@@ -137,6 +157,7 @@ _QID_CACHE: dict[tuple[str, str], str | None] = {}
 _SITELINK_CACHE: dict[tuple[str, str], str | None] = {}
 _P17_CACHE: dict[str, list[str]] = {}
 _P131_CACHE: dict[str, list[str]] = {}
+_DISTRICT_QID_CACHE: dict[str, str | None] = {}
 
 
 def _log(message: str) -> None:
@@ -216,6 +237,30 @@ def search_titles(api_url: str, term: str, limit: int = SEARCH_RESULTS) -> list[
     )
     hits = data.get("query", {}).get("search", [])
     return [hit.get("title") for hit in hits if hit.get("title")]
+
+
+def fetch_wikitext(api_url: str, title: str) -> str | None:
+    data = api_get(
+        api_url,
+        {
+            "action": "query",
+            "titles": title,
+            "prop": "revisions",
+            "rvslots": "main",
+            "rvprop": "content",
+            "rvlimit": 1,
+            "redirects": 1,
+        },
+    )
+    for page in data.get("query", {}).get("pages", []):
+        if _is_missing_page(page):
+            continue
+        for rev in page.get("revisions", []) or []:
+            slot = (rev.get("slots") or {}).get("main") or {}
+            content = slot.get("content")
+            if content:
+                return content
+    return None
 
 
 def get_qids(api_url: str, titles: list[str]) -> dict[str, str]:
@@ -415,6 +460,7 @@ def classify_entity(qid: str | None, target_qids: set[str]) -> str:
 
 _LATIN_WORD_RE = re.compile(r"\w+")
 _CJK_RUN_RE = re.compile(r"[\u4e00-\u9fff]+")
+_DISTRICT_SPLIT_RE = re.compile(r"[与和、及]")
 
 
 def _title_matches(title: str, source_term: str) -> bool:
@@ -438,6 +484,169 @@ def _title_matches(title: str, source_term: str) -> bool:
     # Require at least two thirds of the distinctive words. This is what
     # rejects "Dynastie Chen" for "Temple ancestral du clan Chen".
     return matched >= max(1, (len(tokens) * 2 + 2) // 3)
+
+
+# ---------------------------------------------------------------------------
+# District helpers
+# ---------------------------------------------------------------------------
+
+def district_zh_titles(place: dict[str, Any]) -> list[str]:
+    """Extract the Chinese district page titles, e.g. ``["番禺区"]``.
+
+    Handles compound district fields such as ``'Liwan & Yuexiu (荔湾与越秀区)'``
+    or ``'Yuexiu & Haizhu (越秀/海珠区)'`` by splitting on common separators
+    and appending ``区`` when it is missing.
+    """
+    raw = (
+        place.get("districtCn")
+        or place.get("district_cn")
+        or place.get("districtZh")
+        or place.get("district")
+    )
+    if not isinstance(raw, str) or not raw.strip():
+        return []
+
+    titles: list[str] = []
+    for run in _CJK_RUN_RE.findall(raw):
+        for part in _DISTRICT_SPLIT_RE.split(run):
+            part = part.strip()
+            if not part:
+                continue
+            if part.endswith(("区", "市", "县", "镇", "乡")):
+                candidate = part
+            else:
+                candidate = part + "区"
+            if candidate not in titles:
+                titles.append(candidate)
+    return titles
+
+
+def _district_qids(place: dict[str, Any]) -> set[str]:
+    qids: set[str] = set()
+    for title in district_zh_titles(place):
+        if title not in _DISTRICT_QID_CACHE:
+            _DISTRICT_QID_CACHE[title] = get_qid(ZH_WIKI_API, title)
+        qid = _DISTRICT_QID_CACHE[title]
+        if qid:
+            qids.add(qid)
+    return qids
+
+
+def is_district_placeholder(
+    place: dict[str, Any],
+    title: str | None,
+    api_url: str,
+) -> bool:
+    """True when ``title`` is the district page the place belongs to."""
+    if not title:
+        return False
+    for district in district_zh_titles(place):
+        if title == district:
+            return True
+    district_qids = _district_qids(place)
+    if not district_qids:
+        return False
+    qid = get_qid(api_url, title)
+    return qid is not None and qid in district_qids
+
+
+_WIKILINK_RE = re.compile(r"\[\[([^\[\]|]+?)(?:\|([^\[\]]*))?\]\]")
+_DISTRICT_PAGE_ATTEMPT_LIMIT = 3
+
+
+def _wikilinks(text: str) -> list[tuple[str, str]]:
+    out: list[tuple[str, str]] = []
+    for match in _WIKILINK_RE.finditer(text):
+        target = match.group(1).strip()
+        label = (match.group(2) or "").strip() or target
+        if not target:
+            continue
+        out.append((target, label))
+    return out
+
+
+def _clean_link_target(target: str) -> str:
+    """Strip fragments and normalise the target."""
+    base = target.split("#", 1)[0].strip()
+    return base
+
+
+def _is_skipped_link(base: str) -> bool:
+    if not base:
+        return True
+    if base.startswith(":"):  # interlanguage: ``:fr:Foo``
+        return True
+    lower = base.lower()
+    return any(lower.startswith(prefix) for prefix in _WIKI_SKIP_PREFIXES)
+
+
+def zh_title_from_district_page(
+    place: dict[str, Any],
+    target_qids: set[str],
+) -> str | None:
+    """Find an article linked from the district's Chinese Wikipedia page.
+
+    Chinese district pages often list every notable place inside the
+    district, including sites that do not have enough notability to get their
+    own article from a full-text search. We scan the district page's wikitext
+    for a ``[[…]]`` link whose target or label matches the place's Chinese
+    name, and return its target.
+    """
+    zh_terms = collect_terms(place, _ZH_NAME_KEYS)
+    if not zh_terms:
+        return None
+
+    districts = district_zh_titles(place)
+    if not districts:
+        return None
+
+    attempts = 0
+    for district in districts:
+        attempts += 1
+        if attempts > _DISTRICT_PAGE_ATTEMPT_LIMIT:
+            break
+        page_title = exact_title(ZH_WIKI_API, district)
+        if not page_title:
+            _log(f"district page '{district}' not found on zh.wikipedia")
+            continue
+        text = fetch_wikitext(ZH_WIKI_API, page_title)
+        if not text:
+            _log(f"district page '{page_title}' has no wikitext")
+            continue
+        links = _wikilinks(text)
+        _log(f"scanning {len(links)} links on '{page_title}'")
+
+        # 1. exact match on the target or label
+        for term in zh_terms:
+            for raw_target, label in links:
+                base = _clean_link_target(raw_target)
+                if _is_skipped_link(base):
+                    continue
+                if base != term and label != term:
+                    continue
+                verdict = classify_entity(
+                    get_qid(ZH_WIKI_API, base), target_qids
+                )
+                if verdict in ("city", "guangdong", "other_china", "unknown"):
+                    _log(f"district-page hit for '{term}': '{base}' (exact)")
+                    return base
+
+        # 2. substring match, restricted to entities verified in the target
+        for term in zh_terms:
+            for raw_target, label in links:
+                base = _clean_link_target(raw_target)
+                if _is_skipped_link(base):
+                    continue
+                if term not in base and term not in label:
+                    continue
+                verdict = classify_entity(
+                    get_qid(ZH_WIKI_API, base), target_qids
+                )
+                if verdict in ("city", "guangdong"):
+                    _log(f"district-page hit for '{term}': '{base}' ({verdict})")
+                    return base
+
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -734,6 +943,41 @@ def place_target_qids(place: dict[str, Any]) -> set[str]:
 _API_FOR_LANG = {"fr": FR_WIKI_API, "en": EN_WIKI_API, "zh": ZH_WIKI_API}
 
 
+def _accept_zh(
+    place: dict[str, Any],
+    title: str | None,
+    target_qids: set[str],
+) -> str | None:
+    """Validate a Chinese candidate; return it only if usable."""
+    if not title:
+        return None
+    if is_district_placeholder(place, title, ZH_WIKI_API):
+        _log(f"zh candidate '{title}' is the district page, discarding")
+        return None
+    verdict = classify_entity(get_qid(ZH_WIKI_API, title), target_qids)
+    if verdict == "foreign":
+        _log(f"zh candidate '{title}' rejected (foreign)")
+        return None
+    return title
+
+
+def _accept_fr(
+    place: dict[str, Any],
+    title: str | None,
+    target_qids: set[str],
+) -> str | None:
+    if not title:
+        return None
+    if is_district_placeholder(place, title, FR_WIKI_API):
+        _log(f"fr candidate '{title}' is the district page, discarding")
+        return None
+    verdict = classify_entity(get_qid(FR_WIKI_API, title), target_qids)
+    if verdict == "foreign":
+        _log(f"fr candidate '{title}' rejected (foreign)")
+        return None
+    return title
+
+
 def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     fr_terms = collect_terms(place, _FR_NAME_KEYS)
     en_terms = collect_terms(place, _EN_NAME_KEYS)
@@ -753,26 +997,45 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     zh_title: str | None = None
     fr_verdict: str | None = None
     zh_verdict: str | None = None
+    fr_via: str | None = None
+    zh_via: str | None = None
     qid: str | None = None
 
     # 0. Use the existing wikipediaUrl field as a hint, unless it points to a
-    #    page about another country.
+    #    page about another country or to the district page.
     if hint_lang and hint_title:
         api = _API_FOR_LANG[hint_lang]
         verified = verify_hint(api, hint_title, target_qids)
+        verified = (
+            _accept_zh(place, verified, target_qids)
+            if hint_lang == "zh"
+            else (
+                _accept_fr(place, verified, target_qids)
+                if hint_lang == "fr"
+                else verified
+            )
+        )
         if verified:
             if hint_lang == "fr":
                 fr_title = verified
+                fr_via = "hint"
             elif hint_lang == "en":
                 en_title = verified
             else:
                 zh_title = verified
+                zh_via = "hint"
 
     # 1. Direct French lookup (exact title, then a scoped search).
     if not fr_title:
-        fr_title = lookup_title(
-            FR_WIKI_API, fr_terms, fr_cities, fr_countries, target_qids
+        fr_title = _accept_fr(
+            place,
+            lookup_title(
+                FR_WIKI_API, fr_terms, fr_cities, fr_countries, target_qids
+            ),
+            target_qids,
         )
+        if fr_title:
+            fr_via = "search"
 
     # 2. Fallback: English Wikipedia -> Wikidata -> French sitelink.
     if not fr_title:
@@ -784,10 +1047,10 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
             qid = get_qid(EN_WIKI_API, en_title)
             if qid:
                 candidate = get_sitelink(qid, "frwiki")
-                if candidate and classify_entity(
-                    get_qid(FR_WIKI_API, candidate), target_qids
-                ) in ("city", "guangdong", "unknown"):
+                candidate = _accept_fr(place, candidate, target_qids)
+                if candidate:
                     fr_title = candidate
+                    fr_via = "sitelink"
 
     # 3. Wikidata id from the French article (if still unknown).
     if not qid and fr_title:
@@ -795,35 +1058,28 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
 
     # 4. English title from Wikidata (helps the Chinese fallback search).
     if not en_title and qid:
-        candidate = get_sitelink(qid, "enwiki")
-        if candidate:
-            en_title = candidate
+        en_title = get_sitelink(qid, "enwiki")
 
     # 5. Chinese article via Wikidata interlanguage link, after verification.
     if not zh_title and qid:
         candidate = get_sitelink(qid, "zhwiki")
+        candidate = _accept_zh(place, candidate, target_qids)
         if candidate:
-            verdict = classify_entity(
-                get_qid(ZH_WIKI_API, candidate), target_qids
-            )
-            if verdict == "foreign" or (
-                verdict == "other_china"
-                and not _title_matches(candidate, "".join(zh_terms))
-            ):
-                _log(f"zh sitelink '{candidate}' rejected ({verdict})")
-            else:
-                zh_title = candidate
+            zh_title = candidate
+            zh_via = "sitelink"
 
     if fr_title:
         fr_verdict = classify_entity(get_qid(FR_WIKI_API, fr_title), target_qids)
 
-    # 6. Chinese full-text search, scoped to the city and country. The Chinese
-    #    name is tried first so that entries like ``陈家祠 (陈氏书院)`` resolve
-    #    to ``陈家祠`` before we fall back to the English/French titles.
+    # 6. Chinese full-text search, scoped to the city and country.
     if not zh_title and zh_terms:
-        zh_title = lookup_title(
+        candidate = lookup_title(
             ZH_WIKI_API, zh_terms, zh_cities, zh_countries, target_qids
         )
+        candidate = _accept_zh(place, candidate, target_qids)
+        if candidate:
+            zh_title = candidate
+            zh_via = "search"
 
     if not zh_title:
         extra: list[str] = []
@@ -832,16 +1088,37 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
         if fr_title:
             extra.append(fr_title)
         if extra:
-            zh_title = lookup_title(
+            candidate = lookup_title(
                 ZH_WIKI_API, extra, zh_cities, zh_countries, target_qids
             )
+            candidate = _accept_zh(place, candidate, target_qids)
+            if candidate:
+                zh_title = candidate
+                zh_via = "search"
+
+    # 6b. Last resort: the district's Chinese page lists the place.
+    if not zh_title:
+        candidate = zh_title_from_district_page(place, target_qids)
+        candidate = _accept_zh(place, candidate, target_qids)
+        if candidate:
+            zh_title = candidate
+            zh_via = "district_page"
 
     if zh_title:
         zh_verdict = classify_entity(get_qid(ZH_WIKI_API, zh_title), target_qids)
-        if zh_verdict == "foreign":
-            _log(f"zh result '{zh_title}' rejected (foreign)")
-            zh_title = None
-            zh_verdict = None
+
+    # 6c. Derive a French title from the Chinese page when possible.
+    if not fr_title and zh_title:
+        zh_qid = get_qid(ZH_WIKI_API, zh_title) or qid
+        if zh_qid:
+            candidate = get_sitelink(zh_qid, "frwiki")
+            candidate = _accept_fr(place, candidate, target_qids)
+            if candidate:
+                fr_title = candidate
+                fr_via = "sitelink"
+                fr_verdict = classify_entity(
+                    get_qid(FR_WIKI_API, fr_title), target_qids
+                )
 
     # 7. Backfill the Wikidata id if it is still unknown.
     if not qid and zh_title:
@@ -856,6 +1133,8 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     result["en_title"] = en_title
     result["fr_verdict"] = fr_verdict
     result["zh_verdict"] = zh_verdict
+    result["fr_via"] = fr_via
+    result["zh_via"] = zh_via
     return result
 
 
@@ -1224,11 +1503,21 @@ def main() -> int:
         if r.get("fr_verdict") in ("unknown", "other_china")
         or r.get("zh_verdict") in ("unknown", "other_china")
     ]
+    via_counts: dict[str, int] = {}
+    for r in results:
+        for key in ("fr_via", "zh_via"):
+            value = r.get(key)
+            if value:
+                via_counts[f"{key}:{value}"] = via_counts.get(f"{key}:{value}", 0) + 1
+
     print(f"Wrote {len(results)} entries to {output}", file=sys.stderr)
     print(
         f"Missing French: {missing_fr}, missing Chinese: {missing_zh}",
         file=sys.stderr,
     )
+    if via_counts:
+        summary = ", ".join(f"{k}={v}" for k, v in sorted(via_counts.items()))
+        print(f"Resolution paths: {summary}", file=sys.stderr)
     if weak:
         print(
             "Weakly verified (accepted on title match only, review manually): "
