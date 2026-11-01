@@ -54,17 +54,25 @@ default, adding the following fields to every place object literal:
 ``fr_title``, ``fr_url``, ``zh_title``, ``zh_url``, ``en_title``,
 ``wikidata``, ``fr_verdict``, ``zh_verdict``, ``fr_via`` and ``zh_via``.
 All imported source files (reached through ``import … from './…'``) are
-edited too. Use ``--dry-run`` to preview the changes without writing.
+edited too. Each source file is written as soon as all of its places have
+been resolved, so partial progress is kept even if a later file fails or the
+run is interrupted. Use ``--dry-run`` to preview the changes without writing,
+and ``--limit N`` to only resolve the first N places.
 
 When ``-o`` is provided, the results are written to a single file instead:
 a ``.ts``/``.js`` path produces a self-contained flat array, any other path
 produces JSON. Non-``.ts`` inputs always produce JSON next to the input
 (``<input>.wikipedia.json``) unless ``-o`` is given.
 
+Every ``*_ATTRACTIONS`` declaration found in a module is reported on stderr
+together with the number of place objects it contains; a declaration that
+cannot be parsed produces a WARNING instead of being silently skipped.
+
 Usage
 -----
     python scripts/fetch_wikipedia_links.py src/data/citiesData.ts
     python scripts/fetch_wikipedia_links.py src/data/citiesData.ts --dry-run
+    python scripts/fetch_wikipedia_links.py src/data/citiesData.ts --limit 3
     python scripts/fetch_wikipedia_links.py src/data/citiesData.ts -o enriched.ts
     python scripts/fetch_wikipedia_links.py places.json -o places.wikipedia.json
 """
@@ -82,7 +90,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "place-wikipedia-links/1.6 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.7 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
@@ -156,7 +164,7 @@ _WIKI_SKIP_PREFIXES = (
 )
 
 # Suffix of the top-level arrays we collect from data modules.
-_ATTRA_SUFFIX = "_ATTACTIONS"
+_ATTRA_SUFFIX = "_ATTRACTIONS"
 
 # Matches `<kw> NAME: <Type> = [` where `<kw>` is `const`, `let`, or `var`
 # (optionally preceded by `export`). Anchored to the start of a line so that
@@ -1266,7 +1274,8 @@ class JSLiteralParser:
         """Parse an array literal.
 
         Return ``(values, spans)`` where ``spans`` holds ``(start, end)``
-        positions for every object element; non-object elements get ``-1``.
+        positions for every object element; non-object elements (including
+        ``...spread`` placeholders) get ``-1``.
         """
         self.skip_ignored()
         if self.pos >= self.length or self.text[self.pos] != "[":
@@ -1283,7 +1292,14 @@ class JSLiteralParser:
                 return values, spans
 
             item_start = self.pos
-            if self.text[self.pos] == "{":
+            if self.text[self.pos:self.pos + 3] == "...":
+                # Spread element (``...OTHER_ARRAY``): keep values/spans
+                # aligned but mark it as a non-object placeholder.
+                self.pos += 3
+                self._skip_spread_element()
+                values.append(None)
+                spans.append((-1, -1))
+            elif self.text[self.pos] == "{":
                 value = self.parse_object()
                 item_end = self.pos - 1  # position of closing '}'
                 values.append(value)
@@ -1301,6 +1317,29 @@ class JSLiteralParser:
                 self.pos += 1
                 return values, spans
             self.fail("expected ',' or ']' in array")
+
+    def _skip_spread_element(self) -> None:
+        """Skip an ``...expression`` up to the next ',' or closing bracket.
+
+        Bracket depth is tracked so nested calls/objects/arrays inside the
+        spread expression (e.g. ``...A.map(a => ({ ...a }))``) are consumed
+        correctly, while strings are skipped via :meth:`parse_string`.
+        """
+        depth = 0
+        while self.pos < self.length:
+            ch = self.text[self.pos]
+            if ch in "\"'`":
+                self.parse_string()
+                continue
+            if ch in "[{(":
+                depth += 1
+            elif ch in "]})":
+                if depth == 0:
+                    return
+                depth -= 1
+            elif ch == "," and depth == 0:
+                return
+            self.pos += 1
 
     def parse_object(self) -> dict[str, Any]:
         self.pos += 1  # '{'
@@ -1357,24 +1396,35 @@ def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
 
 def parse_js_attraction_arrays(
     text: str,
+    source: str = "",
 ) -> list[tuple[dict[str, Any], int, int]]:
     """Parse every top-level ``*_ATTACTIONS`` array literal in ``text``.
 
-    Returns ``[(obj, obj_start, obj_end), ...]`` in source order.
+    Returns ``[(obj, obj_start, obj_end), ...]`` in source order. Every
+    declaration whose name ends with ``_ATTRACTIONS`` is reported on stderr
+    with the number of place objects it contains; a declaration that cannot
+    be parsed produces a WARNING instead of being silently skipped.
     """
     entries: list[tuple[dict[str, Any], int, int]] = []
     seen_ids: set[str] = set()
+    label = f"{source}: " if source else ""
 
     for match in _VAR_ARRAY_ASSIGN_RE.finditer(text):
-        if not match.group(1).endswith(_ATTRA_SUFFIX):
+        name = match.group(1)
+        if not name.endswith(_ATTRA_SUFFIX):
             continue
         array_start = match.end() - 1  # position of '['
         parser = JSLiteralParser(text, array_start)
         try:
             values, spans = parser.parse_array_with_spans()
-        except (ValueError, IndexError):
+        except (ValueError, IndexError) as exc:
+            print(
+                f"  · {label}WARNING: could not parse array '{name}': {exc}",
+                file=sys.stderr,
+            )
             continue
 
+        count = 0
         for item, span in zip(values, spans):
             if not isinstance(item, dict):
                 continue
@@ -1384,6 +1434,18 @@ def parse_js_attraction_arrays(
                     continue
                 seen_ids.add(ident)
             entries.append((item, span[0], span[1]))
+            count += 1
+
+        if count:
+            print(
+                f"  · {label}found {name}: {count} place(s)",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"  · {label}found {name}: 0 place object (skipped)",
+                file=sys.stderr,
+            )
 
     return entries
 
@@ -1415,7 +1477,9 @@ def _collect_js_attractions(
 
     Returns ``[(place_dict, file_path, obj_start, obj_end), ...]`` so the
     caller can both resolve each place and locate its source span for
-    in-place editing.
+    in-place editing. The file's own arrays come first, so the file given on
+    the command line is processed (and written) before the modules it
+    imports.
     """
     try:
         resolved = path.resolve()
@@ -1434,6 +1498,9 @@ def _collect_js_attractions(
 
     entries: list[tuple[dict[str, Any], Path, int, int]] = []
 
+    for item, start, end in parse_js_attraction_arrays(text, source=str(path)):
+        entries.append((item, path, start, end))
+
     for match in _REL_IMPORT_RE.finditer(text):
         target = path.parent / match.group(1)
         for candidate in _resolve_import_target(target):
@@ -1442,10 +1509,21 @@ def _collect_js_attractions(
                 entries.extend(imported)
             break
 
-    for item, start, end in parse_js_attraction_arrays(text):
-        entries.append((item, path, start, end))
-
     return entries
+
+
+def _group_entries_by_file(
+    entries: list[tuple[dict[str, Any], Path | None, int, int]],
+) -> list[tuple[Path | None, list[tuple[dict[str, Any], int, int]]]]:
+    """Group collected entries by source file, preserving first-seen order."""
+    groups: list[tuple[Path | None, list[tuple[dict[str, Any], int, int]]]] = []
+    index_by_path: dict[Path | None, int] = {}
+    for place, path, start, end in entries:
+        if path not in index_by_path:
+            index_by_path[path] = len(groups)
+            groups.append((path, []))
+        groups[index_by_path[path]][1].append((place, start, end))
+    return groups
 
 
 # ---------------------------------------------------------------------------
@@ -1591,14 +1669,17 @@ def _write_js_sources_in_place(
                 text = text[:start] + new_source + text[end + 1:]
 
         if dry_run:
-            print(f"[dry-run] would update {path}", file=sys.stderr)
+            print(
+                f"[dry-run] would update {path} ({len(entries)} place(s))",
+                file=sys.stderr,
+            )
         else:
             try:
                 path.write_text(text, encoding="utf-8")
             except OSError as exc:
                 print(f"Cannot write {path}: {exc}", file=sys.stderr)
                 continue
-            print(f"Updated {path}", file=sys.stderr)
+            print(f"Updated {path} ({len(entries)} place(s))", file=sys.stderr)
 
 
 # ---------------------------------------------------------------------------
@@ -1674,7 +1755,11 @@ def display_name(place: dict[str, Any], fallback: str) -> str:
     return fallback
 
 
-def _write_single_output(results: list[dict[str, Any]], output: Path) -> None:
+def _write_single_output(
+    results: list[dict[str, Any]],
+    output: Path,
+    dry_run: bool = False,
+) -> None:
     if output.suffix.lower() in JS_SUFFIXES:
         body = ",\n".join(_js_serialize_value(r, 1) for r in results)
         content = (
@@ -1682,12 +1767,13 @@ def _write_single_output(results: list[dict[str, Any]], output: Path) -> None:
             + body
             + ",\n];\n"
         )
-        output.write_text(content, encoding="utf-8")
+    else:
+        content = json.dumps(results, ensure_ascii=False, indent=2) + "\n"
+
+    if dry_run:
+        print(f"[dry-run] would write {output}", file=sys.stderr)
         return
-    output.write_text(
-        json.dumps(results, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    output.write_text(content, encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:
@@ -1724,6 +1810,12 @@ def parse_args() -> argparse.Namespace:
         help="Do not write anything; just show which files would be edited.",
     )
     parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Process only the first N places (useful for a quick test run).",
+    )
+    parser.add_argument(
         "--pause",
         type=float,
         default=DEFAULT_PAUSE,
@@ -1754,49 +1846,86 @@ def main() -> int:
     _VERBOSE = bool(args.verbose)
     SEARCH_RESULTS = max(1, args.search_results)
 
+    if args.dry_run:
+        print("DRY RUN: no file will be modified.", file=sys.stderr)
+
     raw_entries = load_places_with_spans(args.input)
     if not raw_entries:
         print("No places found in input file.", file=sys.stderr)
         return 1
 
-    results_with_span: list[tuple[dict[str, Any], Path | None, int, int]] = []
-    total = len(raw_entries)
-    for index, (place, file_path, start, end) in enumerate(raw_entries, start=1):
-        name = display_name(place, f"place-{index}")
-        print(f"[{index}/{total}] {name}", file=sys.stderr)
-        try:
-            result = resolve_place(place)
-        except Exception as exc:
-            result = dict(place)
-            result["error"] = str(exc)
-        result.setdefault("name", name)
-        results_with_span.append((result, file_path, start, end))
+    if args.limit is not None and args.limit >= 0:
+        raw_entries = raw_entries[: args.limit]
 
-    results = [r for r, _, _, _ in results_with_span]
+    groups = _group_entries_by_file(raw_entries)
+    is_js_input = args.input.suffix.lower() in JS_SUFFIXES
+    in_place = is_js_input and not args.output
+
+    def _group_label(path: Path | None) -> str:
+        return str(path) if path is not None else str(args.input)
+
+    summary = ", ".join(
+        f"{_group_label(path)} ({len(entries)})" for path, entries in groups
+    )
+    print(
+        f"Loaded {len(raw_entries)} place(s) from {len(groups)} file(s): "
+        f"{summary}",
+        file=sys.stderr,
+    )
+
+    all_results: list[dict[str, Any]] = []
+
+    for group_index, (file_path, entries) in enumerate(groups, start=1):
+        label = _group_label(file_path)
+        print(
+            f"=== file {group_index}/{len(groups)}: {label} — "
+            f"{len(entries)} place(s) ===",
+            file=sys.stderr,
+        )
+
+        results_with_span: list[tuple[dict[str, Any], Path | None, int, int]] = []
+        for index, (place, start, end) in enumerate(entries, start=1):
+            name = display_name(place, f"place-{index}")
+            print(f"[{index}/{len(entries)}] {name}", file=sys.stderr)
+            try:
+                result = resolve_place(place)
+            except Exception as exc:
+                result = dict(place)
+                result["error"] = str(exc)
+            result.setdefault("name", name)
+            results_with_span.append((result, file_path, start, end))
+
+        all_results.extend(r for r, _, _, _ in results_with_span)
+
+        # Write this source file immediately so that progress is kept even
+        # if a later file fails or the run is interrupted.
+        if in_place and file_path is not None:
+            _write_js_sources_in_place(results_with_span, dry_run=args.dry_run)
 
     if args.output:
-        _write_single_output(results, args.output)
-        print(f"Wrote {len(results)} entries to {args.output}", file=sys.stderr)
-    elif args.input.suffix.lower() in JS_SUFFIXES:
-        _write_js_sources_in_place(results_with_span, dry_run=args.dry_run)
-    else:
+        _write_single_output(all_results, args.output, dry_run=args.dry_run)
+        print(f"Wrote {len(all_results)} entries to {args.output}", file=sys.stderr)
+    elif not in_place:
         output = args.input.with_suffix(".wikipedia.json")
-        output.write_text(
-            json.dumps(results, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
-        print(f"Wrote {len(results)} entries to {output}", file=sys.stderr)
+        if args.dry_run:
+            print(f"[dry-run] would write {output}", file=sys.stderr)
+        else:
+            output.write_text(
+                json.dumps(all_results, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Wrote {len(all_results)} entries to {output}", file=sys.stderr)
 
-    missing_fr = sum(1 for r in results if not r.get("fr_title"))
-    missing_zh = sum(1 for r in results if not r.get("zh_title"))
+    missing_fr = sum(1 for r in all_results if not r.get("fr_title"))
+    missing_zh = sum(1 for r in all_results if not r.get("zh_title"))
     weak = [
         r.get("name") or r.get("id")
-        for r in results
+        for r in all_results
         if r.get("fr_verdict") in ("unknown", "other_china")
         or r.get("zh_verdict") in ("unknown", "other_china")
     ]
     via_counts: dict[str, int] = {}
-    for r in results:
+    for r in all_results:
         for key in ("fr_via", "zh_via"):
             value = r.get(key)
             if value:
@@ -1807,8 +1936,8 @@ def main() -> int:
         file=sys.stderr,
     )
     if via_counts:
-        summary = ", ".join(f"{k}={v}" for k, v in sorted(via_counts.items()))
-        print(f"Resolution paths: {summary}", file=sys.stderr)
+        summary_counts = ", ".join(f"{k}={v}" for k, v in sorted(via_counts.items()))
+        print(f"Resolution paths: {summary_counts}", file=sys.stderr)
     if weak:
         print(
             "Weakly verified (accepted on title match only, review manually): "
