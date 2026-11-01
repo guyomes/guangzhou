@@ -12,25 +12,28 @@ The script accepts either:
 For each place the script resolves:
 
   * the French Wikipedia article (exact title first, then a search scoped to
-    the place's city, then an English -> Wikidata fallback), and
+    the place's city/country, then an English -> Wikidata fallback), and
   * the Chinese Wikipedia article through Wikidata's interlanguage links,
     rendered through the Google Translate proxy with ``_x_tr_sl=auto`` and
     ``_x_tr_tl=fr``.
 
+Every candidate is checked against Wikidata: a candidate whose Wikidata item
+has a ``P17`` (country) that is not China (Q148) is treated as a wrong-result
+and rejected. This is what prevents e.g. ``Rivière des Perles`` from resolving
+to the Swiss lake of the same name. ``P131`` (located in the administrative
+territorial entity) is a secondary signal; candidates without any country
+statement are accepted as ``unknown`` so that legitimate Chinese pages (which
+sometimes lack P17) are not dropped.
+
 If no Chinese sitelink exists on Wikidata, the script falls back to a
-full-text search on zh.wikipedia.org, again scoped to the city.
+full-text search on zh.wikipedia.org, again scoped to the city and country.
 
 The name candidates come from the per-language fields of the data file
 (``nameFr`` for French, ``nameEn`` for English, ``nameCn`` for Chinese). An
 existing ``wikipediaUrl`` field is used as a hint and canonicalised through
-the API; if the hinted URL points to a missing page (the "Wikipédia ne possède
-pas d'article avec ce nom" screen), it is treated as not found and the search
-paths kick in.
-
-Searches are scoped to the place's city (see ``CITY_NAMES`` below) so that
-generic names do not resolve to an article about another city. The city is
-read from the ``cityId`` field and can be overridden per place with
-``cityFr`` / ``cityEn`` / ``cityCn``.
+the API; if the hinted URL points to a missing page or to a page whose
+Wikidata item is not located in China, it is treated as not found and the
+search paths kick in.
 
 Usage
 -----
@@ -41,7 +44,10 @@ Output
 ------
 A JSON file next to the input (or ``-o``). Every original field is preserved
 and the following keys are added per place: ``fr_title``, ``fr_url``,
-``zh_title``, ``zh_url``, ``en_title`` and ``wikidata``.
+``zh_title``, ``zh_url``, ``en_title``, ``wikidata``, ``fr_verdict`` and
+``zh_verdict``. ``*_verdict`` is one of ``china`` (verified via P17=P17(China)),
+``unknown`` (no country statement on Wikidata) or ``foreign`` (rejected; the
+corresponding URL is ``null``).
 """
 
 from __future__ import annotations
@@ -55,12 +61,13 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
-USER_AGENT = "place-wikipedia-links/1.1 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.2 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
+SEARCH_RESULTS = 5
 
 FR_WIKI_API = "https://fr.wikipedia.org/w/api.php"
 EN_WIKI_API = "https://en.wikipedia.org/w/api.php"
@@ -72,6 +79,8 @@ ZH_TRANSLATE_BASE = "https://zh-wikipedia-org.translate.goog/wiki/"
 ZH_TRANSLATE_QUERY = "?_x_tr_sl=auto&_x_tr_tl=fr"
 
 JS_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}
+
+CHINA_QID = "Q148"
 
 # Localised city names used to disambiguate searches. Only the names for the
 # target wiki's language are appended to a query. The first name is the
@@ -99,16 +108,29 @@ CITY_NAMES: dict[str, dict[str, list[str]]] = {
     },
 }
 
+# Localised country names, appended after the city names in search queries.
+COUNTRY_TERMS: dict[str, list[str]] = {
+    "fr": ["Chine"],
+    "en": ["China"],
+    "zh": ["中国"],
+}
+
 _PAUSE = DEFAULT_PAUSE
 _VERBOSE = False
 
 _QID_CACHE: dict[tuple[str, str], str | None] = {}
 _SITELINK_CACHE: dict[tuple[str, str], str | None] = {}
+_VERDICT_CACHE: dict[str, str] = {}
 
 
 def _log(message: str) -> None:
     if _VERBOSE:
         print(f"  · {message}", file=sys.stderr)
+
+
+def _chunks(items: list[str], size: int) -> Iterable[list[str]]:
+    for start in range(0, len(items), size):
+        yield items[start:start + size]
 
 
 # ---------------------------------------------------------------------------
@@ -165,71 +187,106 @@ def exact_title(api_url: str, term: str) -> str | None:
     return None
 
 
-def search_title(api_url: str, term: str) -> str | None:
+def search_titles(api_url: str, term: str, limit: int = SEARCH_RESULTS) -> list[str]:
     data = api_get(
         api_url,
         {
             "action": "query",
             "list": "search",
             "srsearch": term,
-            "srlimit": 1,
+            "srlimit": max(1, limit),
             "srnamespace": 0,
         },
     )
     hits = data.get("query", {}).get("search", [])
-    if hits:
-        return hits[0].get("title")
-    return None
+    return [hit.get("title") for hit in hits if hit.get("title")]
 
 
-def search_title_with_city(
-    api_url: str,
-    terms: list[str],
-    city_terms: list[str],
-) -> str | None:
-    """Search for ``<name> <city>`` for every combination before going bare."""
-    for term in terms:
-        for city in city_terms:
-            query = f"{term} {city}"
-            title = search_title(api_url, query)
-            if title:
-                _log(f"search hit for '{query}': {title}")
-                return title
-    for term in terms:
-        title = search_title(api_url, term)
-        if title:
-            _log(f"search hit for '{term}': {title}")
-            return title
-    return None
+# --- Wikidata verification -------------------------------------------------
+
+def _claim_ids(claims: dict[str, Any], prop: str) -> list[str]:
+    ids: list[str] = []
+    for claim in claims.get(prop, []) or []:
+        try:
+            value = claim["mainsnak"]["datavalue"]["value"]
+        except (KeyError, TypeError):
+            continue
+        if isinstance(value, dict) and value.get("id"):
+            ids.append(value["id"])
+    return ids
 
 
-def lookup_title(
-    api_url: str,
-    terms: list[str],
-    city_terms: list[str] | None = None,
-) -> str | None:
-    """Resolve a title: exact matches first, then a city-scoped search."""
-    for term in terms:
-        title = exact_title(api_url, term)
-        if title:
-            return title
-    return search_title_with_city(api_url, terms, list(city_terms or []))
+def _entity_verdict(entity: dict[str, Any]) -> str:
+    claims = entity.get("claims", {}) or {}
+    countries = _claim_ids(claims, "P17")
+    if CHINA_QID in countries:
+        return "china"
+    if countries:
+        return "foreign"
+    # No country statement: sometimes the country is only in the located-in
+    # chain, in which case trust it if it points straight at China.
+    if CHINA_QID in _claim_ids(claims, "P131"):
+        return "china"
+    return "unknown"
 
 
-def canonical_title(api_url: str, title: str) -> str | None:
-    """Follow redirects; return ``None`` for missing pages.
+def verify_entities(qids: Iterable[str | None]) -> dict[str, str]:
+    """Return ``{qid: verdict}`` for each non-empty QID (batched)."""
+    wanted = [qid for qid in dict.fromkeys(qids) if qid]
+    results: dict[str, str] = {}
+    if not wanted:
+        return results
 
-    Hinted URLs from the data file sometimes point to a page that does not
-    exist. Returning ``None`` here makes the caller fall through to the search
-    path instead of propagating a broken title.
-    """
-    try:
-        resolved = exact_title(api_url, title)
-    except Exception:
-        return title
-    if resolved is None:
-        _log(f"hinted title '{title}' is missing, falling back to search")
-    return resolved
+    for chunk in _chunks(wanted, 50):
+        to_fetch = [qid for qid in chunk if qid not in _VERDICT_CACHE]
+        if to_fetch:
+            data = api_get(
+                WIKIDATA_API,
+                {
+                    "action": "wbgetentities",
+                    "ids": "|".join(to_fetch),
+                    "props": "claims",
+                    "claims": "P17|P131",
+                },
+            )
+            for qid, entity in data.get("entities", {}).items():
+                if qid not in to_fetch:
+                    continue
+                if "missing" in entity:
+                    _VERDICT_CACHE[qid] = "unknown"
+                    continue
+                _VERDICT_CACHE[qid] = _entity_verdict(entity)
+        for qid in chunk:
+            results[qid] = _VERDICT_CACHE.get(qid, "unknown")
+    return results
+
+
+def get_qids(api_url: str, titles: list[str]) -> dict[str, str]:
+    """Return ``{page_title: wikidata_qid}`` for existing pages only."""
+    wanted = [title for title in dict.fromkeys(titles) if title]
+    results: dict[str, str] = {}
+    if not wanted:
+        return results
+
+    for chunk in _chunks(wanted, 50):
+        data = api_get(
+            api_url,
+            {
+                "action": "query",
+                "titles": "|".join(chunk),
+                "prop": "pageprops",
+                "ppprop": "wikibase_item",
+                "redirects": 1,
+            },
+        )
+        for page in data.get("query", {}).get("pages", []):
+            if _is_missing_page(page):
+                continue
+            title = page.get("title")
+            qid = page.get("pageprops", {}).get("wikibase_item")
+            if title and qid:
+                results[title] = qid
+    return results
 
 
 def get_qid(api_url: str, title: str) -> str | None:
@@ -257,6 +314,13 @@ def get_qid(api_url: str, title: str) -> str | None:
     return qid
 
 
+def entity_verdict_for_title(api_url: str, title: str) -> str:
+    qid = get_qid(api_url, title)
+    if not qid:
+        return "unknown"
+    return verify_entities([qid]).get(qid, "unknown")
+
+
 def get_sitelink(qid: str, site: str) -> str | None:
     key = (qid, site)
     if key in _SITELINK_CACHE:
@@ -274,6 +338,117 @@ def get_sitelink(qid: str, site: str) -> str | None:
     title = entity.get("sitelinks", {}).get(site, {}).get("title")
     _SITELINK_CACHE[key] = title
     return title
+
+
+# --- Title resolution ------------------------------------------------------
+
+def lookup_title(
+    api_url: str,
+    terms: list[str],
+    city_terms: list[str] | None = None,
+    country_terms: list[str] | None = None,
+) -> str | None:
+    """Resolve a title: exact matches first, then a scoped search."""
+    for term in terms:
+        title = exact_title(api_url, term)
+        if not title:
+            continue
+        verdict = entity_verdict_for_title(api_url, title)
+        if verdict == "foreign":
+            _log(f"exact match '{term}' -> '{title}' rejected (foreign)")
+            continue
+        return title
+    return search_title_with_context(
+        api_url,
+        terms,
+        list(city_terms or []),
+        list(country_terms or []),
+    )
+
+
+def search_title_with_context(
+    api_url: str,
+    terms: list[str],
+    city_terms: list[str],
+    country_terms: list[str],
+) -> str | None:
+    """Search ``<name> <city>``, then ``<name> <country>``, then ``<name>``.
+
+    For each query we inspect the first :data:`SEARCH_RESULTS` hits and pick
+    the first whose Wikidata item is located in China. A hit without any
+    country statement is kept as a fallback only if no Chinese hit is found
+    in the same query; hits that are demonstrably foreign are skipped.
+    """
+    queries: list[str] = []
+    seen: set[str] = set()
+
+    def add(query: str) -> None:
+        if query and query not in seen:
+            seen.add(query)
+            queries.append(query)
+
+    for term in terms:
+        for city in city_terms:
+            add(f"{term} {city}")
+        for country in country_terms:
+            add(f"{term} {country}")
+        add(term)
+
+    for query in queries:
+        hits = search_titles(api_url, query)
+        if not hits:
+            continue
+        qid_map = get_qids(api_url, hits)
+        verdicts = verify_entities(list(qid_map.values()))
+
+        chinese_hit: str | None = None
+        unknown_hit: str | None = None
+        for hit in hits:
+            qid = qid_map.get(hit)
+            verdict = verdicts.get(qid or "", "unknown")
+            if verdict == "china":
+                chinese_hit = hit
+                break
+            if verdict == "unknown" and unknown_hit is None:
+                unknown_hit = hit
+
+        if chinese_hit:
+            _log(f"search hit for '{query}': {chinese_hit} (verified China)")
+            return chinese_hit
+        if unknown_hit:
+            _log(f"search hit for '{query}': {unknown_hit} (unverified)")
+            return unknown_hit
+        _log(f"every hit for '{query}' is foreign, trying next query")
+
+    return None
+
+
+def canonical_title(api_url: str, title: str) -> str | None:
+    """Follow redirects; return ``None`` for missing pages.
+
+    Hinted URLs from the data file sometimes point to a page that does not
+    exist. Returning ``None`` here makes the caller fall through to the search
+    path instead of propagating a broken title.
+    """
+    try:
+        resolved = exact_title(api_url, title)
+    except Exception:
+        return title
+    if resolved is None:
+        _log(f"hinted title '{title}' is missing, falling back to search")
+    return resolved
+
+
+def verify_hint(api_url: str, title: str) -> str | None:
+    """Canonicalise a hinted title and discard wrong-country results."""
+    resolved = canonical_title(api_url, title)
+    if not resolved:
+        return None
+    verdict = entity_verdict_for_title(api_url, resolved)
+    if verdict == "foreign":
+        _log(f"hinted title '{resolved}' rejected (foreign)")
+        return None
+    return resolved
 
 
 # ---------------------------------------------------------------------------
@@ -413,6 +588,9 @@ def city_terms_for(place: dict[str, Any], lang: str) -> list[str]:
     return terms
 
 
+_API_FOR_LANG = {"fr": FR_WIKI_API, "en": EN_WIKI_API, "zh": ZH_WIKI_API}
+
+
 def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     fr_terms = collect_terms(place, _FR_NAME_KEYS)
     en_terms = collect_terms(place, _EN_NAME_KEYS)
@@ -420,32 +598,40 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     fr_cities = city_terms_for(place, "fr")
     en_cities = city_terms_for(place, "en")
     zh_cities = city_terms_for(place, "zh")
+    fr_countries = COUNTRY_TERMS["fr"]
+    en_countries = COUNTRY_TERMS["en"]
+    zh_countries = COUNTRY_TERMS["zh"]
 
     hint_lang, hint_title = wiki_hint(place)
 
     fr_title: str | None = None
     en_title: str | None = None
     zh_title: str | None = None
+    fr_verdict: str | None = None
+    zh_verdict: str | None = None
     qid: str | None = None
 
-    # 0. Use the existing wikipediaUrl field as a hint. A missing hinted page
-    #    yields None, which lets the search paths below run.
+    # 0. Use the existing wikipediaUrl field as a hint, unless it is missing
+    #    or points to a page about another country.
     if hint_lang and hint_title:
-        if hint_lang == "fr":
-            fr_title = canonical_title(FR_WIKI_API, hint_title)
-        elif hint_lang == "en":
-            en_title = canonical_title(EN_WIKI_API, hint_title)
-        elif hint_lang == "zh":
-            zh_title = canonical_title(ZH_WIKI_API, hint_title)
+        api = _API_FOR_LANG[hint_lang]
+        verified = verify_hint(api, hint_title)
+        if verified:
+            if hint_lang == "fr":
+                fr_title = verified
+            elif hint_lang == "en":
+                en_title = verified
+            else:
+                zh_title = verified
 
-    # 1. Direct French lookup (exact title, then a city-scoped search).
+    # 1. Direct French lookup (exact title, then a scoped search).
     if not fr_title:
-        fr_title = lookup_title(FR_WIKI_API, fr_terms, fr_cities)
+        fr_title = lookup_title(FR_WIKI_API, fr_terms, fr_cities, fr_countries)
 
     # 2. Fallback: English Wikipedia -> Wikidata -> French sitelink.
     if not fr_title:
         if not en_title:
-            en_title = lookup_title(EN_WIKI_API, en_terms, en_cities)
+            en_title = lookup_title(EN_WIKI_API, en_terms, en_cities, en_countries)
         if en_title:
             qid = get_qid(EN_WIKI_API, en_title)
             if qid:
@@ -459,18 +645,44 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     if not en_title and qid:
         en_title = get_sitelink(qid, "enwiki")
 
-    # 5. Chinese article via Wikidata interlanguage link.
+    # 5. Chinese article via Wikidata interlanguage link, if it is about China.
     if not zh_title and qid:
-        zh_title = get_sitelink(qid, "zhwiki")
+        candidate = get_sitelink(qid, "zhwiki")
+        if candidate:
+            verdict = entity_verdict_for_title(ZH_WIKI_API, candidate)
+            if verdict == "foreign":
+                _log(f"zh sitelink '{candidate}' rejected (foreign)")
+            else:
+                zh_title = candidate
 
-    # 6. Last resort: Chinese full-text search, scoped to the city.
+    if fr_title:
+        fr_verdict = entity_verdict_for_title(FR_WIKI_API, fr_title)
+
+    # 6. Chinese full-text search, scoped to the city and country. The Chinese
+    #    name is tried first so that entries like ``陈家祠 (陈氏书院)`` resolve
+    #    to ``陈家祠`` before we fall back to the English/French titles.
+    if not zh_title and zh_terms:
+        zh_title = lookup_title(ZH_WIKI_API, zh_terms, zh_cities, zh_countries)
+
     if not zh_title:
-        zh_candidates: list[str] = list(zh_terms)
-        if en_title and en_title not in zh_candidates:
-            zh_candidates.insert(0, en_title)
-        if fr_title and fr_title not in zh_candidates:
-            zh_candidates.append(fr_title)
-        zh_title = lookup_title(ZH_WIKI_API, zh_candidates, zh_cities)
+        extra: list[str] = []
+        if en_title:
+            extra.append(en_title)
+        if fr_title:
+            extra.append(fr_title)
+        if extra:
+            zh_title = lookup_title(ZH_WIKI_API, extra, zh_cities, zh_countries)
+
+    if zh_title:
+        zh_verdict = entity_verdict_for_title(ZH_WIKI_API, zh_title)
+        if zh_verdict == "foreign":
+            _log(f"zh result '{zh_title}' rejected (foreign)")
+            zh_title = None
+            zh_verdict = None
+
+    # 7. Backfill the Wikidata id if it is still unknown.
+    if not qid and zh_title:
+        qid = get_qid(ZH_WIKI_API, zh_title)
 
     result = dict(place)
     result["fr_title"] = fr_title
@@ -479,6 +691,8 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     result["zh_url"] = zh_url(zh_title) if zh_title else None
     result["wikidata"] = qid
     result["en_title"] = en_title
+    result["fr_verdict"] = fr_verdict
+    result["zh_verdict"] = zh_verdict
     return result
 
 
@@ -791,19 +1005,29 @@ def parse_args() -> argparse.Namespace:
         help=f"Seconds to sleep between API calls (default: {DEFAULT_PAUSE}).",
     )
     parser.add_argument(
+        "--search-results",
+        type=int,
+        default=SEARCH_RESULTS,
+        help=(
+            "How many search results to inspect per query before giving up "
+            f"(default: {SEARCH_RESULTS})."
+        ),
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
-        help="Log the search queries that hit and hinted titles that were missing.",
+        help="Log every query, the accepted title, and rejected candidates.",
     )
     return parser.parse_args()
 
 
 def main() -> int:
-    global _PAUSE, _VERBOSE
+    global _PAUSE, _VERBOSE, SEARCH_RESULTS
     args = parse_args()
     _PAUSE = max(0.0, args.pause)
     _VERBOSE = bool(args.verbose)
+    SEARCH_RESULTS = max(1, args.search_results)
 
     places = load_places(args.input)
     if not places:
@@ -831,11 +1055,22 @@ def main() -> int:
 
     missing_fr = sum(1 for r in results if not r.get("fr_title"))
     missing_zh = sum(1 for r in results if not r.get("zh_title"))
+    unverified = [
+        r.get("name") or r.get("id")
+        for r in results
+        if r.get("fr_verdict") == "unknown" or r.get("zh_verdict") == "unknown"
+    ]
     print(f"Wrote {len(results)} entries to {output}", file=sys.stderr)
     print(
         f"Missing French: {missing_fr}, missing Chinese: {missing_zh}",
         file=sys.stderr,
     )
+    if unverified:
+        print(
+            "Unverified (no country statement on Wikidata, review manually): "
+            + ", ".join(str(u) for u in unverified),
+            file=sys.stderr,
+        )
     return 0
 
 
