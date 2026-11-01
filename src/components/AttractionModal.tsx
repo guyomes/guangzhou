@@ -22,6 +22,32 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
 }) => {
   if (!attraction) return null;
 
+  // Wikipedia links, in display order: the hand-curated wikipediaUrl first,
+  // then the script-resolved French article (skipped when identical to
+  // wikipediaUrl), then the auto-translated Chinese article.
+  const wikipediaLinks: { href: string; label: string; title: string }[] = [];
+  if (attraction.wikipediaUrl) {
+    wikipediaLinks.push({
+      href: attraction.wikipediaUrl,
+      label: 'Wikipédia',
+      title: "Lire l'article encyclopédique sur Wikipédia",
+    });
+  }
+  if (attraction.fr_url && attraction.fr_url !== attraction.wikipediaUrl) {
+    wikipediaLinks.push({
+      href: attraction.fr_url,
+      label: 'Wikipédia FR',
+      title: 'Article Wikipédia en français (résolu automatiquement)',
+    });
+  }
+  if (attraction.zh_url) {
+    wikipediaLinks.push({
+      href: attraction.zh_url,
+      label: 'Wikipédia 中文 (traduit)',
+      title: 'Article Wikipédia en chinois, traduit automatiquement en français',
+    });
+  }
+
   return (
     <div className="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4 overflow-y-auto">
       <div 
@@ -219,7 +245,7 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
                   Ressources & plateformes documentaires :
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <a
                     href={attraction.tripadvisorUrl}
                     target="_blank"
@@ -231,18 +257,19 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
                     <ExternalLink className="w-3 h-3" />
                   </a>
 
-                  {attraction.wikipediaUrl && (
+                  {wikipediaLinks.map((link) => (
                     <a
-                      href={attraction.wikipediaUrl}
+                      key={link.href}
+                      href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60 hover:bg-sky-100 transition-colors font-semibold text-xs"
-                      title="Lire l'article encyclopédique sur Wikipédia"
+                      title={link.title}
                     >
-                      <span>Wikipédia</span>
+                      <span>{link.label}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
-                  )}
+                  ))}
                 </div>
               </div>
             </div>
