@@ -3,8 +3,13 @@
 
 The script accepts either:
 
-  * a data module in the same shape as ``src/data/guangzhouData.ts``
-    (a ``const SOME_NAME: any[] = [ {...}, ... ];`` literal), or
+  * a data module in the same shape as ``src/data/guangzhouData.ts`` or
+    ``src/data/citiesData.ts`` — any number of top-level arrays whose variable
+    name ends with ``_ATTACTIONS`` are parsed (so ``RAW_GUANGZHOU_ATTACTIONS``,
+    ``SHENZHEN_ATTACTIONS``, ``SHANTOU_ATTACTIONS``, ``CHAOZHOU_ATTACTIONS``
+    are all picked up from a single file). Relative ``import … from './…'``
+    statements are followed, letting a file like ``citiesData.ts`` be used on
+    its own even though Guangzhou lives in ``guangzhouData.ts``; or
   * a ``.json`` file (list of strings, list of objects, or an object mapping
     place name -> metadata), or
   * a plain text file with one place per line (``#`` comments allowed).
@@ -45,6 +50,7 @@ found and the search paths kick in.
 
 Usage
 -----
+    python scripts/fetch_wikipedia_links.py src/data/citiesData.ts
     python scripts/fetch_wikipedia_links.py src/data/guangzhouData.ts
     python scripts/fetch_wikipedia_links.py places.json -o places.wikipedia.json
 
@@ -69,7 +75,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "place-wikipedia-links/1.4 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.5 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
@@ -149,6 +155,19 @@ _WIKI_SKIP_PREFIXES = (
     "mediawiki:",
     "draft:",
 )
+
+# Suffix of the top-level arrays we collect from data modules.
+_ATTRA_SUFFIX = "_ATTACTIONS"
+
+# Matches `<Name>: <Type> = [`. The type is optional and permits `any[]`,
+# `Attraction[]`, `Array<Attraction>`, `Record<…>`, etc. We exclude `=`, `;`,
+# `{` and `}` from the type so that a `= {` assignment is never matched.
+_VAR_ARRAY_ASSIGN_RE = re.compile(
+    r"\b([A-Za-z_$][A-Za-z0-9_$]*)\s*(?::\s*[^=;{}]+?)?=\s*\["
+)
+
+# Matches `from './relative/path'` in import statements.
+_REL_IMPORT_RE = re.compile(r"\bfrom\s+['\"](\.[^'\"]+)['\"]")
 
 _PAUSE = DEFAULT_PAUSE
 _VERBOSE = False
@@ -1341,7 +1360,11 @@ class JSLiteralParser:
 
 
 def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
-    """Return the largest array of objects found in ``text``."""
+    """Fallback: return the largest array of objects found in ``text``.
+
+    Used only when no ``_ATTACTIONS`` array is found in the module (or its
+    relative imports), so that arbitrary ``.ts``/``.js`` files keep working.
+    """
     best: list[dict[str, Any]] | None = None
 
     for match in _ARRAY_ASSIGN_RE.finditer(text):
@@ -1358,6 +1381,126 @@ def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
             best = objects
 
     return best
+
+
+def parse_js_attraction_arrays(text: str) -> list[dict[str, Any]]:
+    """Parse every ``<Name>_ATTACTIONS: … = [ … ]`` literal in ``text``.
+
+    Only top-level names ending in ``_ATTACTIONS`` are considered, which is
+    what lets a module like ``src/data/citiesData.ts`` (which defines
+    ``SHENZHEN_ATTACTIONS``, ``SHANTOU_ATTACTIONS``, ``CHAOZHOU_ATTACTIONS``...)
+    be read without executing TypeScript. Aliases built from a function call
+    (``GUANGZHOU_ATTACTIONS = RAW_GUANGZHOU_ATTACTIONS.map(…)``) and arrays
+    that use spread syntax are simply skipped — the underlying ``_ATTACTIONS``
+    literal is what gets picked up.
+    """
+    objects: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+
+    for match in _VAR_ARRAY_ASSIGN_RE.finditer(text):
+        name = match.group(1)
+        if not name.endswith(_ATTRA_SUFFIX):
+            continue
+
+        start = match.end() - 1  # position of '['
+        parser = JSLiteralParser(text, start)
+        try:
+            value = parser.parse_value()
+        except (ValueError, IndexError):
+            continue
+        if not isinstance(value, list):
+            continue
+
+        for item in value:
+            if not isinstance(item, dict):
+                continue
+            ident = item.get("id")
+            if isinstance(ident, str):
+                if ident in seen_ids:
+                    continue
+                seen_ids.add(ident)
+            objects.append(item)
+
+    return objects
+
+
+def _resolve_import_target(base: Path) -> list[Path]:
+    """Return existing candidate paths for a base import path, best first."""
+    if base.suffix:
+        candidates = [base]
+    else:
+        candidates = [
+            base.with_suffix(ext)
+            for ext in (".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs")
+        ]
+    candidates.extend(
+        [
+            base / "index.ts",
+            base / "index.tsx",
+            base / "index.js",
+            base / "index.jsx",
+        ]
+    )
+    return [candidate for candidate in candidates if candidate.exists()]
+
+
+def _collect_js_attractions(
+    path: Path,
+    visited: set[Path],
+) -> list[dict[str, Any]]:
+    """Recursively collect ``*_ATTACTIONS`` arrays starting from ``path``.
+
+    Relative ``import … from './…'`` statements are followed so that a single
+    entry point (e.g. ``citiesData.ts``) yields the data of every module it
+    re-exports, without needing to list them on the command line. Imported
+    arrays come before the file's own arrays, matching the ordering used by
+    ``ALL_ATTACTIONS``.
+    """
+    try:
+        resolved = path.resolve()
+    except OSError:
+        resolved = path
+    if resolved in visited:
+        return []
+    visited.add(resolved)
+
+    if not path.exists():
+        return []
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+
+    objects: list[dict[str, Any]] = []
+
+    for match in _REL_IMPORT_RE.finditer(text):
+        target = path.parent / match.group(1)
+        for candidate in _resolve_import_target(target):
+            imported = _collect_js_attractions(candidate, visited)
+            if imported:
+                objects.extend(imported)
+            break
+
+    objects.extend(parse_js_attraction_arrays(text))
+    return objects
+
+
+def js_attractions_from_file(path: Path) -> list[dict[str, Any]]:
+    """Collect ``*_ATTACTIONS`` arrays from ``path`` and its relative imports."""
+    objects = _collect_js_attractions(path, set())
+
+    # De-duplicate by ``id`` at the top level, in case the same array is
+    # reachable through more than one import chain.
+    seen: set[str] = set()
+    result: list[dict[str, Any]] = []
+    for item in objects:
+        ident = item.get("id")
+        if isinstance(ident, str):
+            if ident in seen:
+                continue
+            seen.add(ident)
+        result.append(item)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -1380,11 +1523,14 @@ def load_places(path: Path) -> list[dict[str, Any]]:
     suffix = path.suffix.lower()
 
     if suffix in JS_SUFFIXES:
-        objects = parse_js_data_objects(text)
+        objects = js_attractions_from_file(path)
+        if not objects:
+            objects = parse_js_data_objects(text)
         if not objects:
             raise SystemExit(
-                f"No array-of-objects literal found in {path}. "
-                "Expected something like `const DATA: any[] = [ ... ];`."
+                f"No `_ATTACTIONS` array or array-of-objects literal found in "
+                f"{path}. Expected something like "
+                "`const SHENZHEN_ATTACTIONS: Attraction[] = [ ... ];`."
             )
         return [normalize_entry(item) for item in objects]
 
@@ -1422,16 +1568,19 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Recover French and Chinese Wikipedia links for places. Accepts a "
-            "guangzhouData-style .ts/.js module, a .json file, or a plain "
-            "text file with one place per line."
+            "guangzhouData/citiesData-style .ts/.js module (all arrays whose "
+            "name ends with _ATTACTIONS are collected, and relative imports "
+            "are followed), a .json file, or a plain text file with one place "
+            "per line."
         )
     )
     parser.add_argument(
         "input",
         type=Path,
         help=(
-            "Input file: .ts/.tsx/.js/.jsx data module, .json, or one-name-"
-            "per-line text."
+            "Input file: .ts/.tsx/.js/.jsx data module (arrays ending in "
+            "_ATTACTIONS, with relative imports followed), .json, or a "
+            "one-name-per-line text file."
         ),
     )
     parser.add_argument(
