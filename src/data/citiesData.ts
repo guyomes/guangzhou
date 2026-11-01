@@ -116,7 +116,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Architecture Futuriste', 'Skyline', 'Vue Hong Kong', '599 Mètres']
+    tags: ['Architecture Futuriste', 'Skyline', 'Vue Hong Kong', '599 Mètres'],
+    fr_title: 'Ping An Finance Centre',
+    fr_url: 'https://fr.wikipedia.org/wiki/Ping_An_Finance_Centre',
+    zh_title: '平安金融中心',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B9%B3%E5%AE%89%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Ping An Finance Centre',
+    wikidata: 'Q1077308',
+    fr_verdict: 'city',
+    zh_verdict: 'city',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'oct-loft-shenzhen',
@@ -185,7 +195,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: false,
     isHiddenGem: true,
-    tags: ['Pépite Cachée', 'Design Industriel', 'Clubs de Jazz', 'Cafés de Torréfaction']
+    tags: ['Pépite Cachée', 'Design Industriel', 'Clubs de Jazz', 'Cafés de Torréfaction'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '華僑城',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E8%8F%AF%E5%83%91%E5%9F%8E?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Overseas Chinese Town',
+    wikidata: 'Q13961773',
+    fr_verdict: null,
+    zh_verdict: 'city',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'shenzhen-bay-park',
@@ -254,7 +274,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Parc Côtier', 'Vue Hong Kong', 'Piste Cyclable', 'Oiseaux Migrateurs']
+    tags: ['Parc Côtier', 'Vue Hong Kong', 'Piste Cyclable', 'Oiseaux Migrateurs'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '深圳灣公園',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%B7%B1%E5%9C%B3%E7%81%A3%E5%85%AC%E5%9C%92?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Shenzhen Bay Park',
+    wikidata: 'Q20716864',
+    fr_verdict: null,
+    zh_verdict: 'city',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'dapeng-ancient-fortress',
@@ -323,7 +353,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: false,
     isHiddenGem: true,
-    tags: ['Pépite Cachée', 'Forteresse Ming 1394', 'Histoire Navale', 'Bord de Mer']
+    tags: ['Pépite Cachée', 'Forteresse Ming 1394', 'Histoire Navale', 'Bord de Mer'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '大鹏所城',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%A4%A7%E9%B9%8F%E6%89%80%E5%9F%8E?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: null,
+    wikidata: 'Q1022212',
+    fr_verdict: null,
+    zh_verdict: 'city',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'shenzhen-mixc-world',
@@ -392,7 +432,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Mall Futuriste', 'Bubblecoat Elephant', 'Tech Flagships', 'Terrasses & Bistros']
+    tags: ['Mall Futuriste', 'Bubblecoat Elephant', 'Tech Flagships', 'Terrasses & Bistros'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '华润万象生活',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%8D%8E%E6%B6%A6%E4%B8%87%E8%B1%A1%E7%94%9F%E6%B4%BB?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'China Resources Mixc Lifestyle',
+    wikidata: 'Q106205882',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'shenzhen-robot-arena',
@@ -460,7 +510,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: true,
-    tags: ['Robot Box', 'Combats Méchas', 'Cyberpunk', 'High-Tech Shenzhen']
+    tags: ['Robot Box', 'Combats Méchas', 'Cyberpunk', 'High-Tech Shenzhen'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: null,
+    zh_url: null,
+    en_title: null,
+    wikidata: null,
+    fr_verdict: null,
+    zh_verdict: null,
+    fr_via: null,
+    zh_via: null
   },
   {
     id: 'runyuan-coconut-chicken',
@@ -529,7 +589,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Poulet à l’Eau de Coco', 'Spécialité de Shenzhen', 'Wenchang Chicken', 'Baozai Fan']
+    tags: ['Poulet à l’Eau de Coco', 'Spécialité de Shenzhen', 'Wenchang Chicken', 'Baozai Fan'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '文昌雞',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%96%87%E6%98%8C%E9%9B%9E?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Wenchang chicken',
+    wikidata: 'Q11079928',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'shenzhen-tech-canopy',
@@ -598,7 +668,17 @@ export const SHENZHEN_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Toit Technologique LED', 'Huaqiangbei', 'Cyberpunk', 'Silicon Valley Hardware', 'Néons Nocturnes']
+    tags: ['Toit Technologique LED', 'Huaqiangbei', 'Cyberpunk', 'Silicon Valley Hardware', 'Néons Nocturnes'],
+    fr_title: 'Centre commercial numérique Yuanwang',
+    fr_url: 'https://fr.wikipedia.org/wiki/Centre_commercial_num%C3%A9rique_Yuanwang',
+    zh_title: '华强北',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%8D%8E%E5%BC%BA%E5%8C%97?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Yuanwang digital mall',
+    wikidata: 'Q16926170',
+    fr_verdict: 'city',
+    zh_verdict: 'city',
+    fr_via: 'hint',
+    zh_via: 'search'
   }
 ];
 
@@ -670,7 +750,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Architecture Qilou', 'Plan Radial', 'Mémoire de la Diaspora', 'Échoppes Gourmandes']
+    tags: ['Architecture Qilou', 'Plan Radial', 'Mémoire de la Diaspora', 'Échoppes Gourmandes'],
+    fr_title: 'Shantou',
+    fr_url: 'https://fr.wikipedia.org/wiki/Shantou',
+    zh_title: '汕头市',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%B1%95%E5%A4%B4%E5%B8%82?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Shantou',
+    wikidata: 'Q59100',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'sitelink',
+    zh_via: 'sitelink'
   },
   {
     id: 'shantou-beef-hotpot',
@@ -739,7 +829,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Gastronomie Chaoshan', 'Fondue de Bœuf', 'Sauce Shacha', 'Légende Culinaire']
+    tags: ['Gastronomie Chaoshan', 'Fondue de Bœuf', 'Sauce Shacha', 'Légende Culinaire'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '潮汕牛肉火锅',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%BD%AE%E6%B1%95%E7%89%9B%E8%82%89%E7%81%AB%E9%94%85?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: null,
+    wikidata: 'Q97278843',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'nanao-island-shantou',
@@ -808,7 +908,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Île Maritime', 'Tropique du Cancer', 'Plage Qing’ao', 'Parcs à Huîtres']
+    tags: ['Île Maritime', 'Tropique du Cancer', 'Plage Qing’ao', 'Parcs à Huîtres'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '南澳岛',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%8D%97%E6%BE%B3%E5%B2%9B?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: null,
+    wikidata: 'Q28794776',
+    fr_verdict: null,
+    zh_verdict: 'other_china',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'shantou-mixc',
@@ -877,7 +987,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Mall Moderne', 'Patinoire Olympique', 'Nanyang Street', 'Shopping de Prestige']
+    tags: ['Mall Moderne', 'Patinoire Olympique', 'Nanyang Street', 'Shopping de Prestige'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '华润万象生活',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%8D%8E%E6%B6%A6%E4%B8%87%E8%B1%A1%E7%94%9F%E6%B4%BB?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'China Resources Mixc Lifestyle',
+    wikidata: 'Q106205882',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'shantou-fuyuan-seafood',
@@ -946,7 +1066,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Michelin Selected', 'Crabes Cru Marinés', 'Da Pai Dang', 'Fruits de Mer Chaoshan']
+    tags: ['Michelin Selected', 'Crabes Cru Marinés', 'Da Pai Dang', 'Fruits de Mer Chaoshan'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: null,
+    zh_url: null,
+    en_title: null,
+    wikidata: null,
+    fr_verdict: null,
+    zh_verdict: null,
+    fr_via: null,
+    zh_via: null
   },
   {
     id: 'shantou-chen-cihong-residence',
@@ -1015,7 +1145,17 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Manoir Historique', '岭南第一侨宅', 'Quatre Chevaux Tirant un Chariot', 'Faïences Importées', 'Chenghai', 'Diaspora Teochew']
+    tags: ['Manoir Historique', '岭南第一侨宅', 'Quatre Chevaux Tirant un Chariot', 'Faïences Importées', 'Chenghai', 'Diaspora Teochew'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '陈慈黉故居',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E9%99%88%E6%85%88%E9%BB%89%E6%95%85%E5%B1%85?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Chenghai, Shantou',
+    wikidata: 'Q1028088',
+    fr_verdict: null,
+    zh_verdict: 'other_china',
+    fr_via: null,
+    zh_via: 'search'
   }
 ];
 
@@ -1087,7 +1227,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Pont Flottant Song', '18 Bateaux de Bois', 'Spectacle Son & Lumière', 'Rivière Han']
+    tags: ['Pont Flottant Song', '18 Bateaux de Bois', 'Spectacle Son & Lumière', 'Rivière Han'],
+    fr_title: 'Pont Guangji',
+    fr_url: 'https://fr.wikipedia.org/wiki/Pont_Guangji',
+    zh_title: '广济桥 (潮州)',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B9%BF%E6%B5%8E%E6%A1%A5_%28%E6%BD%AE%E5%B7%9E%29?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Guangji Bridge (Chaozhou)',
+    wikidata: 'Q826705',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'chaozhou-paifang-street',
@@ -1156,7 +1306,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['22 Portiques de Granit', 'Thé Gongfu', 'Broderie Teochew', 'Omelette aux Huîtres']
+    tags: ['22 Portiques de Granit', 'Thé Gongfu', 'Broderie Teochew', 'Omelette aux Huîtres'],
+    fr_title: 'Chaozhou',
+    fr_url: 'https://fr.wikipedia.org/wiki/Chaozhou',
+    zh_title: '潮州市',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%BD%AE%E5%B7%9E%E5%B8%82?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Chaozhou',
+    wikidata: 'Q59227',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'sitelink',
+    zh_via: 'sitelink'
   },
   {
     id: 'chaozhou-kaiyuan-temple',
@@ -1225,7 +1385,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Sanctuaire Tang 738', 'Cloche de Bronze Song', 'Sculpture sur Bois Doré', 'Bouddhisme Zen']
+    tags: ['Sanctuaire Tang 738', 'Cloche de Bronze Song', 'Sculpture sur Bois Doré', 'Bouddhisme Zen'],
+    fr_title: 'Temple Kaiyuan (Chaozhou)',
+    fr_url: 'https://fr.wikipedia.org/wiki/Temple_Kaiyuan_%28Chaozhou%29',
+    zh_title: '开元寺 (潮州)',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%BC%80%E5%85%83%E5%AF%BA_%28%E6%BD%AE%E5%B7%9E%29?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Kaiyuan Temple (Chaozhou)',
+    wikidata: 'Q2546519',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'search',
+    zh_via: 'sitelink'
   },
   {
     id: 'chaozhou-gongfu-tea',
@@ -1294,7 +1464,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Thé UNESCO', 'Fenghuang Dancong', 'Art de Vivre', '21 Étapes Sacrées']
+    tags: ['Thé UNESCO', 'Fenghuang Dancong', 'Art de Vivre', '21 Étapes Sacrées'],
+    fr_title: 'Gong fu cha',
+    fr_url: 'https://fr.wikipedia.org/wiki/Gong_fu_cha',
+    zh_title: '工夫茶',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B7%A5%E5%A4%AB%E8%8C%B6?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Gongfu tea',
+    wikidata: 'Q2606657',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'chaozhou-live-opera',
@@ -1363,7 +1543,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Opéra UNESCO', 'Costumes de Soie', 'Erxian Fiddle', 'Spectacle Vivant']
+    tags: ['Opéra UNESCO', 'Costumes de Soie', 'Erxian Fiddle', 'Spectacle Vivant'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '潮剧',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%BD%AE%E5%89%A7?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Teochew opera',
+    wikidata: 'Q843927',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'chaozhou-goose-banquet',
@@ -1432,7 +1622,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Oie à Tête de Lion', 'Haute Gastronomie Teochew', 'Foie d’Oie Braisé', 'Cour Ancestrale']
+    tags: ['Oie à Tête de Lion', 'Haute Gastronomie Teochew', 'Foie d’Oie Braisé', 'Cour Ancestrale'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: null,
+    zh_url: null,
+    en_title: null,
+    wikidata: null,
+    fr_verdict: null,
+    zh_verdict: null,
+    fr_via: null,
+    zh_via: null
   },
   {
     id: 'orange-hotel-chaozhou',
@@ -1501,7 +1701,17 @@ export const CHAOZHOU_ATTRACTIONS: Attraction[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Hôtel', 'Route Cixing', 'Centre de la Fortune', 'Chao’an', 'Design Moderne']
+    tags: ['Hôtel', 'Route Cixing', 'Centre de la Fortune', 'Chao’an', 'Design Moderne'],
+    fr_title: 'Huazhu',
+    fr_url: 'https://fr.wikipedia.org/wiki/Huazhu',
+    zh_title: '华住集团',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%8D%8E%E4%BD%8F%E9%9B%86%E5%9B%A2?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'H World Group Limited',
+    wikidata: 'Q15926208',
+    fr_verdict: 'other_china',
+    zh_verdict: 'other_china',
+    fr_via: 'sitelink',
+    zh_via: 'sitelink'
   }
 ];
 

@@ -68,7 +68,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Architecture', 'Vue Panoramique', 'Rivière des Perles', 'Photographie Nocturne']
+    tags: ['Architecture', 'Vue Panoramique', 'Rivière des Perles', 'Photographie Nocturne'],
+    fr_title: 'Tour de télévision et de tourisme de Canton',
+    fr_url: 'https://fr.wikipedia.org/wiki/Tour_de_t%C3%A9l%C3%A9vision_et_de_tourisme_de_Canton',
+    zh_title: '广州塔',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B9%BF%E5%B7%9E%E5%A1%94?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Canton Tower',
+    wikidata: 'Q168400',
+    fr_verdict: 'city',
+    zh_verdict: 'city',
+    fr_via: 'search',
+    zh_via: 'sitelink'
   },
   {
     id: 'chen-clan-ancestral-hall',
@@ -136,7 +146,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Patrimoine Qing', 'Sculptures sur Bois', 'Céramique de Shiwan', 'Artisanat Lingnan']
+    tags: ['Patrimoine Qing', 'Sculptures sur Bois', 'Céramique de Shiwan', 'Artisanat Lingnan'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '陈家祠',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E9%99%88%E5%AE%B6%E7%A5%A0?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Chen Clan Ancestral Hall',
+    wikidata: 'Q5090739',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'shamian-island',
@@ -204,7 +224,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Concessions Historiques', 'Banyans Centenaires', 'Flânerie', 'Patrimoine Franco-Britannique']
+    tags: ['Concessions Historiques', 'Banyans Centenaires', 'Flânerie', 'Patrimoine Franco-Britannique'],
+    fr_title: 'Île de Shamian',
+    fr_url: 'https://fr.wikipedia.org/wiki/%C3%8Ele_de_Shamian',
+    zh_title: '沙面岛',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%B2%99%E9%9D%A2%E5%B2%9B?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Shamian',
+    wikidata: 'Q529977',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'cantonese-dimsum-yumcha',
@@ -272,7 +302,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Gastronomie Cantonaise', 'Yum Cha', 'Étoile Gourmande', 'Art de Vivre']
+    tags: ['Gastronomie Cantonaise', 'Yum Cha', 'Étoile Gourmande', 'Art de Vivre'],
+    fr_title: 'Yum cha',
+    fr_url: 'https://fr.wikipedia.org/wiki/Yum_cha',
+    zh_title: '飲茶',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E9%A3%B2%E8%8C%B6?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Yum cha',
+    wikidata: 'Q2602488',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'dongshankou',
@@ -340,7 +380,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: false,
     isHiddenGem: true,
-    tags: ['Pépite Cachée', 'Villas Rétro 1920', 'Galeries d’Art', 'Cafés de Spécialité']
+    tags: ['Pépite Cachée', 'Villas Rétro 1920', 'Galeries d’Art', 'Cafés de Spécialité'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '东山区 (广州市)',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E4%B8%9C%E5%B1%B1%E5%8C%BA_%28%E5%B9%BF%E5%B7%9E%E5%B8%82%29?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Dongshan, Guangzhou',
+    wikidata: 'Q5296019',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'yong-qing-fang',
@@ -408,7 +458,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Opéra UNESCO', 'Xiguan Qilou', 'Bruce Lee', 'Architecture sur l’eau']
+    tags: ['Opéra UNESCO', 'Xiguan Qilou', 'Bruce Lee', 'Architecture sur l’eau'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '永庆坊',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E6%B0%B8%E5%BA%86%E5%9D%8A?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: null,
+    wikidata: 'Q63925707',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'yuexiu-park',
@@ -476,7 +536,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Parc Urbain', 'Légende des 5 Béliers', 'Muraille Ming', 'Tour Zhenhai']
+    tags: ['Parc Urbain', 'Légende des 5 Béliers', 'Muraille Ming', 'Tour Zhenhai'],
+    fr_title: 'Mont Jyutsau',
+    fr_url: 'https://fr.wikipedia.org/wiki/Mont_Jyutsau',
+    zh_title: '越秀山',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E8%B6%8A%E7%A7%80%E5%B1%B1?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Yuexiu Hill',
+    wikidata: 'Q7209907',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'sitelink',
+    zh_via: 'sitelink'
   },
   {
     id: 'sacred-heart-cathedral',
@@ -544,7 +614,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Architecture Gothique', 'Granit Massif', 'Vitraux Français', 'Histoire XIXe']
+    tags: ['Architecture Gothique', 'Granit Massif', 'Vitraux Français', 'Histoire XIXe'],
+    fr_title: 'Cathédrale du Sacré-Cœur de Canton',
+    fr_url: 'https://fr.wikipedia.org/wiki/Cath%C3%A9drale_du_Sacr%C3%A9-C%C5%93ur_de_Canton',
+    zh_title: '耶稣圣心主教座堂 (广州市)',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E8%80%B6%E7%A8%A3%E5%9C%A3%E5%BF%83%E4%B8%BB%E6%95%99%E5%BA%A7%E5%A0%82_%28%E5%B9%BF%E5%B7%9E%E5%B8%82%29?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Sacred Heart Cathedral (Guangzhou)',
+    wikidata: 'Q1195445',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'xiaozhou-village',
@@ -612,7 +692,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: false,
     isHiddenGem: true,
-    tags: ['Pépite Cachée', 'Village Lacustre', 'Maisons d’Huîtres', 'Ateliers de Peintres']
+    tags: ['Pépite Cachée', 'Village Lacustre', 'Maisons d’Huîtres', 'Ateliers de Peintres'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '小洲村',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B0%8F%E6%B4%B2%E6%9D%91?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: null,
+    wikidata: 'Q13163615',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'pearl-river-cruise',
@@ -680,7 +770,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Croisière', 'Skyline Nocturne', 'Rivière des Perles', 'Romantique']
+    tags: ['Croisière', 'Skyline Nocturne', 'Rivière des Perles', 'Romantique'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: null,
+    zh_url: null,
+    en_title: null,
+    wikidata: null,
+    fr_verdict: null,
+    zh_verdict: null,
+    fr_via: null,
+    zh_via: null
   },
   {
     id: 'baiyun-mountain',
@@ -748,7 +848,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Nature & Randonnée', 'Téléphérique', 'Panorama', 'Tofu de Montagne']
+    tags: ['Nature & Randonnée', 'Téléphérique', 'Panorama', 'Tofu de Montagne'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '白云山',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E7%99%BD%E4%BA%91%E5%B1%B1?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Baiyun Mountain',
+    wikidata: 'Q56754061',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'pantang-ancient-village',
@@ -816,7 +926,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: false,
     isHiddenGem: true,
-    tags: ['Pépite Cachée', 'Village Millénaire', 'Musique Guqin', 'Gâteau de Châtaigne d’eau']
+    tags: ['Pépite Cachée', 'Village Millénaire', 'Musique Guqin', 'Gâteau de Châtaigne d’eau'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '荔湾湖公园',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E8%8D%94%E6%B9%BE%E6%B9%96%E5%85%AC%E5%9B%AD?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Liwan, Guangzhou',
+    wikidata: 'Q590891',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'baomo-garden',
@@ -884,7 +1004,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Jardin Lingnan', 'Carpes Koï', 'Sculptures Guinness', 'Juge Bao']
+    tags: ['Jardin Lingnan', 'Carpes Koï', 'Sculptures Guinness', 'Juge Bao'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '宝墨园',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%AE%9D%E5%A2%A8%E5%9B%AD?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Panyu, Guangzhou',
+    wikidata: 'Q948245',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'search'
   },
   {
     id: 'guangdong-museum',
@@ -952,7 +1082,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Musée National', 'Zaha Hadid Voisine', 'Route de la Soie Maritime', 'Porcelaine de Canton']
+    tags: ['Musée National', 'Zaha Hadid Voisine', 'Route de la Soie Maritime', 'Porcelaine de Canton'],
+    fr_title: 'Musée du Guangdong',
+    fr_url: 'https://fr.wikipedia.org/wiki/Mus%C3%A9e_du_Guangdong',
+    zh_title: '广东省博物馆',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%8D%9A%E7%89%A9%E9%A6%86?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Guangdong Museum',
+    wikidata: 'Q5613636',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'taikoo-hui',
@@ -1020,7 +1160,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Shopping de Luxe', 'Rooftop Garden', 'Librairie Fangsuo', 'Tianhe CBD']
+    tags: ['Shopping de Luxe', 'Rooftop Garden', 'Librairie Fangsuo', 'Tianhe CBD'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '廣州太古滙',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%BB%A3%E5%B7%9E%E5%A4%AA%E5%8F%A4%E6%BB%99?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Taikoo Hui Guangzhou',
+    wikidata: 'Q7675717',
+    fr_verdict: null,
+    zh_verdict: 'unknown',
+    fr_via: null,
+    zh_via: 'sitelink'
   },
   {
     id: 'guangzhou-opera-house',
@@ -1088,7 +1238,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Spectacles Vivants', 'Zaha Hadid', 'Opéra & Ballets', 'Architecture Futuriste']
+    tags: ['Spectacles Vivants', 'Zaha Hadid', 'Opéra & Ballets', 'Architecture Futuriste'],
+    fr_title: 'Opéra de Canton',
+    fr_url: 'https://fr.wikipedia.org/wiki/Op%C3%A9ra_de_Canton',
+    zh_title: '广州大剧院',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E5%B9%BF%E5%B7%9E%E5%A4%A7%E5%89%A7%E9%99%A2?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Guangzhou Opera House',
+    wikidata: 'Q3354553',
+    fr_verdict: 'unknown',
+    zh_verdict: 'unknown',
+    fr_via: 'hint',
+    zh_via: 'sitelink'
   },
   {
     id: 'haijun-hotel-guangzhou',
@@ -1155,7 +1315,17 @@ const RAW_GUANGZHOU_ATTRACTIONS: any[] = [
 ],
     isTopRated: true,
     isHiddenGem: false,
-    tags: ['Hôtel', 'Vue Rivière des Perles', 'Beijing Road', 'Embarcadère Tianzi', 'Yuexiu']
+    tags: ['Hôtel', 'Vue Rivière des Perles', 'Beijing Road', 'Embarcadère Tianzi', 'Yuexiu'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: null,
+    zh_url: null,
+    en_title: null,
+    wikidata: null,
+    fr_verdict: null,
+    zh_verdict: null,
+    fr_via: null,
+    zh_via: null
   }
 ];
 
