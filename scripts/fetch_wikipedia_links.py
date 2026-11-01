@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 """Recover French and (auto-translated) Chinese Wikipedia links for places.
 
-The script accepts either:
+Input
+-----
+The script accepts:
 
   * a data module in the same shape as ``src/data/guangzhouData.ts`` or
-    ``src/data/citiesData.ts`` — any number of top-level arrays whose variable
-    name ends with ``_ATTACTIONS`` are parsed (so ``RAW_GUANGZHOU_ATTACTIONS``,
-    ``SHENZHEN_ATTACTIONS``, ``SHANTOU_ATTACTIONS``, ``CHAOZHOU_ATTACTIONS``
-    are all picked up from a single file). Relative ``import … from './…'``
-    statements are followed, letting a file like ``citiesData.ts`` be used on
-    its own even though Guangzhou lives in ``guangzhouData.ts``; or
+    ``src/data/citiesData.ts`` — every top-level array declaration whose
+    variable name ends with ``_ATTACTIONS`` is parsed, so
+    ``RAW_GUANGZHOU_ATTACTIONS``, ``SHENZHEN_ATTACTIONS``,
+    ``SHANTOU_ATTACTIONS``, ``CHAOZHOU_ATTACTIONS`` are all picked up from a
+    single file. Relative ``import … from './…'`` statements are followed,
+    letting a file like ``citiesData.ts`` be used on its own even though
+    Guangzhou lives in ``guangzhouData.ts``.
   * a ``.json`` file (list of strings, list of objects, or an object mapping
     place name -> metadata), or
   * a plain text file with one place per line (``#`` comments allowed).
 
+Resolution
+----------
 For each place the script resolves:
 
   * the French Wikipedia article (exact title first, then an ``intitle:``
@@ -42,24 +47,26 @@ uses that target as the article title. Once a Chinese article is known, a
 French title is fetched from its Wikidata ``frwiki`` sitelink if none was
 found earlier.
 
-The name candidates come from the per-language fields of the data file
-(``nameFr`` for French, ``nameEn`` for English, ``nameCn`` for Chinese). An
-existing ``wikipediaUrl`` field is used as a hint and canonicalised through
-the API; if the hinted URL points to a missing page, it is treated as not
-found and the search paths kick in.
+Output
+------
+For ``.ts`` / ``.js`` inputs the script edits the source files *in place* by
+default, adding the following fields to every place object literal:
+``fr_title``, ``fr_url``, ``zh_title``, ``zh_url``, ``en_title``,
+``wikidata``, ``fr_verdict``, ``zh_verdict``, ``fr_via`` and ``zh_via``.
+All imported source files (reached through ``import … from './…'``) are
+edited too. Use ``--dry-run`` to preview the changes without writing.
+
+When ``-o`` is provided, the results are written to a single file instead:
+a ``.ts``/``.js`` path produces a self-contained flat array, any other path
+produces JSON. Non-``.ts`` inputs always produce JSON next to the input
+(``<input>.wikipedia.json``) unless ``-o`` is given.
 
 Usage
 -----
     python scripts/fetch_wikipedia_links.py src/data/citiesData.ts
-    python scripts/fetch_wikipedia_links.py src/data/guangzhouData.ts
+    python scripts/fetch_wikipedia_links.py src/data/citiesData.ts --dry-run
+    python scripts/fetch_wikipedia_links.py src/data/citiesData.ts -o enriched.ts
     python scripts/fetch_wikipedia_links.py places.json -o places.wikipedia.json
-
-Output
-------
-A JSON file next to the input (or ``-o``). Every original field is preserved
-and the following keys are added per place: ``fr_title``, ``fr_url``,
-``zh_title``, ``zh_url``, ``en_title``, ``wikidata``, ``fr_verdict``,
-``zh_verdict``, ``fr_via`` and ``zh_via``.
 """
 
 from __future__ import annotations
@@ -75,7 +82,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "place-wikipedia-links/1.5 (contact@example.invalid)"
+USER_AGENT = "place-wikipedia-links/1.6 (contact@example.invalid)"
 TIMEOUT = 20
 RETRIES = 3
 DEFAULT_PAUSE = 0.2
@@ -95,9 +102,6 @@ JS_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}
 CHINA_QID = "Q148"
 GUANGDONG_QID = "Q15126"
 
-# Known city QIDs. All four cities live in Guangdong (Q15126); keeping the
-# province QID alongside lets us accept places whose district chain reaches
-# 广州市 through a district rather than directly.
 CITY_QIDS: dict[str, str] = {
     "guangzhou": "Q16572",
     "shenzhen": "Q15174",
@@ -105,9 +109,6 @@ CITY_QIDS: dict[str, str] = {
     "chaozhou": "Q59239",
 }
 
-# Localised city names used to disambiguate searches. Only the names for the
-# target wiki's language are appended to a query. The first name is the
-# preferred one; the others are tried in order as fallbacks.
 CITY_NAMES: dict[str, dict[str, list[str]]] = {
     "guangzhou": {
         "fr": ["Canton", "Guangzhou"],
@@ -131,14 +132,12 @@ CITY_NAMES: dict[str, dict[str, list[str]]] = {
     },
 }
 
-# Localised country names, appended after the city names in search queries.
 COUNTRY_TERMS: dict[str, list[str]] = {
     "fr": ["Chine"],
     "en": ["China"],
     "zh": ["中国"],
 }
 
-# Namespace prefixes ignored when scanning wikitext for article links.
 _WIKI_SKIP_PREFIXES = (
     "file:",
     "image:",
@@ -159,15 +158,37 @@ _WIKI_SKIP_PREFIXES = (
 # Suffix of the top-level arrays we collect from data modules.
 _ATTRA_SUFFIX = "_ATTACTIONS"
 
-# Matches `<Name>: <Type> = [`. The type is optional and permits `any[]`,
-# `Attraction[]`, `Array<Attraction>`, `Record<…>`, etc. We exclude `=`, `;`,
-# `{` and `}` from the type so that a `= {` assignment is never matched.
+# Matches `<kw> NAME: <Type> = [` where `<kw>` is `const`, `let`, or `var`
+# (optionally preceded by `export`). Anchored to the start of a line so that
+# indented object-literal fields such as `    scores: [` are never matched.
 _VAR_ARRAY_ASSIGN_RE = re.compile(
-    r"\b([A-Za-z_$][A-Za-z0-9_$]*)\s*(?::\s*[^=;{}]+?)?=\s*\["
+    r"^(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)"
+    r"\s*(?::\s*[^=;{}\n]+?)?\s*=\s*\[",
+    re.MULTILINE,
 )
 
 # Matches `from './relative/path'` in import statements.
 _REL_IMPORT_RE = re.compile(r"\bfrom\s+['\"](\.[^'\"]+)['\"]")
+
+# Fields that this script injects into every place object literal.
+_EXTRA_FIELD_KEYS: tuple[str, ...] = (
+    "fr_title",
+    "fr_url",
+    "zh_title",
+    "zh_url",
+    "en_title",
+    "wikidata",
+    "fr_verdict",
+    "zh_verdict",
+    "fr_via",
+    "zh_via",
+)
+
+# Matches a single line of one of our generated fields (indented anywhere).
+_GENERATED_FIELD_RE = re.compile(
+    r"^[ \t]*(?:" + "|".join(_EXTRA_FIELD_KEYS) + r")\s*:[^\n]*\n?",
+    re.MULTILINE,
+)
 
 _PAUSE = DEFAULT_PAUSE
 _VERBOSE = False
@@ -224,7 +245,6 @@ def api_get(api_url: str, params: dict[str, Any]) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 def _is_missing_page(page: dict[str, Any]) -> bool:
-    """True for the "Wikipédia ne possède pas d'article avec ce nom" case."""
     if "missing" in page or "invalid" in page:
         return True
     if page.get("pageid") is None:
@@ -283,7 +303,6 @@ def fetch_wikitext(api_url: str, title: str) -> str | None:
 
 
 def get_qids(api_url: str, titles: list[str]) -> dict[str, str]:
-    """Return ``{page_title: wikidata_qid}`` for existing pages only."""
     wanted = [title for title in dict.fromkeys(titles) if title]
     results: dict[str, str] = {}
     if not wanted:
@@ -421,7 +440,6 @@ def _walk_ancestors(
     target_qids: set[str],
     max_depth: int = 3,
 ) -> tuple[set[str], bool]:
-    """BFS the P17/P131 graph. Early-returns once a target QID is reached."""
     seen: set[str] = set()
     frontier = [qid]
     for _ in range(max_depth):
@@ -444,12 +462,6 @@ def _walk_ancestors(
 
 
 def classify_entity(qid: str | None, target_qids: set[str]) -> str:
-    """Return ``city``/``guangdong``/``other_china``/``foreign``/``unknown``.
-
-    ``city`` and ``guangdong`` are both strong positives (they mean the
-    candidate is inside the target province); ``other_china`` and ``unknown``
-    are weak positives and must be combined with a title match to be accepted.
-    """
     if not qid:
         return "unknown"
     _get_p17([qid])
@@ -462,7 +474,6 @@ def classify_entity(qid: str | None, target_qids: set[str]) -> str:
 
     ancestors, hit = _walk_ancestors(qid, target_qids)
     if hit:
-        # Whether we hit 广州市 or 广东省, treat both as positive signals.
         if GUANGDONG_QID in ancestors or any(
             q in ancestors for q in target_qids if q != GUANGDONG_QID
         ):
@@ -483,7 +494,6 @@ _DISTRICT_SPLIT_RE = re.compile(r"[与和、及]")
 
 
 def _title_matches(title: str, source_term: str) -> bool:
-    """True when ``title`` visibly mentions the name we searched for."""
     if not title or not source_term:
         return False
 
@@ -500,8 +510,6 @@ def _title_matches(title: str, source_term: str) -> bool:
         return False
     lower = title.lower()
     matched = sum(1 for word in tokens if word in lower)
-    # Require at least two thirds of the distinctive words. This is what
-    # rejects "Dynastie Chen" for "Temple ancestral du clan Chen".
     return matched >= max(1, (len(tokens) * 2 + 2) // 3)
 
 
@@ -510,12 +518,6 @@ def _title_matches(title: str, source_term: str) -> bool:
 # ---------------------------------------------------------------------------
 
 def district_zh_titles(place: dict[str, Any]) -> list[str]:
-    """Extract the Chinese district page titles, e.g. ``["番禺区"]``.
-
-    Handles compound district fields such as ``'Liwan & Yuexiu (荔湾与越秀区)'``
-    or ``'Yuexiu & Haizhu (越秀/海珠区)'`` by splitting on common separators
-    and appending ``区`` when it is missing.
-    """
     raw = (
         place.get("districtCn")
         or place.get("district_cn")
@@ -556,7 +558,6 @@ def is_district_placeholder(
     title: str | None,
     api_url: str,
 ) -> bool:
-    """True when ``title`` is the district page the place belongs to."""
     if not title:
         return False
     for district in district_zh_titles(place):
@@ -585,15 +586,13 @@ def _wikilinks(text: str) -> list[tuple[str, str]]:
 
 
 def _clean_link_target(target: str) -> str:
-    """Strip fragments and normalise the target."""
-    base = target.split("#", 1)[0].strip()
-    return base
+    return target.split("#", 1)[0].strip()
 
 
 def _is_skipped_link(base: str) -> bool:
     if not base:
         return True
-    if base.startswith(":"):  # interlanguage: ``:fr:Foo``
+    if base.startswith(":"):
         return True
     lower = base.lower()
     return any(lower.startswith(prefix) for prefix in _WIKI_SKIP_PREFIXES)
@@ -603,14 +602,6 @@ def zh_title_from_district_page(
     place: dict[str, Any],
     target_qids: set[str],
 ) -> str | None:
-    """Find an article linked from the district's Chinese Wikipedia page.
-
-    Chinese district pages often list every notable place inside the
-    district, including sites that do not have enough notability to get their
-    own article from a full-text search. We scan the district page's wikitext
-    for a ``[[…]]`` link whose target or label matches the place's Chinese
-    name, and return its target.
-    """
     zh_terms = collect_terms(place, _ZH_NAME_KEYS)
     if not zh_terms:
         return None
@@ -635,7 +626,6 @@ def zh_title_from_district_page(
         links = _wikilinks(text)
         _log(f"scanning {len(links)} links on '{page_title}'")
 
-        # 1. exact match on the target or label
         for term in zh_terms:
             for raw_target, label in links:
                 base = _clean_link_target(raw_target)
@@ -650,7 +640,6 @@ def zh_title_from_district_page(
                     _log(f"district-page hit for '{term}': '{base}' (exact)")
                     return base
 
-        # 2. substring match, restricted to entities verified in the target
         for term in zh_terms:
             for raw_target, label in links:
                 base = _clean_link_target(raw_target)
@@ -673,7 +662,6 @@ def zh_title_from_district_page(
 # ---------------------------------------------------------------------------
 
 def _intitle_safe(term: str) -> str:
-    """Sanitise a phrase so it can be embedded inside ``intitle:"…"``."""
     cleaned = re.sub(r'[&|(){}:;"\\/]+', " ", term)
     return " ".join(cleaned.split()).strip()
 
@@ -685,7 +673,6 @@ def lookup_title(
     country_terms: list[str] | None = None,
     target_qids: set[str] | None = None,
 ) -> str | None:
-    """Resolve a title: exact match first, then a scoped search."""
     targets = target_qids or set()
 
     for term in terms:
@@ -714,14 +701,6 @@ def search_title_with_context(
     country_terms: list[str],
     target_qids: set[str],
 ) -> str | None:
-    """Search ``intitle:``, then ``<name> <city>``, ``<name> <country>``, bare.
-
-    For each query the returned hits are classified against the target city.
-    A hit that lives in the target city or in Guangdong is accepted outright.
-    A hit whose Wikidata item is only known to be "in China" (or which has no
-    location statements at all) is accepted only if its title visibly contains
-    the name we searched for; otherwise we try the next query.
-    """
     queries: list[tuple[str, str]] = []
     seen: set[str] = set()
 
@@ -730,9 +709,6 @@ def search_title_with_context(
             seen.add(query)
             queries.append((query, source_term))
 
-    # Prefix the pipeline with the exact-title operator so that
-    # ``intitle:"陈家祠"`` finds ``陈家祠`` directly even when the name
-    # includes a parenthesised alternate form.
     for term in terms:
         safe = _intitle_safe(term)
         if safe:
@@ -771,7 +747,6 @@ def search_title_with_context(
 
 
 def canonical_title(api_url: str, title: str) -> str | None:
-    """Follow redirects; return ``None`` for missing pages."""
     try:
         resolved = exact_title(api_url, title)
     except Exception:
@@ -786,7 +761,6 @@ def verify_hint(
     title: str,
     target_qids: set[str],
 ) -> str | None:
-    """Canonicalise a hinted title and discard foreign results."""
     resolved = canonical_title(api_url, title)
     if not resolved:
         return None
@@ -812,7 +786,6 @@ def zh_url(title: str) -> str:
 
 
 def wiki_hint(place: dict[str, Any]) -> tuple[str | None, str | None]:
-    """Return ``(language, title)`` from an existing ``wikipediaUrl`` field."""
     raw = place.get("wikipediaUrl") or place.get("wikipedia_url") or place.get(
         "wikipediaFrUrl"
     )
@@ -878,7 +851,6 @@ _ZH_NAME_KEYS = (
 
 
 def expand_term(value: str) -> list[str]:
-    """Split ``陈家祠 (陈氏书院)`` into ``["陈家祠 (陈氏书院)", "陈家祠"]``."""
     value = value.strip()
     if not value:
         return []
@@ -921,7 +893,6 @@ def _place_city_id(place: dict[str, Any]) -> str:
 
 
 def city_terms_for(place: dict[str, Any], lang: str) -> list[str]:
-    """Return the place's city names in ``lang``, primary name first."""
     terms: list[str] = []
 
     def add(value: Any) -> None:
@@ -942,10 +913,8 @@ def city_terms_for(place: dict[str, Any], lang: str) -> list[str]:
 
 
 def place_target_qids(place: dict[str, Any]) -> set[str]:
-    """Return the set of Wikidata QIDs that mark a hit as "in the city"."""
     targets: set[str] = set()
 
-    # A place may override the city QID entirely (used for unknown cities).
     for key in ("cityQid", "city_qid"):
         value = place.get(key)
         if isinstance(value, str) and value.strip():
@@ -967,7 +936,6 @@ def _accept_zh(
     title: str | None,
     target_qids: set[str],
 ) -> str | None:
-    """Validate a Chinese candidate; return it only if usable."""
     if not title:
         return None
     if is_district_placeholder(place, title, ZH_WIKI_API):
@@ -1020,8 +988,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     zh_via: str | None = None
     qid: str | None = None
 
-    # 0. Use the existing wikipediaUrl field as a hint, unless it points to a
-    #    page about another country or to the district page.
     if hint_lang and hint_title:
         api = _API_FOR_LANG[hint_lang]
         verified = verify_hint(api, hint_title, target_qids)
@@ -1044,7 +1010,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
                 zh_title = verified
                 zh_via = "hint"
 
-    # 1. Direct French lookup (exact title, then a scoped search).
     if not fr_title:
         fr_title = _accept_fr(
             place,
@@ -1056,7 +1021,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
         if fr_title:
             fr_via = "search"
 
-    # 2. Fallback: English Wikipedia -> Wikidata -> French sitelink.
     if not fr_title:
         if not en_title:
             en_title = lookup_title(
@@ -1071,15 +1035,12 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
                     fr_title = candidate
                     fr_via = "sitelink"
 
-    # 3. Wikidata id from the French article (if still unknown).
     if not qid and fr_title:
         qid = get_qid(FR_WIKI_API, fr_title)
 
-    # 4. English title from Wikidata (helps the Chinese fallback search).
     if not en_title and qid:
         en_title = get_sitelink(qid, "enwiki")
 
-    # 5. Chinese article via Wikidata interlanguage link, after verification.
     if not zh_title and qid:
         candidate = get_sitelink(qid, "zhwiki")
         candidate = _accept_zh(place, candidate, target_qids)
@@ -1090,7 +1051,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     if fr_title:
         fr_verdict = classify_entity(get_qid(FR_WIKI_API, fr_title), target_qids)
 
-    # 6. Chinese full-text search, scoped to the city and country.
     if not zh_title and zh_terms:
         candidate = lookup_title(
             ZH_WIKI_API, zh_terms, zh_cities, zh_countries, target_qids
@@ -1115,7 +1075,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
                 zh_title = candidate
                 zh_via = "search"
 
-    # 6b. Last resort: the district's Chinese page lists the place.
     if not zh_title:
         candidate = zh_title_from_district_page(place, target_qids)
         candidate = _accept_zh(place, candidate, target_qids)
@@ -1126,7 +1085,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
     if zh_title:
         zh_verdict = classify_entity(get_qid(ZH_WIKI_API, zh_title), target_qids)
 
-    # 6c. Derive a French title from the Chinese page when possible.
     if not fr_title and zh_title:
         zh_qid = get_qid(ZH_WIKI_API, zh_title) or qid
         if zh_qid:
@@ -1139,7 +1097,6 @@ def resolve_place(place: dict[str, Any]) -> dict[str, Any]:
                     get_qid(FR_WIKI_API, fr_title), target_qids
                 )
 
-    # 7. Backfill the Wikidata id if it is still unknown.
     if not qid and zh_title:
         qid = get_qid(ZH_WIKI_API, zh_title)
 
@@ -1168,12 +1125,7 @@ _ARRAY_ASSIGN_RE = re.compile(r"=\s*\[")
 
 
 class JSLiteralParser:
-    """Parse the subset of JS/TS needed for the data modules.
-
-    Supports objects, arrays, single/double quoted strings, template literals,
-    numbers, booleans, ``null``/``undefined``, trailing commas, and both
-    ``//`` and ``/* */`` comments.
-    """
+    """Parse the subset of JS/TS needed for the data modules."""
 
     def __init__(self, text: str, pos: int = 0) -> None:
         self.text = text
@@ -1305,17 +1257,41 @@ class JSLiteralParser:
         self.fail("unterminated string")
 
     def parse_array(self) -> list[Any]:
-        self.pos += 1  # '['
-        items: list[Any] = []
+        values, _spans = self.parse_array_with_spans()
+        return values
+
+    def parse_array_with_spans(
+        self,
+    ) -> tuple[list[Any], list[tuple[int, int]]]:
+        """Parse an array literal.
+
+        Return ``(values, spans)`` where ``spans`` holds ``(start, end)``
+        positions for every object element; non-object elements get ``-1``.
+        """
+        self.skip_ignored()
+        if self.pos >= self.length or self.text[self.pos] != "[":
+            self.fail("expected '[' for array")
+        self.pos += 1
+        values: list[Any] = []
+        spans: list[tuple[int, int]] = []
         while True:
             self.skip_ignored()
             if self.pos >= self.length:
                 self.fail("unterminated array")
             if self.text[self.pos] == "]":
                 self.pos += 1
-                return items
+                return values, spans
 
-            items.append(self.parse_value())
+            item_start = self.pos
+            if self.text[self.pos] == "{":
+                value = self.parse_object()
+                item_end = self.pos - 1  # position of closing '}'
+                values.append(value)
+                spans.append((item_start, item_end))
+            else:
+                value = self.parse_value()
+                values.append(value)
+                spans.append((-1, -1))
 
             self.skip_ignored()
             if self.pos < self.length and self.text[self.pos] == ",":
@@ -1323,7 +1299,7 @@ class JSLiteralParser:
                 continue
             if self.pos < self.length and self.text[self.pos] == "]":
                 self.pos += 1
-                return items
+                return values, spans
             self.fail("expected ',' or ']' in array")
 
     def parse_object(self) -> dict[str, Any]:
@@ -1360,15 +1336,11 @@ class JSLiteralParser:
 
 
 def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
-    """Fallback: return the largest array of objects found in ``text``.
-
-    Used only when no ``_ATTACTIONS`` array is found in the module (or its
-    relative imports), so that arbitrary ``.ts``/``.js`` files keep working.
-    """
+    """Fallback: the largest array of objects found in ``text``."""
     best: list[dict[str, Any]] | None = None
 
     for match in _ARRAY_ASSIGN_RE.finditer(text):
-        start = match.end() - 1  # position of '['
+        start = match.end() - 1
         parser = JSLiteralParser(text, start)
         try:
             value = parser.parse_value()
@@ -1383,35 +1355,27 @@ def parse_js_data_objects(text: str) -> list[dict[str, Any]] | None:
     return best
 
 
-def parse_js_attraction_arrays(text: str) -> list[dict[str, Any]]:
-    """Parse every ``<Name>_ATTACTIONS: … = [ … ]`` literal in ``text``.
+def parse_js_attraction_arrays(
+    text: str,
+) -> list[tuple[dict[str, Any], int, int]]:
+    """Parse every top-level ``*_ATTACTIONS`` array literal in ``text``.
 
-    Only top-level names ending in ``_ATTACTIONS`` are considered, which is
-    what lets a module like ``src/data/citiesData.ts`` (which defines
-    ``SHENZHEN_ATTACTIONS``, ``SHANTOU_ATTACTIONS``, ``CHAOZHOU_ATTACTIONS``...)
-    be read without executing TypeScript. Aliases built from a function call
-    (``GUANGZHOU_ATTACTIONS = RAW_GUANGZHOU_ATTACTIONS.map(…)``) and arrays
-    that use spread syntax are simply skipped — the underlying ``_ATTACTIONS``
-    literal is what gets picked up.
+    Returns ``[(obj, obj_start, obj_end), ...]`` in source order.
     """
-    objects: list[dict[str, Any]] = []
+    entries: list[tuple[dict[str, Any], int, int]] = []
     seen_ids: set[str] = set()
 
     for match in _VAR_ARRAY_ASSIGN_RE.finditer(text):
-        name = match.group(1)
-        if not name.endswith(_ATTRA_SUFFIX):
+        if not match.group(1).endswith(_ATTRA_SUFFIX):
             continue
-
-        start = match.end() - 1  # position of '['
-        parser = JSLiteralParser(text, start)
+        array_start = match.end() - 1  # position of '['
+        parser = JSLiteralParser(text, array_start)
         try:
-            value = parser.parse_value()
+            values, spans = parser.parse_array_with_spans()
         except (ValueError, IndexError):
             continue
-        if not isinstance(value, list):
-            continue
 
-        for item in value:
+        for item, span in zip(values, spans):
             if not isinstance(item, dict):
                 continue
             ident = item.get("id")
@@ -1419,13 +1383,12 @@ def parse_js_attraction_arrays(text: str) -> list[dict[str, Any]]:
                 if ident in seen_ids:
                     continue
                 seen_ids.add(ident)
-            objects.append(item)
+            entries.append((item, span[0], span[1]))
 
-    return objects
+    return entries
 
 
 def _resolve_import_target(base: Path) -> list[Path]:
-    """Return existing candidate paths for a base import path, best first."""
     if base.suffix:
         candidates = [base]
     else:
@@ -1447,14 +1410,12 @@ def _resolve_import_target(base: Path) -> list[Path]:
 def _collect_js_attractions(
     path: Path,
     visited: set[Path],
-) -> list[dict[str, Any]]:
-    """Recursively collect ``*_ATTACTIONS`` arrays starting from ``path``.
+) -> list[tuple[dict[str, Any], Path, int, int]]:
+    """Recursively collect place objects from ``path`` and its imports.
 
-    Relative ``import … from './…'`` statements are followed so that a single
-    entry point (e.g. ``citiesData.ts``) yields the data of every module it
-    re-exports, without needing to list them on the command line. Imported
-    arrays come before the file's own arrays, matching the ordering used by
-    ``ALL_ATTACTIONS``.
+    Returns ``[(place_dict, file_path, obj_start, obj_end), ...]`` so the
+    caller can both resolve each place and locate its source span for
+    in-place editing.
     """
     try:
         resolved = path.resolve()
@@ -1471,36 +1432,173 @@ def _collect_js_attractions(
     except OSError:
         return []
 
-    objects: list[dict[str, Any]] = []
+    entries: list[tuple[dict[str, Any], Path, int, int]] = []
 
     for match in _REL_IMPORT_RE.finditer(text):
         target = path.parent / match.group(1)
         for candidate in _resolve_import_target(target):
             imported = _collect_js_attractions(candidate, visited)
             if imported:
-                objects.extend(imported)
+                entries.extend(imported)
             break
 
-    objects.extend(parse_js_attraction_arrays(text))
-    return objects
+    for item, start, end in parse_js_attraction_arrays(text):
+        entries.append((item, path, start, end))
+
+    return entries
 
 
-def js_attractions_from_file(path: Path) -> list[dict[str, Any]]:
-    """Collect ``*_ATTACTIONS`` arrays from ``path`` and its relative imports."""
-    objects = _collect_js_attractions(path, set())
+# ---------------------------------------------------------------------------
+# JS literal serialisation helpers (for the flat ``-o <file>.ts`` output)
+# ---------------------------------------------------------------------------
 
-    # De-duplicate by ``id`` at the top level, in case the same array is
-    # reachable through more than one import chain.
-    seen: set[str] = set()
-    result: list[dict[str, Any]] = []
-    for item in objects:
-        ident = item.get("id")
-        if isinstance(ident, str):
-            if ident in seen:
+def _js_escape(value: str) -> str:
+    return (
+        value.replace("\\", "\\\\")
+        .replace("'", "\\'")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+    )
+
+
+def _js_repr(value: Any) -> str:
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return repr(value)
+    return "'" + _js_escape(str(value)) + "'"
+
+
+def _js_serialize_value(value: Any, indent: int = 0) -> str:
+    pad = "  " * indent
+    inner = "  " * (indent + 1)
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return repr(value)
+    if isinstance(value, str):
+        return "'" + _js_escape(value) + "'"
+    if isinstance(value, list):
+        if not value:
+            return "[]"
+        items = [inner + _js_serialize_value(v, indent + 1) for v in value]
+        return "[\n" + ",\n".join(items) + ",\n" + pad + "]"
+    if isinstance(value, dict):
+        if not value:
+            return "{}"
+        items = []
+        for key, val in value.items():
+            safe_key = (
+                key
+                if re.match(r"^[A-Za-z_$][A-Za-z0-9_$]*$", str(key))
+                else "'" + _js_escape(str(key)) + "'"
+            )
+            items.append(
+                f"{inner}{safe_key}: {_js_serialize_value(val, indent + 1)}"
+            )
+        return "{\n" + ",\n".join(items) + ",\n" + pad + "}"
+    return _js_repr(value)
+
+
+# ---------------------------------------------------------------------------
+# In-place field injection into JS/TS source files
+# ---------------------------------------------------------------------------
+
+def _strip_generated_fields(source: str) -> str:
+    return _GENERATED_FIELD_RE.sub("", source)
+
+
+def _inject_extra_fields(obj_source: str, extra: dict[str, Any]) -> str:
+    """Insert ``extra`` fields just before the closing ``}`` of ``obj_source``.
+
+    Any field already present with a name from :data:`_EXTRA_FIELD_KEYS`
+    is removed first, so the transformation is idempotent.
+    """
+    if not extra:
+        return obj_source
+    stripped = _strip_generated_fields(obj_source)
+    if not stripped.rstrip().endswith("}"):
+        return obj_source
+
+    lines = stripped.split("\n")
+    close_idx = None
+    for i in range(len(lines) - 1, -1, -1):
+        if lines[i].lstrip().startswith("}"):
+            close_idx = i
+            break
+    if close_idx is None:
+        return obj_source
+
+    close_line = lines[close_idx]
+    close_indent = close_line[: len(close_line) - len(close_line.lstrip())]
+    field_indent = close_indent + "  "
+
+    before = lines[:close_idx]
+    if before:
+        last = before[-1]
+        stripped_last = last.rstrip()
+        if (
+            stripped_last
+            and not stripped_last.endswith(",")
+            and not stripped_last.endswith("{")
+        ):
+            before[-1] = stripped_last + ","
+
+    entries = list(extra.items())
+    new_field_lines: list[str] = []
+    for idx, (key, value) in enumerate(entries):
+        trailing = "," if idx < len(entries) - 1 else ""
+        new_field_lines.append(
+            f"{field_indent}{key}: {_js_repr(value)}{trailing}"
+        )
+
+    return "\n".join(before + new_field_lines + [close_line])
+
+
+def _write_js_sources_in_place(
+    results_with_span: list[tuple[dict[str, Any], Path | None, int, int]],
+    dry_run: bool,
+) -> None:
+    by_file: dict[Path, list[tuple[dict[str, Any], int, int]]] = {}
+    for result, file_path, start, end in results_with_span:
+        if file_path is None or start < 0 or end < 0:
+            continue
+        by_file.setdefault(file_path, []).append((result, start, end))
+
+    if not by_file:
+        print("No source locations to edit.", file=sys.stderr)
+        return
+
+    for path, entries in by_file.items():
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            print(f"Cannot read {path}: {exc}", file=sys.stderr)
+            continue
+
+        # Apply from the end so earlier edits do not shift later offsets.
+        entries.sort(key=lambda entry: entry[1], reverse=True)
+
+        for result, start, end in entries:
+            obj_source = text[start:end + 1]
+            extra = {key: result.get(key) for key in _EXTRA_FIELD_KEYS}
+            new_source = _inject_extra_fields(obj_source, extra)
+            if new_source != obj_source:
+                text = text[:start] + new_source + text[end + 1:]
+
+        if dry_run:
+            print(f"[dry-run] would update {path}", file=sys.stderr)
+        else:
+            try:
+                path.write_text(text, encoding="utf-8")
+            except OSError as exc:
+                print(f"Cannot write {path}: {exc}", file=sys.stderr)
                 continue
-            seen.add(ident)
-        result.append(item)
-    return result
+            print(f"Updated {path}", file=sys.stderr)
 
 
 # ---------------------------------------------------------------------------
@@ -1515,26 +1613,9 @@ def normalize_entry(entry: Any) -> dict[str, Any]:
     raise SystemExit(f"Unsupported input entry: {entry!r}")
 
 
-def load_places(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        raise SystemExit(f"Input file not found: {path}")
-
+def _load_non_js_places(path: Path) -> list[dict[str, Any]]:
     text = path.read_text(encoding="utf-8")
-    suffix = path.suffix.lower()
-
-    if suffix in JS_SUFFIXES:
-        objects = js_attractions_from_file(path)
-        if not objects:
-            objects = parse_js_data_objects(text)
-        if not objects:
-            raise SystemExit(
-                f"No `_ATTACTIONS` array or array-of-objects literal found in "
-                f"{path}. Expected something like "
-                "`const SHENZHEN_ATTACTIONS: Attraction[] = [ ... ];`."
-            )
-        return [normalize_entry(item) for item in objects]
-
-    if suffix == ".json":
+    if path.suffix.lower() == ".json":
         data = json.loads(text)
         if isinstance(data, list):
             return [normalize_entry(item) for item in data]
@@ -1556,6 +1637,35 @@ def load_places(path: Path) -> list[dict[str, Any]]:
     ]
 
 
+def load_places_with_spans(
+    path: Path,
+) -> list[tuple[dict[str, Any], Path | None, int, int]]:
+    """Load every place plus its source span (only for JS modules)."""
+    if not path.exists():
+        raise SystemExit(f"Input file not found: {path}")
+
+    if path.suffix.lower() in JS_SUFFIXES:
+        entries = _collect_js_attractions(path, set())
+        if not entries:
+            text = path.read_text(encoding="utf-8")
+            fallback = parse_js_data_objects(text)
+            if fallback:
+                entries = [
+                    (normalize_entry(item), path, -1, -1)
+                    for item in fallback
+                ]
+        if not entries:
+            raise SystemExit(
+                f"No `_ATTACTIONS` array or array-of-objects literal found in "
+                f"{path}. Expected something like "
+                "`const SHENZHEN_ATTACTIONS: Attraction[] = [ ... ];`."
+            )
+        return entries
+
+    places = _load_non_js_places(path)
+    return [(normalize_entry(place), None, -1, -1) for place in places]
+
+
 def display_name(place: dict[str, Any], fallback: str) -> str:
     for key in ("nameFr", "nameEn", "nameCn", "name", "title", "id"):
         value = place.get(key)
@@ -1564,30 +1674,54 @@ def display_name(place: dict[str, Any], fallback: str) -> str:
     return fallback
 
 
+def _write_single_output(results: list[dict[str, Any]], output: Path) -> None:
+    if output.suffix.lower() in JS_SUFFIXES:
+        body = ",\n".join(_js_serialize_value(r, 1) for r in results)
+        content = (
+            "export const ATTRACTIONS_WITH_WIKIPEDIA: any[] = [\n"
+            + body
+            + ",\n];\n"
+        )
+        output.write_text(content, encoding="utf-8")
+        return
+    output.write_text(
+        json.dumps(results, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Recover French and Chinese Wikipedia links for places. Accepts a "
-            "guangzhouData/citiesData-style .ts/.js module (all arrays whose "
-            "name ends with _ATTACTIONS are collected, and relative imports "
-            "are followed), a .json file, or a plain text file with one place "
-            "per line."
+            "Recover French and Chinese Wikipedia links for places. For .ts/.js "
+            "modules every top-level array ending in _ATTACTIONS is parsed "
+            "(relative imports are followed) and the source files are edited "
+            "in place, adding fr/zh titles, URLs and verdicts to every place."
         )
     )
     parser.add_argument(
         "input",
         type=Path,
         help=(
-            "Input file: .ts/.tsx/.js/.jsx data module (arrays ending in "
-            "_ATTACTIONS, with relative imports followed), .json, or a "
-            "one-name-per-line text file."
+            "Input file: a guangzhouData/citiesData-style .ts/.js module (all "
+            "_ATTACTIONS arrays, relative imports followed), a .json file, or "
+            "a one-name-per-line text file."
         ),
     )
     parser.add_argument(
         "-o",
         "--output",
         type=Path,
-        help="Output JSON file (default: <input>.wikipedia.json).",
+        help=(
+            "Write results to a single file instead of editing sources in "
+            "place. A .ts/.js suffix produces a flat TS array; anything else "
+            "produces JSON."
+        ),
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Do not write anything; just show which files would be edited.",
     )
     parser.add_argument(
         "--pause",
@@ -1608,7 +1742,7 @@ def parse_args() -> argparse.Namespace:
         "-v",
         "--verbose",
         action="store_true",
-        help="Log every query, the accepted title, and rejected candidates.",
+        help="Log every query, accepted titles, and rejected candidates.",
     )
     return parser.parse_args()
 
@@ -1620,29 +1754,38 @@ def main() -> int:
     _VERBOSE = bool(args.verbose)
     SEARCH_RESULTS = max(1, args.search_results)
 
-    places = load_places(args.input)
-    if not places:
+    raw_entries = load_places_with_spans(args.input)
+    if not raw_entries:
         print("No places found in input file.", file=sys.stderr)
         return 1
 
-    results: list[dict[str, Any]] = []
-    total = len(places)
-    for index, place in enumerate(places, start=1):
+    results_with_span: list[tuple[dict[str, Any], Path | None, int, int]] = []
+    total = len(raw_entries)
+    for index, (place, file_path, start, end) in enumerate(raw_entries, start=1):
         name = display_name(place, f"place-{index}")
         print(f"[{index}/{total}] {name}", file=sys.stderr)
         try:
             result = resolve_place(place)
-        except Exception as exc:  # keep going on individual failures
+        except Exception as exc:
             result = dict(place)
             result["error"] = str(exc)
         result.setdefault("name", name)
-        results.append(result)
+        results_with_span.append((result, file_path, start, end))
 
-    output = args.output or args.input.with_suffix(".wikipedia.json")
-    output.write_text(
-        json.dumps(results, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    results = [r for r, _, _, _ in results_with_span]
+
+    if args.output:
+        _write_single_output(results, args.output)
+        print(f"Wrote {len(results)} entries to {args.output}", file=sys.stderr)
+    elif args.input.suffix.lower() in JS_SUFFIXES:
+        _write_js_sources_in_place(results_with_span, dry_run=args.dry_run)
+    else:
+        output = args.input.with_suffix(".wikipedia.json")
+        output.write_text(
+            json.dumps(results, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(f"Wrote {len(results)} entries to {output}", file=sys.stderr)
 
     missing_fr = sum(1 for r in results if not r.get("fr_title"))
     missing_zh = sum(1 for r in results if not r.get("zh_title"))
@@ -1659,7 +1802,6 @@ def main() -> int:
             if value:
                 via_counts[f"{key}:{value}"] = via_counts.get(f"{key}:{value}", 0) + 1
 
-    print(f"Wrote {len(results)} entries to {output}", file=sys.stderr)
     print(
         f"Missing French: {missing_fr}, missing Chinese: {missing_zh}",
         file=sys.stderr,
