@@ -120,24 +120,38 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
               "{attraction.ourOpinionFr}"
             </p>
 
-            {/* Direct Link: auto-translated Chinese Wikipedia only (the
-                Tripadvisor and hand-curated Wikipedia links proved unreliable
-                and are no longer displayed) */}
-            <div className="flex items-center justify-end pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px]">
+            {/* Direct Links: Booking.com and/or auto-translated Chinese Wikipedia */}
+            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px] gap-2">
+              {attraction.bookingUrl ? (
+                <a
+                  href={attraction.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors shrink-0"
+                  title="Voir les disponibilités et réserver sur Booking.com"
+                >
+                  <span>Booking.com</span>
+                  <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              ) : (
+                <span />
+              )}
+
               {attraction.zh_url ? (
                 <a
                   href={attraction.zh_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1 font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 transition-colors"
+                  className="inline-flex items-center gap-1 font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 transition-colors truncate"
                   title="Article Wikipédia en chinois, traduit automatiquement en français"
                 >
                   <span>Wikipédia 中文 (traduit)</span>
-                  <ExternalLink className="w-2.5 h-2.5" />
+                  <ExternalLink className="w-2.5 h-2.5 shrink-0" />
                 </a>
               ) : (
-                <span className="text-[10px] text-slate-400">Guangdong Guide</span>
+                !attraction.bookingUrl && <span className="text-[10px] text-slate-400">Guangdong Guide</span>
               )}
             </div>
           </div>

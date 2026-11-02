@@ -1156,6 +1156,86 @@ export const SHANTOU_ATTRACTIONS: Attraction[] = [
     zh_verdict: 'other_china',
     fr_via: null,
     zh_via: 'search'
+  },
+  {
+    id: 'atour-hotel-shantou-hanjiang',
+    cityId: 'shantou',
+    nameFr: 'Hôtel Atour Shantou (Nouvelle Ville de Zhugang / Route Hanjiang)',
+    nameEn: 'Atour Hotel Shantou Zhugang New City Hanjiang Road',
+    nameCn: '亚朵酒店 (汕头珠港新城韩江路店)',
+    pinyin: 'Yàduǒ Jiǔdiàn (Shàntóu Zhūgǎng Xīnchéng Hánjiāng Lù Diàn)',
+    cantonesePhonetic: 'Aa-do Zau-dim',
+    category: 'hotel',
+    district: 'Longhu (龙湖区 / 珠港新城)',
+    lat: 23.3594,
+    lng: 116.7387,
+    metroInfoFr: 'À 10 min en taxi de la gare TGV de Shantou (汕头站) ou bus urbain 20 / 42 arrêt Hanjiang Road (韩江路)',
+    metroInfoEn: '10 min taxi from Shantou Railway Station or city bus 20/42 to Hanjiang Road',
+    addressCn: '汕头市龙湖区韩江路23号嘉福大厦132号 (汕头珠港新城韩江路亚朵酒店)',
+    image: './assets/images/atour_hotel_shantou_hanjiang_1793500000000.jpg',
+    thumbnailAlt: 'Façade et lobby contemporain de l’Hôtel Atour sur la route Hanjiang dans la Nouvelle Ville de Zhugang à Shantou',
+    descriptionFr: 'Situé sur la route Hanjiang (Hanjiang Road / 韩江路) dans l’immeuble Jiafu au cœur de la Nouvelle Ville de Zhugang (Zhugang New City), cet hôtel de la chaîne haut de gamme Atour allie design contemporain épuré, atmosphère feutrée inspirée de la lecture et de la photographie, et hospitalité attentionnée. L’établissement dispose de chambres insonorisées grand confort avec literie ergonomique en duvet, d’une bibliothèque lounge ouverte 24h/24 (Bamboo House / 竹居), d’une blanchisserie en libre-service gratuite (Dust Off / 出尘) et d’un restaurant lumineux servant un petit-déjeuner buffet mêlant saveurs occidentales et spécialités de Chaoshan (soupes de nouilles de riz et congee aux fruits de mer). Sa situation stratégique dans le nouveau quartier d’affaires de Longhu permet de rallier rapidement la gare TGV de Shantou, la baie et les hauts lieux gourmands.',
+    descriptionEn: 'Located on Hanjiang Road in the Jiafu Building within Shantou’s Zhugang New City, this upscale Atour Hotel offers serene reading-and-photography inspired modern interiors, premium soundproof rooms with bespoke ergonomic bedding, a 24-hour library lounge, self-service laundry, and a rich Chaoshan-infused breakfast buffet with quick access to Shantou Railway Station.',
+    culturalNoteFr: 'La marque Atour s’inspire de la sérénité d’un village du Yunnan pour offrir un accueil humaniste ("Warmth Service") : thé chaud de bienvenue offert dès l’arrivée, livres consultables gratuitement sans caution et service de nuit attentionné.',
+    visitingTipsFr: [
+      'Situation idéale sur la route Hanjiang pour un séjour au calme à 10 minutes de la gare TGV de Shantou et des grands centres commerciaux.',
+      'Le petit-déjeuner buffet propose des spécialités chaudes teochew (soupes de nouilles de riz guotiao fraîches et boulettes de bœuf).',
+      'La bibliothèque de l’hôtel (Zhuju) et la laverie avec sèche-linge professionnels sont accessibles 24h/24 gratuitement pour les résidents.'
+    ],
+    recommendedDuration: 'Séjour & Nuitée',
+    estimatedCostRmb: 380,
+    bestTime: 'Enregistrement dès 14h / Idéal pour séjours touristiques et d’affaires à Shantou',
+    overallScore: 4.8,
+    ourOpinionFr: "Notre avis : Un havre de confort contemporain et de sérénité sur la route Hanjiang, parfait pour explorer Shantou avec une literie d’exception, un service attentionné et un excellent petit-déjeuner.",
+    annualVisitors: 95000,
+    tripadvisorUrl: 'https://www.tripadvisor.com/Hotels-g303746-Shantou_Guangdong-Hotels.html',
+    bookingUrl: 'https://www.booking.com/hotel/cn/shan-tou-zhu-gang-xin-cheng-han-jiang-lu-ya-duo-jiu-dian.fr.html',
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Atour_Lifestyle_Holdings',
+    scores: [
+      {
+        source: 'dianping',
+        sourceName: 'Dianping (大众点评)',
+        sourceType: 'chinese',
+        score: 4.8,
+        reviewCount: 4820,
+        badge: '珠港新城高分口碑酒店 (Hôtel d’Excellence Zhugang)',
+        highlightQuote: '韩江路位置安静方便，房间宽敞干净，亚朵的床垫和枕头太舒服了，前台服务态度特别好！(Emplacement calme et accessible sur Hanjiang Road, literie exceptionnelle et service très chaleureux).',
+        url: 'https://www.dianping.com/search/keyword/0/0_%E6%B1%95%E5%A4%B4%E4%BA%9A%E6%9C%B5%E9%85%92%E5%BA%97%E9%9F%A9%E6%B1%9F%E8%B7%AF'
+      },
+      {
+        source: 'tripadvisor',
+        sourceName: 'Tripadvisor',
+        sourceType: 'western',
+        score: 4.5,
+        reviewCount: 80,
+        badge: 'Top Modern Comfort & Hospitality',
+        highlightQuote: 'Exceptional hospitality with welcoming hot tea, pristine modern rooms, super comfortable bed and convenient taxi ride to the railway station.',
+        url: 'https://www.tripadvisor.com/Search?q=Atour+Hotel+Shantou+Hanjiang+Road'
+      },
+      {
+        source: 'ctrip',
+        sourceName: 'Ctrip (携程)',
+        sourceType: 'chinese',
+        score: 4.8,
+        reviewCount: 6200,
+        badge: '金牌品质优选商旅酒店 (Choix Prisé Qualité & Confort)',
+        highlightQuote: '入住送了暖心茶，房间全智能化控制，早餐品类丰富还有正宗潮汕汤粉，出差旅游都强烈推荐。(Thé d’accueil réconfortant, domotique en chambre, excellent buffet avec nouilles locales).',
+        url: 'https://you.ctrip.com/hotels/shantou215.html'
+      }
+    ],
+    isTopRated: true,
+    isHiddenGem: false,
+    tags: ['Hôtel', 'Route Hanjiang', 'Zhugang New City', 'Longhu', 'Design & Confort', 'Atour'],
+    fr_title: null,
+    fr_url: null,
+    zh_title: '亚朵集团',
+    zh_url: 'https://zh-wikipedia-org.translate.goog/wiki/%E4%BA%9A%E6%9C%B5%E9%85%92%E5%BA%97?_x_tr_sl=auto&_x_tr_tl=fr',
+    en_title: 'Atour Lifestyle Holdings',
+    wikidata: 'Q115136894',
+    fr_verdict: null,
+    zh_verdict: 'other_china',
+    fr_via: null,
+    zh_via: 'search'
   }
 ];
 

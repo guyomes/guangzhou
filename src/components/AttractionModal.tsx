@@ -218,24 +218,38 @@ export const AttractionModal: React.FC<AttractionModalProps> = ({
                 </p>
               </div>
 
-              {/* External Resource Link (auto-translated Chinese Wikipedia only) */}
-              {zhWikiUrl && (
+              {/* External Resource / Booking Links */}
+              {(zhWikiUrl || attraction.bookingUrl) && (
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
                   <div className="text-[11px] text-slate-500">
-                    Ressource documentaire :
+                    {attraction.bookingUrl ? 'Réservation & Documentation :' : 'Ressource documentaire :'}
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <a
-                      href={zhWikiUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60 hover:bg-sky-100 transition-colors font-semibold text-xs"
-                      title="Article Wikipédia en chinois, traduit automatiquement en français"
-                    >
-                      <span>Wikipédia 中文 (traduit)</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    {attraction.bookingUrl && (
+                      <a
+                        href={attraction.bookingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60 hover:bg-blue-100 transition-colors font-semibold text-xs"
+                        title="Consulter les tarifs et réserver sur Booking.com"
+                      >
+                        <span>Réserver sur Booking.com</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                    {zhWikiUrl && (
+                      <a
+                        href={zhWikiUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60 hover:bg-sky-100 transition-colors font-semibold text-xs"
+                        title="Article Wikipédia en chinois, traduit automatiquement en français"
+                      >
+                        <span>Wikipédia 中文 (traduit)</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                 </div>
               )}
