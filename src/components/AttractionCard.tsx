@@ -103,7 +103,7 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
             {attraction.descriptionFr}
           </p>
 
-          {/* Avis éditorial, Score, Fréquentation & Liens */}
+          {/* Avis éditorial, Score, Fréquentation & Lien */}
           <div className="mt-3.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 space-y-2">
             {/* Stars & Annual Visitors */}
             <div className="flex items-center justify-between text-xs">
@@ -120,30 +120,20 @@ export const AttractionCard: React.FC<AttractionCardProps> = ({
               "{attraction.ourOpinionFr}"
             </p>
 
-            {/* Direct Links: Tripadvisor & Wikipédia */}
-            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px]">
-              <a
-                href={attraction.tripadvisorUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 transition-colors"
-                title="Consulter la fiche Tripadvisor"
-              >
-                <span>Tripadvisor</span>
-                <ExternalLink className="w-2.5 h-2.5" />
-              </a>
-
-              {attraction.wikipediaUrl ? (
+            {/* Direct Link: auto-translated Chinese Wikipedia only (the
+                Tripadvisor and hand-curated Wikipedia links proved unreliable
+                and are no longer displayed) */}
+            <div className="flex items-center justify-end pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px]">
+              {attraction.zh_url ? (
                 <a
-                  href={attraction.wikipediaUrl}
+                  href={attraction.zh_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
                   className="inline-flex items-center gap-1 font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 transition-colors"
-                  title="Consulter l'article Wikipédia"
+                  title="Article Wikipédia en chinois, traduit automatiquement en français"
                 >
-                  <span>Wikipédia</span>
+                  <span>Wikipédia 中文 (traduit)</span>
                   <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               ) : (
